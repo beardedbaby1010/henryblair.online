@@ -86,7 +86,8 @@
 </div>
 
 <div class="social">
-  <a class="soc ob-link" data-u="henry.blair" data-d="downstate.edu" aria-label="Email">
+  <a class="soc ob-link" data-u="henry.blair" data-d="downstate.edu" target="_blank" rel="noopener"
+     aria-label="Compose an email in Outlook">
     <img src="/assets/icons/email.png" alt="Email" width="54" height="54"></a>
   <a class="soc tel-link" data-a="914" data-b="708" data-c="9909" aria-label="Phone">
     <img src="/assets/icons/phone.png" alt="Phone" width="54" height="54"></a>
@@ -118,7 +119,11 @@ document.querySelectorAll('.ob-tel').forEach(function(el){
   link.href = 'tel:+1' + d.a + d.b + d.c; link.textContent = n; el.appendChild(link);
 });
 document.querySelectorAll('.ob-link').forEach(function(el){
-  el.href = 'mailto:' + el.dataset.u + String.fromCharCode(64) + el.dataset.d;
+  // The icon is Outlook's, and a mailto: cannot open in a tab — it hands off to
+  // whatever mail client is registered. So point it at Outlook on the web, which
+  // opens in a new tab like the other icons do.
+  var a = el.dataset.u + String.fromCharCode(64) + el.dataset.d;
+  el.href = 'https://outlook.office.com/mail/deeplink/compose?to=' + encodeURIComponent(a);
 });
 document.querySelectorAll('.tel-link').forEach(function(el){
   var d = el.dataset; el.href = 'tel:+1' + d.a + d.b + d.c;
