@@ -45,6 +45,12 @@ PROJECTS = [
         # where the complete version lives when PUBLISH_FULL is on
         "full_path": "full-2f4cdd679f40",
     },
+    {
+        "slug":   "ve-boxed-warning",
+        "tab":    "Vaginal Estrogen",
+        # hand-written page (projects/<slug>/index.html); the build only refreshes its tab bar
+        "static": True,
+    },
     # {"slug": "next-project", "tab": "Next Project", "source": "_source/hub.html"},
 ]
 
@@ -153,6 +159,19 @@ def write(path, html):
 
 
 def build_project(p):
+    if p.get("static"):
+        path = os.path.join(ROOT, "projects", p["slug"], "index.html")
+        if not os.path.exists(path):
+            print("  !! %s is marked static but %s is missing" % (p["slug"], path)); return False
+        html = open(path, encoding="utf-8").read()
+        if "<!--SITENAV-->" not in html:
+            print("  !! no SITENAV markers in %s" % path); return False
+        new = re.sub(r"<!--SITENAV-->.*?<!--/SITENAV-->",
+                     "<!--SITENAV-->\n" + nav_html(p["slug"]) + "\n<!--/SITENAV-->", html, flags=re.S)
+        if new != html:
+            open(path, "w", encoding="utf-8").write(new)
+        print("  %s (hand-written) — tab bar refreshed" % p["slug"])
+        return True
     src = os.path.normpath(os.path.join(ROOT, p["source"]))
     if not os.path.exists(src):
         print("  !! source not found: %s" % src)

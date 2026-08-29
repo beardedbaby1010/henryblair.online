@@ -56,6 +56,67 @@ repo requires GitHub Pro (~$4/month). In a public repo anyone can read the
 folder names and open the file directly, so the unguessable URL protects
 nothing.
 
+## Publishing: one command
+
+```bash
+cd ~/Documents/henryblair.online
+./publish "what changed"        # rebuild → commit → push
+./publish                       # message defaults to "Update site — <date>"
+./publish --no-push "wip"       # build and commit only
+```
+
+`publish` rebuilds every generated page, runs three safety checks, commits and
+pushes. GitHub Pages redeploys about a minute later. The checks refuse to commit if:
+
+1. `PUBLISH_FULL = True` while the GitHub repo is still public,
+2. manuscript markup (`class="manuscript"`) appears in a page about to be committed,
+3. `_source/` has become tracked by git.
+
+A shell alias makes it two words from anywhere:
+
+```bash
+echo "alias pub='~/Documents/henryblair.online/publish'" >> ~/.zshrc
+```
+
+## Which file to edit
+
+| To change | Edit | Then |
+|---|---|---|
+| About Me text | `about/index.html` | `./publish` |
+| Contact details | `contact/index.html` | `./publish` |
+| CV content | `resume/index.html`, then re-print the PDF (below) | `./publish` |
+| Landing page blurb or project cards | `index.html` | `./publish` |
+| Tab labels or tab order | `PAGES` / `PROJECTS` in `build_site.py` | `./publish` |
+| Colors, type, spacing (all hand-written pages) | `assets/site.css` | `./publish` |
+| Project-hub layout (sidebar, tables, figures) | `assets/project.css` | `./publish` |
+| The vaginal-estrogen project page | `projects/ve-boxed-warning/index.html` | `./publish` |
+| The ADT project page | **not** here — re-export from `build_hub.py` in the PCa folder, copy the standalone into `_source/` | `./publish` |
+
+Reprinting the CV PDF after editing the resume page:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --no-pdf-header-footer \
+  --print-to-pdf="resume/Henry-Blair-CV.pdf" \
+  "https://henryblair.online/resume/"
+```
+
+Previewing before you push:
+
+```bash
+python3 -m http.server 8000     # then open http://localhost:8000
+```
+
+## Two kinds of project page
+
+**Generated** (`"source": ...` in `PROJECTS`) — built from a self-contained hub
+in `_source/`, with the manuscript section stripped. The ADT project works this way.
+
+**Hand-written** (`"static": True`) — the page lives at
+`projects/<slug>/index.html` and the build only refreshes its tab bar. The
+vaginal-estrogen project works this way; its figures sit in
+`projects/ve-boxed-warning/figures/` and it uses `assets/project.css`.
+
 ## Adding a project
 
 1. Drop the standalone HTML into `_source/`.

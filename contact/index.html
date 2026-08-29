@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Contact — Henry M. Blair</title>
-<meta name="description" content="Get in touch with Henry M. Blair.">
+<meta name="description" content="Get in touch with Henry M. Blair — SUNY Downstate College of Medicine, Department of Urology, Maimonides Medical Center.">
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
 <!--SITENAV-->
 <div class="sitebar">
   <a class="sb-brand" href="/">Henry M. Blair</a>
-  <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/" aria-current="page">Contact Me</a><a href="/resume/">Resume</a><a href="/">Research Portfolio</a><a href="/projects/adt-initiation/">ADT Initiation</a></nav>
+  <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/" aria-current="page">Contact Me</a><a href="/resume/">Resume</a><a href="/">Research Portfolio</a><a href="/projects/adt-initiation/">ADT Initiation</a><a href="/projects/ve-boxed-warning/">Vaginal Estrogen</a></nav>
   
 </div>
 <!--/SITENAV-->
@@ -26,34 +26,59 @@
 
 <div class="channels">
 
-  <div class="ch">
+  <!--   emails --><div class="ch">
     <div class="k">Email</div>
-    <div class="v"><a href="mailto:henrymblair@gmail.com">henrymblair@gmail.com</a></div>
+    <div class="v">
+      <span class="ob" data-u="henry.blair" data-d="downstate.edu"></span>
+      <span class="note">Preferred &mdash; SUNY Downstate</span>
+    </div>
+  </div>
+
+  <div class="ch">
+    <div class="k">Email, also</div>
+    <div class="v">
+      <span class="ob" data-u="hblair" data-d="maimo.org"></span>
+      <span class="note">Maimonides Medical Center</span>
+      <span style="display:block;margin-top:10px"><span class="ob" data-u="henrymblair" data-d="gmail.com"></span></span>
+      <span class="note">Personal</span>
+    </div>
   </div>
 
   <div class="ch">
     <div class="k">LinkedIn</div>
-    <div class="v todo">[LinkedIn URL to be added]</div>
+    <div class="v"><a href="https://www.linkedin.com/in/henry-blair-102773203/" target="_blank" rel="noopener">linkedin.com/in/henry-blair</a></div>
   </div>
 
   <div class="ch">
     <div class="k">ORCID</div>
-    <div class="v todo">[ORCID iD to be added]</div>
+    <div class="v"><a href="https://orcid.org/0000-0002-4270-1556" target="_blank" rel="noopener">0000-0002-4270-1556</a></div>
   </div>
 
   <div class="ch">
     <div class="k">Phone</div>
-    <div class="v todo">[phone number to be added]</div>
+    <div class="v">
+      <span class="ob-tel" data-a="914" data-b="708" data-c="9909"></span>
+      <span class="note">Text or call; email reaches me faster.</span>
+    </div>
   </div>
 
   <div class="ch">
     <div class="k">Instagram</div>
-    <div class="v todo">[Instagram handle to be added]</div>
+    <div class="v"><a href="https://www.instagram.com/henryblair/" target="_blank" rel="noopener">@henryblair</a></div>
   </div>
 
   <div class="ch">
     <div class="k">Affiliations</div>
-    <div class="v">SUNY Downstate Health Sciences University<span class="note">Maimonides Medical Center &middot; Department of Urology &middot; Brooklyn, NY</span></div>
+    <div class="v">
+      SUNY Downstate College of Medicine
+      <span class="note">Brooklyn, NY &mdash; Doctor of Medicine, Class of 2028</span>
+      <span style="display:block;margin-top:12px">Maimonides Medical Center, Department of Urology</span>
+      <span class="note">Brooklyn, NY &mdash; research associate</span>
+      <span style="display:block;margin-top:12px">Emory University, Department of Neuroscience and Behavioral Biology</span>
+      <span class="note">Atlanta, GA &mdash; B.S. Neuroscience, 2023</span>
+      <span style="display:block;margin-top:12px">New York Medical College, Department of Neuroscience</span>
+      <span class="note">Valhalla, NY &mdash; epilepsy research, 2017&ndash;2019</span>
+    </div>
   </div>
 
 </div>
@@ -64,6 +89,24 @@
 </footer>
 
 </div>
-<script>document.querySelectorAll('.yr').forEach(function(e){e.textContent=new Date().getFullYear()});</script>
+<script>
+// Addresses and the phone number are assembled here rather than written into the
+// HTML, so the page reads normally for people and gives scrapers nothing to lift.
+document.querySelectorAll('.ob').forEach(function(el){
+  var a = el.dataset.u + String.fromCharCode(64) + el.dataset.d;
+  var link = document.createElement('a');
+  link.href = 'mailto:' + a; link.textContent = a; el.appendChild(link);
+});
+document.querySelectorAll('.ob-tel').forEach(function(el){
+  var d = el.dataset, n = '(' + d.a + ') ' + d.b + '-' + d.c;
+  var link = document.createElement('a');
+  link.href = 'tel:+1' + d.a + d.b + d.c; link.textContent = n; el.appendChild(link);
+});
+document.querySelectorAll('.yr').forEach(function(e){e.textContent=new Date().getFullYear()});
+</script>
+<noscript>
+  <div class="wrap narrow"><p style="color:#6b6f73">Email and phone are assembled by a small script to keep them away from scrapers.
+  With JavaScript off: henry.blair at downstate.edu, or nine one four &middot; seven zero eight &middot; nine nine zero nine.</p></div>
+</noscript>
 </body>
 </html>
