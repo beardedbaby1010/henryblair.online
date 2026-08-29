@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dr. Hank: a cited-source study assistant for medical students — project</title>
+<meta name="description" content="A study assistant built on a language model that answers Step 1 questions in a fixed high-yield structure and — the part that matters — points to the actual page in First Aid, AMBO">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/project.css">
+
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="Henry M. Blair">
+<meta property="og:image" content="https://henryblair.online/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+</head>
+<body>
+
+<!--SITENAV--><div class="sitebar">
+  <a class="sb-brand" href="/">Henry M. Blair</a>
+  <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/">Contact Me</a><a href="/resume/">Resume</a><a href="/">Research Portfolio</a><a href="/projects/adt-initiation/">ADT Initiation</a><a href="/projects/ve-boxed-warning/">Vaginal Estrogen</a><a href="/projects/oab-pvr/">PVR Self-Estimation</a><a href="/projects/oab-adi/">Deprivation & Access</a><a href="/projects/nocturia-goals/">Nocturia Goals</a><a href="/projects/retzius-retention/">Retzius-Sparing RARP</a><a href="/projects/focal-therapy-continence/">Focal Therapy</a><a href="/projects/ketamine-cystitis/">Ketamine Cystitis</a><a href="/projects/urogyn-perceptions/">Urogyn Survey</a><a href="/projects/aua-core-videos/">AUA Core Videos</a><a href="/projects/maude-sealing-devices/">MAUDE Device Safety</a><a href="/projects/dr-hank-med-ed-ai/" aria-current="page">Med-Ed AI</a><a href="/projects/insula-autism-thesis/">Honors Thesis</a><a href="/projects/varvel-ep2-status-epilepticus/">EP2 & Status Epilepticus</a><a href="/projects/varvel-monocyte-engraftment/">Monocyte Engraftment</a><a href="/projects/varvel-5xfad-inflammation/">5xFAD Inflammation</a><a href="/projects/tbi-stress-pte/">TBI & Stress</a><a href="/projects/estrogen-dentate-gyrus/">Estrogen & Dentate Gyrus</a></nav>
+</div>
+<span class="sb-fade" aria-hidden="true"></span><!--/SITENAV-->
+
+<header class="hubbar">
+  <div class="ht">Dr. Hank: a cited-source study assistant for medical students <span>· Medical education tooling · personal project</span></div>
+</header>
+
+<nav class="hubside">
+  <a href="#overview">Overview</a>
+  <a href="#question">The question</a>
+  <a href="#approach">How it is done</a>
+  <a href="#next">What comes next</a>
+  <div class="sidefoot">Henry M. Blair<br>SUNY Downstate College of Medicine</div>
+</nav>
+
+<main class="hub">
+<section id="overview" class="sec">
+  <div class="masthead2">
+    <div class="tag">Medical education tooling · personal project</div>
+    <h1>Dr. Hank: a cited-source study assistant for medical students</h1>
+    <p class="authors">Henry M. Blair</p>
+    <p class="lede">Students asking a language model a Step 1 question get a fluent answer with no way to check it, and no path back to the resource they already pay for. The design goal here was the opposite: answer in the structure students actually study in, and end every answer at a citation they can open.</p>
+  </div>
+  <div class="callout"><b>Status.</b> Working prototype. Related work: I sit on the ScholarRx Student Advisory Committee and assist its AI development team.</div>
+  <div class="wip"><b>This hub is still being built.</b> The analysis is underway; the derivation, tables and figures will be posted here as they are finished, the way the completed projects on this site are. What is below is the design and the current state, written up as it stands.</div>
+</section>
+
+<section id="question" class="sec">
+  <h2>The question</h2>
+  <p>Can a language model be made genuinely useful for board study without becoming either a plagiarism engine or a confident source of unverifiable claims?</p>
+</section>
+
+<section id="approach" class="sec">
+  <h2>How it is being done</h2>
+  <ul class="pitfalls">
+    <li>Answers follow a fixed structure — a direct high-yield response, then, where relevant, a disease breakdown covering pathophysiology and clinical features.</li>
+    <li>Every answer cites the relevant section of First Aid, AMBOSS or Rx Bricks and links out to it; content is pointed at rather than reproduced, which keeps the tool on the right side of both copyright and comprehension.</li>
+    <li>Response length, format and detail are refined by A/B testing, with user preference on formatting sampled every ten to twenty interactions.</li>
+  </ul>
+</section>
+
+<section id="next" class="sec">
+  <h2>What comes next</h2>
+  <p>The intended direction is a tool that identifies where a student is weak and generates against it — practice questions, spaced-repetition decks, case presentations and study plans — rather than only answering what is asked.</p>
+</section>
+  <div class="pgfoot">This page is generated from projects.py — it grows as the work does.</div>
+</main>
+</body>
+</html>

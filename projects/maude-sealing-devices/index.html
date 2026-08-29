@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adverse events of two vessel-sealing devices in robotic urologic surgery — project</title>
+<meta name="description" content="In March 2022 the FDA warned that two widely used robotic vessel-sealing devices could fail to seal when too much tissue sits in the jaws. This study went to the FDA's own adverse-">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/project.css">
+
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="Henry M. Blair">
+<meta property="og:image" content="https://henryblair.online/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+</head>
+<body>
+
+<!--SITENAV--><div class="sitebar">
+  <a class="sb-brand" href="/">Henry M. Blair</a>
+  <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/">Contact Me</a><a href="/resume/">Resume</a><a href="/">Research Portfolio</a><a href="/projects/adt-initiation/">ADT Initiation</a><a href="/projects/ve-boxed-warning/">Vaginal Estrogen</a><a href="/projects/oab-pvr/">PVR Self-Estimation</a><a href="/projects/oab-adi/">Deprivation & Access</a><a href="/projects/nocturia-goals/">Nocturia Goals</a><a href="/projects/retzius-retention/">Retzius-Sparing RARP</a><a href="/projects/focal-therapy-continence/">Focal Therapy</a><a href="/projects/ketamine-cystitis/">Ketamine Cystitis</a><a href="/projects/urogyn-perceptions/">Urogyn Survey</a><a href="/projects/aua-core-videos/">AUA Core Videos</a><a href="/projects/maude-sealing-devices/" aria-current="page">MAUDE Device Safety</a><a href="/projects/dr-hank-med-ed-ai/">Med-Ed AI</a><a href="/projects/insula-autism-thesis/">Honors Thesis</a><a href="/projects/varvel-ep2-status-epilepticus/">EP2 & Status Epilepticus</a><a href="/projects/varvel-monocyte-engraftment/">Monocyte Engraftment</a><a href="/projects/varvel-5xfad-inflammation/">5xFAD Inflammation</a><a href="/projects/tbi-stress-pte/">TBI & Stress</a><a href="/projects/estrogen-dentate-gyrus/">Estrogen & Dentate Gyrus</a></nav>
+</div>
+<span class="sb-fade" aria-hidden="true"></span><!--/SITENAV-->
+
+<header class="hubbar">
+  <div class="ht">Adverse events of two vessel-sealing devices in robotic urologic surgery <span>· FDA MAUDE database analysis · Maimonides Medical Center · MSRE, summer 2024</span></div>
+</header>
+
+<nav class="hubside">
+  <a href="#overview">Overview</a>
+  <a href="#question">The question</a>
+  <a href="#approach">How it is done</a>
+  <a href="#findings">What it shows</a>
+  <a href="#materials">Materials</a>
+  <a href="#next">What comes next</a>
+  <div class="sidefoot">Henry M. Blair · Dr. Ariel Schulman · Dr. Jacob Khurgin<br>MSRE · Maimonides Medical Center · 2024</div>
+</nav>
+
+<main class="hub">
+<section id="overview" class="sec">
+  <div class="masthead2">
+    <div class="tag">FDA MAUDE database analysis · Maimonides Medical Center · MSRE, summer 2024</div>
+    <h1>Adverse events of two vessel-sealing devices in robotic urologic surgery</h1>
+    <p class="authors">Henry M. Blair · Christopher Edwards · Ariel Schulman, MD · Jacob Khurgin, MD</p>
+    <p class="lede">Robotic vessel sealers cut and seal blood vessels in nearly every major urologic operation. On 3 March 2022 the FDA issued a field safety notice about two of them — SynchroSeal and Vessel Sealer Extend — warning that seals could fail when excessive tissue is caught in the jaws. A safety notice says a failure mode is possible; the FDA's adverse-event database says what has actually been reported.</p>
+  </div>
+  <div class="statrow"><div class="stat"><div class="statv">67</div><div class="statl">urologic adverse-event reports reviewed</div></div><div class="stat"><div class="statv">p = 0.025</div><div class="statl">severity difference between devices</div></div><div class="stat"><div class="statv">22% / 19%</div><div class="statl">sealing / cutting issues, SynchroSeal</div></div></div>
+  <div class="callout"><b>Status.</b> Conducted through the Medical Student Research Experience at Maimonides in summer 2024 and presented at the Society of Urologic Robotic Surgeons Focal Therapy Conference, 2024, and at regional surgical meetings.</div>
+</section>
+
+<section id="question" class="sec">
+  <h2>The question</h2>
+  <p>What adverse events are reported for the SynchroSeal and Vessel Sealer Extend in urologic surgery, do the two devices differ in the severity of what is reported, and do the reports match the failure mode the FDA warned about?</p>
+</section>
+
+<section id="approach" class="sec">
+  <h2>How it is being done</h2>
+  <ul class="pitfalls">
+    <li>The MAUDE database — the FDA's repository of mandatory manufacturer reports and voluntary reports from clinicians and patients — was queried for both devices across prostatectomy, nephrectomy, cystectomy, lymphadenectomy, nephroureterectomy and pyeloplasty.</li>
+    <li>Every report was read and classified twice: by <b>severity</b>, and by whether the event was actually <b>related to device use</b> — the second axis matters because a device that attracts more unrelated reports looks worse than it is.</li>
+    <li>Python scripts handled the classification and grouping of event descriptions into comparable categories.</li>
+    <li>Chi-square analysis compared severity profiles between devices, then was repeated after excluding unrelated events — the comparison that answers the clinical question.</li>
+    <li>37 SynchroSeal and 30 Vessel Sealer Extend urologic reports met criteria.</li>
+  </ul>
+</section>
+
+<section id="findings" class="sec">
+  <h2>What it shows so far</h2>
+  <ul class="pitfalls">
+    <li>SynchroSeal drew more reports overall, but a higher share of them were unrelated to device use — the raw count is misleading on its own.</li>
+    <li>After excluding unrelated events, SynchroSeal had significantly <b>fewer</b> severe and critical events than Vessel Sealer Extend (p = 0.025).</li>
+    <li>The characteristic SynchroSeal failures were dislodged components, jaw-cover tears and thermal damage.</li>
+    <li>Sealing issues appeared in 22% and cutting issues in 19% of urologic events — matching the failure mode the FDA's notice described, which is the finding that ties the database back to the warning.</li>
+  </ul>
+  <div class="callout"><b>Why the two-axis classification mattered.</b> Ranked by raw report count, one device looks worse. Ranked by severity of events actually attributable to the device, the ordering reverses. Reporting volume is not a safety signal.</div>
+</section>
+
+<section id="materials" class="sec">
+  <h2>Materials</h2>
+  <div class="dls"><a class="dl" href="/downloads/2024-maude-msre-poster.pdf">Conference poster (PDF)</a></div>
+</section>
+
+<section id="next" class="sec">
+  <h2>What comes next</h2>
+  <p>The queries were restricted to urologic reports for time. Extending to all surgical specialties would add the statistical power this analysis lacks and test whether the severity difference holds outside urology.</p>
+</section>
+  <div class="pgfoot">This page is generated from projects.py — it grows as the work does.</div>
+</main>
+</body>
+</html>

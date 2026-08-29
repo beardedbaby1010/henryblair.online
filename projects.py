@@ -380,6 +380,105 @@ PROJECTS = [
         },
     },
 
+    {
+        "slug": "maude-sealing-devices", "tab": "MAUDE Device Safety", "group": "current",
+        "title": "Adverse events of two vessel-sealing devices in robotic urologic surgery",
+        "kicker": "FDA MAUDE database analysis · Maimonides Medical Center · MSRE, summer 2024",
+        "status": "Presented — Society of Urologic Robotic Surgeons Focal Therapy Conference, 2024",
+        "summary": "In March 2022 the FDA warned that two widely used robotic vessel-sealing devices could "
+                   "fail to seal when too much tissue sits in the jaws. This study went to the FDA's own "
+                   "adverse-event database to ask what actually gets reported about them, and whether the "
+                   "two devices fail differently.",
+        "stats": [("67", "urologic adverse-event reports reviewed"),
+                  ("p = 0.025", "severity difference between devices"),
+                  ("22% / 19%", "sealing / cutting issues, SynchroSeal")],
+        "tags": ["Robotic surgery", "Device safety", "MAUDE", "FDA", "Adverse events"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Christopher Edwards", "Ariel Schulman, MD", "Jacob Khurgin, MD"],
+            "lede": "Robotic vessel sealers cut and seal blood vessels in nearly every major urologic "
+                    "operation. On 3 March 2022 the FDA issued a field safety notice about two of them — "
+                    "SynchroSeal and Vessel Sealer Extend — warning that seals could fail when excessive "
+                    "tissue is caught in the jaws. A safety notice says a failure mode is possible; the "
+                    "FDA's adverse-event database says what has actually been reported.",
+            "question": "What adverse events are reported for the SynchroSeal and Vessel Sealer Extend in "
+                        "urologic surgery, do the two devices differ in the severity of what is reported, "
+                        "and do the reports match the failure mode the FDA warned about?",
+            "approach": [
+                "The MAUDE database — the FDA's repository of mandatory manufacturer reports and voluntary "
+                "reports from clinicians and patients — was queried for both devices across prostatectomy, "
+                "nephrectomy, cystectomy, lymphadenectomy, nephroureterectomy and pyeloplasty.",
+                "Every report was read and classified twice: by <b>severity</b>, and by whether the event "
+                "was actually <b>related to device use</b> — the second axis matters because a device that "
+                "attracts more unrelated reports looks worse than it is.",
+                "Python scripts handled the classification and grouping of event descriptions into "
+                "comparable categories.",
+                "Chi-square analysis compared severity profiles between devices, then was repeated after "
+                "excluding unrelated events — the comparison that answers the clinical question.",
+                "37 SynchroSeal and 30 Vessel Sealer Extend urologic reports met criteria.",
+            ],
+            "findings": [
+                "SynchroSeal drew more reports overall, but a higher share of them were unrelated to device "
+                "use — the raw count is misleading on its own.",
+                "After excluding unrelated events, SynchroSeal had significantly <b>fewer</b> severe and "
+                "critical events than Vessel Sealer Extend (p = 0.025).",
+                "The characteristic SynchroSeal failures were dislodged components, jaw-cover tears and "
+                "thermal damage.",
+                "Sealing issues appeared in 22% and cutting issues in 19% of urologic events — matching the "
+                "failure mode the FDA's notice described, which is the finding that ties the database back "
+                "to the warning.",
+            ],
+            "findings_note": "<b>Why the two-axis classification mattered.</b> Ranked by raw report count, "
+                             "one device looks worse. Ranked by severity of events actually attributable to "
+                             "the device, the ordering reverses. Reporting volume is not a safety signal.",
+            "status_detail": "Conducted through the Medical Student Research Experience at Maimonides in "
+                             "summer 2024 and presented at the Society of Urologic Robotic Surgeons Focal "
+                             "Therapy Conference, 2024, and at regional surgical meetings.",
+            "materials": [{"label": "Conference poster (PDF)", "url": "/downloads/2024-maude-msre-poster.pdf"}],
+            "next": "The queries were restricted to urologic reports for time. Extending to all surgical "
+                    "specialties would add the statistical power this analysis lacks and test whether the "
+                    "severity difference holds outside urology.",
+            "sidefoot": "Henry M. Blair · Dr. Ariel Schulman · Dr. Jacob Khurgin<br>MSRE · Maimonides Medical Center · 2024",
+        },
+    },
+
+    {
+        "slug": "dr-hank-med-ed-ai", "tab": "Med-Ed AI", "group": "current",
+        "title": "Dr. Hank: a cited-source study assistant for medical students",
+        "kicker": "Medical education tooling · personal project",
+        "status": "Working prototype",
+        "summary": "A study assistant built on a language model that answers Step 1 questions in a fixed "
+                   "high-yield structure and — the part that matters — points to the actual page in First "
+                   "Aid, AMBOSS or Rx Bricks rather than reproducing it.",
+        "tags": ["Medical education", "Language models", "Study tools", "Citations"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair"],
+            "lede": "Students asking a language model a Step 1 question get a fluent answer with no way to "
+                    "check it, and no path back to the resource they already pay for. The design goal here "
+                    "was the opposite: answer in the structure students actually study in, and end every "
+                    "answer at a citation they can open.",
+            "question": "Can a language model be made genuinely useful for board study without becoming "
+                        "either a plagiarism engine or a confident source of unverifiable claims?",
+            "approach": [
+                "Answers follow a fixed structure — a direct high-yield response, then, where relevant, a "
+                "disease breakdown covering pathophysiology and clinical features.",
+                "Every answer cites the relevant section of First Aid, AMBOSS or Rx Bricks and links out "
+                "to it; content is pointed at rather than reproduced, which keeps the tool on the right "
+                "side of both copyright and comprehension.",
+                "Response length, format and detail are refined by A/B testing, with user preference on "
+                "formatting sampled every ten to twenty interactions.",
+            ],
+            "status_detail": "Working prototype. Related work: I sit on the ScholarRx Student Advisory "
+                             "Committee and assist its AI development team.",
+            "next": "The intended direction is a tool that identifies where a student is weak and generates "
+                    "against it — practice questions, spaced-repetition decks, case presentations and study "
+                    "plans — rather than only answering what is asked.",
+            "sidefoot": "Henry M. Blair<br>SUNY Downstate College of Medicine",
+            "in_progress": True,
+        },
+    },
+
     # ============================================================ earlier work
 
     {
