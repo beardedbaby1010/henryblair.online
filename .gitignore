@@ -7,3 +7,4 @@ _downloadable/
 .trash/
 a.txt
 _to_delete/
+.locktrash/
