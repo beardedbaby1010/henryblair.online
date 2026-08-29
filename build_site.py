@@ -51,9 +51,15 @@ def note(msg):   print("     " + msg)
 # ------------------------------------------------------------------ head + chrome
 
 HEAD_TAGS = """
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#111111">
 <meta property="og:site_name" content="Henry M. Blair">
 <meta property="og:image" content="https://henryblair.online/assets/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -180,10 +186,29 @@ def build_project_page(p):
 
 # ------------------------------------------------------------------ passphrase gate
 
+SECRETS_TXT = os.path.join(ROOT, "_secrets", "passwords.txt")
+
 def load_secrets():
-    if not os.path.exists(SECRETS):
-        return {}
-    return json.load(open(SECRETS))
+    """Read _secrets/passwords.txt — one `id = passphrase` per line, # for comments.
+
+    Falls back to the older passwords.json if the text file is not there. Ids are
+    project slugs (for manuscripts) and file names (for gated downloads)."""
+    out = {}
+    if os.path.exists(SECRETS_TXT):
+        for n, line in enumerate(open(SECRETS_TXT, encoding="utf-8"), 1):
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                warn("passwords.txt line %d is not `id = passphrase`: %s" % (n, line[:40]))
+                continue
+            k, v = line.split("=", 1)
+            k, v = k.strip(), v.strip()
+            if k and v:
+                out[k] = v
+    elif os.path.exists(SECRETS):
+        out = json.load(open(SECRETS))
+    return out
 
 def encrypt(data: bytes, password: str):
     """PBKDF2-SHA256 → 32-byte AES key + 32-byte MAC key. AES-256-CBC, then HMAC over iv|ct.
@@ -207,7 +232,7 @@ GATE_PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>%(title)s — manuscript</title>
+<title>%(title)s — passphrase required</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="/assets/site.css">
 %(head)s
@@ -244,7 +269,7 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
 <div class="gatewrap" id="gate">
   <div class="lock">
     <h1>%(title)s</h1>
-    <p class="sub">%(label)s · %(note)s</p>
+    <p class="sub">%(subtitle)s</p>
     <form id="f">
       <label for="pw">Passphrase</label>
       <input id="pw" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"
@@ -255,14 +280,14 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
     <div class="meta">The file on this page is encrypted (AES-256-CBC, PBKDF2-SHA256, %(iters)s iterations).
       It is decrypted in your browser and never leaves it. Without the passphrase there is nothing to read —
       not in the page source, not in the repository.<br><br>
-      <a href="/projects/%(slug)s/">← back to the project</a></div>
+      %(note)s<a href="%(back_url)s">← %(back_label)s</a></div>
   </div>
 </div>
 
 <div class="reader" id="reader">
   <div class="readerbar">
     <h1>%(title)s</h1>
-    <div class="r"><a id="dl" download="%(filename)s">Download PDF</a> · <a href="/projects/%(slug)s/">back to the project</a></div>
+    <div class="r"><a id="dl" download="%(filename)s">Download</a> · <a href="%(back_url)s">%(back_label)s</a></div>
   </div>
   <iframe id="frame" title="%(title)s"></iframe>
 </div>
@@ -326,6 +351,31 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
 </html>
 """
 
+def write_gate(out, title, subtitle, blurb, back_url, back_label, filename, data, password, cache_key):
+    """Encrypt `data` under `password` and write a passphrase page to `out`.
+    Skips the work when neither the file nor the passphrase has changed."""
+    fingerprint = hashlib.sha256(data + password.encode() + str(PBKDF2_ITERATIONS).encode()).hexdigest()
+    cache = json.load(open(GATECACHE)) if os.path.exists(GATECACHE) else {}
+    if cache.get(cache_key) == fingerprint and os.path.exists(out):
+        note("%s — gate unchanged" % cache_key)
+        return True
+    payload = encrypt(data, password)
+    html = GATE_PAGE % {
+        "title": title, "subtitle": subtitle, "note": blurb,
+        "back_url": back_url, "back_label": back_label,
+        "iters": "{:,}".format(PBKDF2_ITERATIONS),
+        "filename": filename, "head": HEAD_TAGS, "nav": nav_html(None),
+        "payload": json.dumps(payload),
+    }
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    open(out, "w", encoding="utf-8").write(html)
+    cache[cache_key] = fingerprint
+    os.makedirs(os.path.dirname(GATECACHE), exist_ok=True)
+    json.dump(cache, open(GATECACHE, "w"), indent=1)
+    note("-> %s  (%.1f MB encrypted)" % (os.path.relpath(out, ROOT), os.path.getsize(out) / 1e6))
+    return True
+
+
 def build_gate(p):
     paper = p.get("paper")
     if not paper:
@@ -342,32 +392,90 @@ def build_gate(p):
         warn("%s: no passphrase in _secrets/passwords.json — gate not built" % slug)
         return False
 
-    data = open(src, "rb").read()
-    fingerprint = hashlib.sha256(data + pw.encode() + str(PBKDF2_ITERATIONS).encode()).hexdigest()
-    cache = json.load(open(GATECACHE)) if os.path.exists(GATECACHE) else {}
-    out = os.path.join(ROOT, "projects", slug, "paper", "index.html")
+    return write_gate(
+        out=os.path.join(ROOT, "projects", slug, "paper", "index.html"),
+        title=esc(p["title"]),
+        subtitle="%s · %s" % (esc(paper.get("label", "Manuscript")), esc(paper.get("note", "Unpublished."))),
+        blurb="",
+        back_url="/projects/%s/" % slug, back_label="back to the project",
+        filename=os.path.basename(src),
+        data=open(src, "rb").read(), password=pw, cache_key="project:" + slug)
 
-    if cache.get(slug) == fingerprint and os.path.exists(out):
-        note("%s — gate unchanged" % slug)
+
+# ------------------------------------------------------------------ gated downloads
+
+def build_download_gates(published):
+    """Files listed in DOWNLOAD_GATES are published only as passphrase pages.
+
+    The raw file is never copied into downloads/, so there is no unprotected URL to
+    find. A gated file with no passphrase is NOT published at all — failing closed is
+    the only safe direction here."""
+    gates = getattr(CFG, "DOWNLOAD_GATES", {})
+    if not gates:
         return True
+    secrets = load_secrets()
+    ok = True
+    for name, meta in gates.items():
+        src = published.get(name)
+        if not src:
+            warn("DOWNLOAD_GATES lists %s but it is not in _downloadable/" % name); ok = False; continue
+        pw = secrets.get(name)
+        if not pw:
+            warn("no passphrase for %s in _secrets/passwords.txt — NOT published" % name); ok = False; continue
+        slug = re.sub(r"[^a-z0-9]+", "-", os.path.splitext(name)[0].lower()).strip("-")
+        ok &= write_gate(
+            out=os.path.join(ROOT, "downloads", slug, "index.html"),
+            title=esc(meta.get("title", name)),
+            subtitle=esc(meta.get("subtitle", "")),
+            blurb=esc(meta.get("note", "")),
+            back_url=meta.get("back_url", "/"), back_label=meta.get("back_label", "back to the portfolio"),
+            filename=name, data=open(src, "rb").read(), password=pw, cache_key="download:" + name)
+    return ok
 
-    payload = encrypt(data, pw)
-    html = GATE_PAGE % {
-        "title": p["title"], "slug": slug, "head": HEAD_TAGS,
-        "label": paper.get("label", "Manuscript"),
-        "note": paper.get("note", "Unpublished."),
-        "iters": "{:,}".format(PBKDF2_ITERATIONS),
-        "filename": os.path.basename(src),
-        "nav": nav_html(slug),
-        "payload": json.dumps(payload),
-    }
-    os.makedirs(os.path.dirname(out), exist_ok=True)
-    open(out, "w", encoding="utf-8").write(html)
-    cache[slug] = fingerprint
-    os.makedirs(os.path.dirname(GATECACHE), exist_ok=True)
-    json.dump(cache, open(GATECACHE, "w"), indent=1)
-    note("-> projects/%s/paper/index.html  (%.1f MB encrypted)" % (slug, os.path.getsize(out) / 1e6))
-    return True
+
+# ------------------------------------------------------------------ downloads
+
+def build_downloads():
+    """Copy _downloadable/ into downloads/, and give versioned files a stable public name.
+
+    Drop a file in _downloadable/ and it is published. Files matching a pattern in
+    DOWNLOAD_ALIASES are additionally published under a fixed URL, so a link already
+    emailed or printed keeps working when a new version lands: the newest match wins.
+    Files listed in DOWNLOAD_GATES are published only behind a passphrase."""
+    src = os.path.join(ROOT, "_downloadable")
+    out = os.path.join(ROOT, "downloads")
+    if not os.path.isdir(src):
+        warn("no _downloadable/ folder — nothing to publish as a download"); return True
+    os.makedirs(out, exist_ok=True)
+    gates = getattr(CFG, "DOWNLOAD_GATES", {})
+
+    published = {}
+    for name in sorted(os.listdir(src)):
+        if name.startswith(".") or not os.path.isfile(os.path.join(src, name)):
+            continue
+        s_path = os.path.join(src, name)
+        published[name] = s_path
+        if name in gates:
+            continue                       # gated: never published in the clear
+        d_path = os.path.join(out, name)
+        if not os.path.exists(d_path) or os.path.getsize(d_path) != os.path.getsize(s_path):
+            open(d_path, "wb").write(open(s_path, "rb").read())
+
+    import fnmatch
+    for pattern, alias in getattr(CFG, "DOWNLOAD_ALIASES", {}).items():
+        matches = [n for n in published if fnmatch.fnmatch(n, pattern) and n not in gates]
+        if not matches:
+            warn("no ungated file in _downloadable/ matches %s (alias %s not published)" % (pattern, alias))
+            continue
+        newest = max(matches, key=lambda n: os.path.getmtime(published[n]))
+        if len(matches) > 1:
+            note("%s → %d matches, serving the newest: %s" % (pattern, len(matches), newest))
+        open(os.path.join(out, alias), "wb").write(open(published[newest], "rb").read())
+        note("%s  →  /downloads/%s" % (newest, alias))
+
+    note("published %d file(s) to downloads/" % len([n for n in published if n not in gates]))
+    return build_download_gates(published)
+
 
 # ------------------------------------------------------------------ generated hubs (from config)
 
@@ -403,9 +511,6 @@ AUTO_HUB = """<!doctype html>
 </html>
 """
 
-def _p(text):
-    return '<p>%s</p>' % text
-
 def auto_sections(p):
     h = p.get("hub", {})
     out, nav = [], []
@@ -414,7 +519,6 @@ def auto_sections(p):
         nav.append('  <a href="#%s">%s</a>' % (sid, label))
         out.append('<section id="%s" class="sec">\n%s</section>' % (sid, inner))
 
-    # overview
     stats = "".join('<div class="stat"><div class="statv">%s</div><div class="statl">%s</div></div>'
                     % (esc(v), esc(l)) for v, l in p.get("stats", []))
     o  = '  <div class="masthead2">\n'
@@ -426,28 +530,25 @@ def auto_sections(p):
     o += '  </div>\n'
     if stats:
         o += '  <div class="statrow">%s</div>\n' % stats
-    o += ('  <div class="callout"><b>Status.</b> %s</div>\n'
-          % h.get("status_detail", esc(p.get("status", ""))))
+    o += '  <div class="callout"><b>Status.</b> %s</div>\n' % h.get("status_detail", esc(p.get("status", "")))
     if h.get("in_progress"):
         o += ('  <div class="wip"><b>This hub is still being built.</b> '
-              'The analysis is underway; the derivation, tables and figures will be posted here as '
-              'they are finished, the way the completed projects on this site are. What is below is '
-              'the design and the current state, written up as it stands.</div>\n')
+              'The analysis is underway; the derivation, tables and figures will be posted here as they '
+              'are finished, the way the completed projects on this site are. What is below is the design '
+              'and the current state, written up as it stands.</div>\n')
     sec("overview", "Overview", o)
 
     if h.get("question"):
-        sec("question", "The question", '  <h2>The question</h2>\n  %s\n' % _p(h["question"]))
+        sec("question", "The question", '  <h2>The question</h2>\n  <p>%s</p>\n' % h["question"])
 
     if h.get("approach"):
         body = '  <h2>How it is being done</h2>\n  <ul class="pitfalls">\n'
-        body += "".join('    <li>%s</li>\n' % a for a in h["approach"])
-        body += '  </ul>\n'
+        body += "".join('    <li>%s</li>\n' % a for a in h["approach"]) + '  </ul>\n'
         sec("approach", "How it is done", body)
 
     if h.get("findings"):
         body = '  <h2>What it shows so far</h2>\n  <ul class="pitfalls">\n'
-        body += "".join('    <li>%s</li>\n' % f for f in h["findings"])
-        body += '  </ul>\n'
+        body += "".join('    <li>%s</li>\n' % f for f in h["findings"]) + '  </ul>\n'
         if h.get("findings_note"):
             body += '  <div class="callout">%s</div>\n' % h["findings_note"]
         sec("findings", "What it shows", body)
@@ -473,22 +574,22 @@ def auto_sections(p):
 
     if p.get("paper"):
         body = ('  <h2>The manuscript</h2>\n'
-                '  <div class="gate"><h3>%s</h3><p>%s Behind a passphrase while the work is '
-                'unpublished — <a href="/projects/%s/paper/">open it here</a> if I sent you one, or '
+                '  <div class="gate"><h3>%s</h3><p>%s Behind a passphrase while the work is unpublished — '
+                '<a href="/projects/%s/paper/">open it here</a> if I sent you one, or '
                 '<a href="mailto:henrymblair@gmail.com">email me</a>.</p></div>\n'
-                % (esc(p["paper"].get("label", "Manuscript")),
-                   esc(p["paper"].get("note", "")), p["slug"]))
+                % (esc(p["paper"].get("label", "Manuscript")), esc(p["paper"].get("note", "")), p["slug"]))
         sec("paper", "The manuscript", body)
 
     if h.get("next"):
-        sec("next", "What comes next", '  <h2>What comes next</h2>\n  %s\n' % _p(h["next"]))
+        sec("next", "What comes next", '  <h2>What comes next</h2>\n  <p>%s</p>\n' % h["next"])
 
     if h.get("about"):
         sec("about", "About & provenance",
             '  <h2>About &amp; provenance</h2>\n  <div class="keybox">%s</div>\n'
-            % "".join(_p(x) for x in h["about"]))
+            % "".join('<p>%s</p>' % x for x in h["about"]))
 
     return "\n\n".join(out), "\n".join(nav)
+
 
 def build_auto_hub(p):
     sections, sidenav = auto_sections(p)
@@ -496,8 +597,7 @@ def build_auto_hub(p):
     html = AUTO_HUB % {
         "title": esc(p["title"]), "kicker": esc(p["kicker"]),
         "desc": esc(p["summary"][:180]), "head": HEAD_TAGS, "nav": nav_html(p["slug"]),
-        "sidenav": sidenav,
-        "sidefoot": h.get("sidefoot", "Henry M. Blair"),
+        "sidenav": sidenav, "sidefoot": h.get("sidefoot", "Henry M. Blair"),
         "sections": sections,
         "footnote": h.get("footnote", "This page is generated from projects.py — it grows as the work does."),
     }
@@ -507,54 +607,6 @@ def build_auto_hub(p):
     note("-> projects/%s/index.html  (generated hub)" % p["slug"])
     return True
 
-# ------------------------------------------------------------------ downloads
-
-def build_downloads():
-    """Copy _downloadable/ into downloads/, and give versioned files a stable public name.
-
-    Drop a file in _downloadable/ and it is published. Files matching a pattern in
-    DOWNLOAD_ALIASES are additionally published under a fixed URL, so a link that has
-    been emailed or printed keeps working when a new version of the file lands: the
-    newest match wins, and the old version stops being served."""
-    src = os.path.join(ROOT, "_downloadable")
-    out = os.path.join(ROOT, "downloads")
-    if not os.path.isdir(src):
-        warn("no _downloadable/ folder — nothing to publish as a download"); return True
-    os.makedirs(out, exist_ok=True)
-
-    published = {}
-    for name in sorted(os.listdir(src)):
-        if name.startswith("."):
-            continue
-        s_path = os.path.join(src, name)
-        if not os.path.isfile(s_path):
-            continue
-        d_path = os.path.join(out, name)
-        published[name] = s_path
-        if not os.path.exists(d_path) or os.path.getsize(d_path) != os.path.getsize(s_path):
-            open(d_path, "wb").write(open(s_path, "rb").read())
-
-    import fnmatch
-    for pattern, alias in getattr(CFG, "DOWNLOAD_ALIASES", {}).items():
-        matches = [n for n in published if fnmatch.fnmatch(n, pattern)]
-        if not matches:
-            warn("no file in _downloadable/ matches %s (alias %s not published)" % (pattern, alias))
-            continue
-        newest = max(matches, key=lambda n: os.path.getmtime(published[n]))
-        if len(matches) > 1:
-            note("%s → %d matches, serving the newest: %s" % (pattern, len(matches), newest))
-        open(os.path.join(out, alias), "wb").write(open(published[newest], "rb").read())
-        note("%s  →  /downloads/%s" % (newest, alias))
-
-    # anything in downloads/ that no longer has a source is stale
-    for name in sorted(os.listdir(out)):
-        if name.startswith("."):
-            continue
-        if name not in published and name not in getattr(CFG, "DOWNLOAD_ALIASES", {}).values():
-            warn("downloads/%s has no source in _downloadable/ — delete it or restore the source" % name)
-
-    note("published %d file(s) to downloads/" % len(published))
-    return True
 
 # ------------------------------------------------------------------ landing page
 

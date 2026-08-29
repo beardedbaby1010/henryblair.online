@@ -31,6 +31,18 @@ DOWNLOAD_ALIASES = {
     "Henry_Blair_CV_*.pdf": "Henry-Blair-CV.pdf",
 }
 
+# Downloads that require a passphrase. A file listed here is published ONLY as a
+# passphrase page at /downloads/<name>/ — the raw file is never copied into the
+# site, so there is no unprotected URL. Give each one a passphrase in
+# _secrets/passwords.txt, keyed by the same file name.
+DOWNLOAD_GATES = {
+    # "2024-maude-msre-poster.pdf": {
+    #     "title": "MSRE poster — vessel-sealing device adverse events",
+    #     "subtitle": "Conference poster · SURS Focal Therapy 2024",
+    #     "back_url": "/projects/maude-sealing-devices/", "back_label": "back to the project",
+    # },
+}
+
 # ---------------------------------------------------------------- hand-written pages
 PAGES = [
     {"key": "about",   "tab": "About Me",           "href": "/about/",   "file": "about/index.html"},
