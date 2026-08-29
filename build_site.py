@@ -431,6 +431,7 @@ def write_gate(out, title, subtitle, blurb, back_url, back_label, filename, data
     keymat = "".join("%s:%s" % (l, pw) for l, pw in sorted(passwords))
     fingerprint = hashlib.sha256(data + keymat.encode() + str(PBKDF2_ITERATIONS).encode()).hexdigest()
     cache = json.load(open(GATECACHE)) if os.path.exists(GATECACHE) else {}
+    BUILT_GATES.add(os.path.abspath(out))
     if cache.get(cache_key) == fingerprint and os.path.exists(out):
         note("%s — gate unchanged (%d passphrase%s)" % (cache_key, len(passwords), "" if len(passwords)==1 else "s"))
         return True
@@ -518,6 +519,7 @@ def build_download_gates(published):
 
 # ------------------------------------------------------------------ downloads
 
+BUILT_GATES = set()   # gate pages this build produced (anything else is retired)
 ALIAS_URLS = {}       # alias file name -> the URL that actually serves it
 GATED_ALIASES = {}    # gated source file -> stable alias stem to publish the gate under
 
@@ -839,6 +841,36 @@ def earlier_card(e):
 
 # ------------------------------------------------------------------ main
 
+def prune_gates():
+    """Retire gate pages this build did not produce.
+
+    Commenting out a passphrase does not publish the item — it stops being published
+    at all. Without this, the previously built page would linger and keep opening
+    with the old passphrase, which is the opposite of what removing a line means."""
+    import shutil
+    roots = [os.path.join(ROOT, "projects"), os.path.join(ROOT, "downloads")]
+    for root in roots:
+        if not os.path.isdir(root):
+            continue
+        for dirpath, dirnames, filenames in os.walk(root):
+            if "index.html" not in filenames:
+                continue
+            is_gate = '<script id="payload"' in open(os.path.join(dirpath, "index.html"),
+                                                     encoding="utf-8", errors="replace").read(400000)
+            if not is_gate:
+                continue
+            if os.path.abspath(os.path.join(dirpath, "index.html")) in BUILT_GATES:
+                continue
+            try:
+                shutil.rmtree(dirpath)
+                warn("retired %s — no passphrase for it any more" % os.path.relpath(dirpath, ROOT))
+            except OSError:
+                q = os.path.join(ROOT, ".trash", "retired-gates")
+                os.makedirs(q, exist_ok=True)
+                os.rename(dirpath, os.path.join(q, os.path.basename(dirpath) + "-" + str(int(os.path.getmtime(dirpath)))))
+                warn("retired %s (moved to .trash/retired-gates/)" % os.path.relpath(dirpath, ROOT))
+
+
 if __name__ == "__main__":
     print("Building %s" % ROOT)
     ok = True
@@ -850,6 +882,7 @@ if __name__ == "__main__":
     for pg in CFG.PAGES:
         set_nav(os.path.join(ROOT, pg["file"]), pg["key"])
     ok &= build_downloads()
+    prune_gates()
     ok &= build_home()
     print("Done." if ok else "Done, with problems (see above).")
     sys.exit(0 if ok else 1)
