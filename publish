@@ -51,19 +51,30 @@ fi
 
 git add -A
 if git diff --cached --quiet; then
-  say "${YEL}▸ Nothing changed — no commit made.${OFF}"
-  exit 0
+  say "${YEL}▸ No new changes to commit.${OFF}"
+else
+  say "${BLU}▸ Committing${OFF}  ${BOLD}${MSG}${OFF}"
+  git -c commit.gpgsign=false commit -q -m "$MSG"
+  git --no-pager log --oneline -1 | sed 's/^/    /'
 fi
 
-say "${BLU}▸ Committing${OFF}  ${BOLD}${MSG}${OFF}"
-git -c commit.gpgsign=false commit -q -m "$MSG"
-git --no-pager log --oneline -1 | sed 's/^/    /'
-
+# Pushing is independent of committing: there may be earlier commits still local.
 if [ "$NOPUSH" = "1" ]; then
-  say "${YEL}▸ --no-push: committed locally, not pushed.${OFF}"
+  say "${YEL}▸ --no-push: nothing pushed.${OFF}"
   exit 0
 fi
 
-say "${BLU}▸ Pushing${OFF}"
-git push -q
+if git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
+  AHEAD=$(git rev-list --count @{u}..HEAD)
+  if [ "$AHEAD" = "0" ]; then
+    say "${GRN}✓ Already up to date with GitHub — nothing to push.${OFF}"
+    exit 0
+  fi
+  say "${BLU}▸ Pushing${OFF}  ${AHEAD} commit(s)"
+  git --no-pager log --oneline @{u}..HEAD | sed 's/^/    /'
+  git push -q
+else
+  say "${BLU}▸ Pushing${OFF}  (setting upstream)"
+  git push -q -u origin "$(git branch --show-current)"
+fi
 say "${GRN}✓ Pushed. GitHub Pages redeploys in about a minute → https://henryblair.online${OFF}"
