@@ -121,8 +121,9 @@ PROJECTS = [
         "paper": {"pdf": "Maimo_Work/old_OAB Proj/PVR/Henry Edits V7 PVR Manuscript Family Practice.pdf",
                   "label": "Manuscript V7", "note": "Submitted to Family Practice (OUP)."},
         "hub": {
-            "people": ["Colby Rondeau", "Henry M. Blair", "Sumyia Razzak", "Sarah Chaudhary",
-                       "Trashana Smith", "Michael Silver", "Allison Polland, MD"],
+            "people": ["Colby Rondeau, MD", "Henry M. Blair", "Sumyia Razzak",
+                                    "Sarah Chaudhary", "Trashana Smith", "Michael Silver",
+                                    "Allison Polland, MD"],
             "lede": "A guideline can contradict itself. AUA and SUFU guidance endorses telemedicine for the "
                     "initial evaluation of overactive bladder, and separately requires a post-void residual "
                     "measurement to exclude retention — which requires the in-office bladder ultrasound that "
@@ -293,8 +294,7 @@ PROJECTS = [
             "next": "A longitudinal design correlating symptoms with both measured and estimated residual "
                     "over time, and a low-risk rule tested prospectively against in-office evaluation — the "
                     "study that would turn a deferral argument into a pathway.",
-            "sidefoot": "Colby Rondeau · Henry M. Blair · Dr. Allison Polland<br>Department of Urogynecology, "
-                        "Maimonides Medical Center<br>Brooklyn, NY · 2024–2025",
+            "sidefoot": "Colby Rondeau, MD · Henry M. Blair · Allison Polland, MD<br>Department of Urogynecology, Maimonides Medical Center<br>Brooklyn, NY · 2024–2025",
         },
     },
 
@@ -311,10 +311,11 @@ PROJECTS = [
         "tags": ["Overactive bladder", "Health equity", "Area Deprivation Index", "Urban health", "Telehealth"],
         "page": {"kind": "auto"},
         "paper": {"pdf": "_source/manuscripts/ADI-and-Travel-Time-V3.pdf",
-                  "label": "Manuscript V3", "note": "With Colby Rondeau and Dr. Allison Polland."},
+                  "label": "Manuscript V3", "note": "With Colby Rondeau, MD and Allison Polland, MD."},
         "hub": {
-            "people": ["Colby Rondeau", "Luke Jenusaitis", "Elizabeth DeSellier", "Rebecca Bergmann",
-                       "Peace Deh", "Michael Silver", "Henry M. Blair", "Allison Polland, MD"],
+            "people": ["Colby Rondeau, MD", "Luke Jenusaitis, MD", "Elizabeth DeSellier",
+                                    "Rebecca Bergmann", "Peace Deh", "Michael Silver",
+                                    "Henry M. Blair", "Allison Polland, MD"],
             "lede": "Deprivation indices are used as a proxy for the barriers a patient faces, and the "
                     "barrier they most directly encode is travel: in most of the country, a poorer "
                     "neighborhood means a longer, costlier trip to specialty care. New York has a subway. "
@@ -469,8 +470,7 @@ PROJECTS = [
             "next": "A larger multisite study across cities with different transit density would separate "
                     "the two explanations directly: if the null persists where transit is strong and "
                     "disappears where it is not, the mechanism is transit rather than the instrument.",
-            "sidefoot": "Colby Rondeau · Henry M. Blair · Dr. Allison Polland<br>Maimonides Medical Center · "
-                        "SUNY Downstate<br>Brooklyn, NY · 2024–2025",
+            "sidefoot": "Colby Rondeau, MD · Henry M. Blair · Allison Polland, MD<br>Maimonides Medical Center · SUNY Downstate<br>Brooklyn, NY · 2024–2025",
         },
     },
 
@@ -487,7 +487,7 @@ PROJECTS = [
                   "label": "Manuscript V3", "note": "With Oliver Menken."},
         "page": {"kind": "auto"},
         "hub": {
-            "people": ["Henry M. Blair", "Oliver Menken"],
+            "people": ["Oliver Menken", "Henry M. Blair"],
             "lede": "Nocturia trials are built on a countable outcome: voids per night. It is easy to "
                     "measure and easy to compare, and it may not be the thing patients are trying to "
                     "change. A treatment that removes one void from three may or may not be a treatment "
@@ -504,7 +504,7 @@ PROJECTS = [
             "status_detail": "Manuscript V3.",
             "next": "If patient-defined goals diverge from void count, the argument follows for a "
                     "goal-attainment endpoint in nocturia trials.",
-            "sidefoot": "Henry M. Blair · Oliver Menken<br>Department of Urology, Maimonides Medical Center",
+            "sidefoot": "Oliver Menken · Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
             "in_progress": True,
         },
     },
@@ -520,7 +520,8 @@ PROJECTS = [
         "tags": ["Prostate cancer", "RARP", "Urinary retention", "Surgical outcomes"],
         "page": {"kind": "auto"},
         "hub": {
-            "people": ["Henry M. Blair", "Ervin Teper, MD", "David Silver, MD"],
+            "people": ["Edward Wu, MD", "Henry M. Blair", "Ervin Teper, MD",
+                                    "David Silver, MD"],
             "lede": "Retzius-sparing robotic prostatectomy is chosen for a reason: men regain continence "
                     "sooner. The anatomy that buys that advantage — an untouched anterior compartment — is "
                     "also the anatomy that could obstruct. Retention after the operation has been reported "
@@ -542,7 +543,7 @@ PROJECTS = [
             "next": "The prospective study, in which the candidate predictors are measured before surgery "
                     "rather than reconstructed from charts — the design that can turn an association into "
                     "a preoperative risk estimate a surgeon could act on.",
-            "sidefoot": "Henry M. Blair · Dr. Ervin Teper · Dr. David Silver<br>Department of Urology, Maimonides Medical Center",
+            "sidefoot": "Edward Wu, MD · Henry M. Blair · Ervin Teper, MD · David Silver, MD<br>Department of Urology, Maimonides Medical Center",
             "in_progress": True,
         },
     },
@@ -557,7 +558,7 @@ PROJECTS = [
         "tags": ["Prostate cancer", "Focal therapy", "HIFU", "Irreversible electroporation", "Continence"],
         "page": {"kind": "auto"},
         "hub": {
-            "people": ["Henry M. Blair"],
+            "people": ["Christopher Edwards, MD", "Henry M. Blair", "David Silver, MD"],
             "lede": "Focal therapy is offered on a continence argument: treat part of the gland, spare the "
                     "function. That argument deserves outcome data from the men who took it.",
             "question": "What are the urinary continence outcomes — incontinence, leakage — after HIFU and "
@@ -567,7 +568,7 @@ PROJECTS = [
                 "Continence and leakage as the primary outcomes, recorded against baseline function.",
             ],
             "status_detail": "Early stage — cohort assembly underway.",
-            "sidefoot": "Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
+            "sidefoot": "Christopher Edwards, MD · Henry M. Blair · David Silver, MD<br>Department of Urology, Maimonides Medical Center",
             "in_progress": True,
         },
     },
@@ -582,7 +583,7 @@ PROJECTS = [
         "tags": ["Ketamine cystitis", "Epidemiology", "Substance use", "Real-world data"],
         "page": {"kind": "auto"},
         "hub": {
-            "people": ["Henry M. Blair"],
+            "people": ["Marc Ganz, MD", "Henry M. Blair"],
             "lede": "Ketamine use has moved in a decade from club drug to prescribed treatment for "
                     "depression and chronic pain. Its bladder toxicity is well described in case series "
                     "and poorly described at national scale — which is a problem if prescribing keeps "
@@ -597,7 +598,7 @@ PROJECTS = [
                 "Demographics: age, sex and geography.",
             ],
             "status_detail": "Early stage — cohort definition in progress.",
-            "sidefoot": "Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
+            "sidefoot": "Marc Ganz, MD · Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
             "in_progress": True,
         },
     },
@@ -613,7 +614,7 @@ PROJECTS = [
         "tags": ["Urogynecology", "Medical education", "Workforce", "Survey"],
         "page": {"kind": "auto"},
         "hub": {
-            "people": ["Henry M. Blair", "Allison Polland, MD"],
+            "people": ["Luke Jenusaitis, MD", "Henry M. Blair", "Jubin Matloubieh, MD"],
             "lede": "Subspecialty shortages are usually described in terms of positions and pay. Before "
                     "either, there is what trainees think the field is — and residents choose from the "
                     "picture they have, not the one that is accurate.",
@@ -627,7 +628,7 @@ PROJECTS = [
                 "of the field a resident has actually seen.",
             ],
             "status_detail": "Data collection underway.",
-            "sidefoot": "Henry M. Blair · Dr. Allison Polland<br>Department of Urology, Maimonides Medical Center",
+            "sidefoot": "Luke Jenusaitis, MD · Henry M. Blair · Jubin Matloubieh, MD<br>Department of Urology, Maimonides Medical Center",
             "in_progress": True,
         },
     },
@@ -643,7 +644,7 @@ PROJECTS = [
         "tags": ["Medical education", "Surgical video", "Sacral neuromodulation", "Pessary", "AUA"],
         "page": {"kind": "auto"},
         "hub": {
-            "people": ["Henry M. Blair", "Allison Polland, MD"],
+            "people": ["Henry M. Blair", "Luke Jenusaitis, MD", "Allison Polland, MD"],
             "lede": "Two procedures that residents learn by standing next to someone doing them. The AUA "
                     "Core Curriculum is where that apprenticeship is written down for everyone; these are "
                     "the two entries I filmed, scripted and cut.",
@@ -668,7 +669,7 @@ PROJECTS = [
             ],
             "status_detail": "Both videos produced. Final cuts sit with the AUA for the Core Curriculum; "
                              "they will be embedded on this page or linked to the AUA's own release.",
-            "sidefoot": "Henry M. Blair · Dr. Allison Polland<br>Department of Urology, Maimonides Medical Center",
+            "sidefoot": "Henry M. Blair · Luke Jenusaitis, MD · Allison Polland, MD<br>Department of Urology, Maimonides Medical Center",
         },
     },
 
@@ -730,7 +731,7 @@ PROJECTS = [
             "next": "The queries were restricted to urologic reports for time. Extending to all surgical "
                     "specialties would add the statistical power this analysis lacks and test whether the "
                     "severity difference holds outside urology.",
-            "sidefoot": "Henry M. Blair · Dr. Ariel Schulman · Dr. Jacob Khurgin<br>MSRE · Maimonides Medical Center · 2024",
+            "sidefoot": "Henry M. Blair · Ariel Schulman, MD · Jacob Khurgin, MD<br>MSRE · Maimonides Medical Center · 2024",
         },
     },
 
@@ -825,7 +826,7 @@ PROJECTS = [
             "next": "The sex-stratified result argues for replication in a larger cohort with enough "
                     "autistic girls to power the female analysis on its own — the sample constraint that "
                     "has shaped this literature from the start.",
-            "sidefoot": "Henry M. Blair · Emory University<br>Advisor: Dr. Opal Ousley<br>Defended April 2023",
+            "sidefoot": "Henry M. Blair · Emory University<br>Advisor: Opal Ousley, PhD<br>Defended April 2023",
         },
     },
 
