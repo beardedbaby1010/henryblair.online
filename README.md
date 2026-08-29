@@ -131,14 +131,27 @@ echo "alias pub='~/Documents/henryblair.online/publish'" >> ~/.zshrc
 | The vaginal-estrogen project page | `projects/ve-boxed-warning/index.html` | `./publish` |
 | The ADT project page | **not** here — re-export from `build_hub.py` in the PCa folder, copy the standalone into `_source/` | `./publish` |
 
-Reprinting the CV PDF after editing the resume page:
+## Downloads
 
-```bash
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-  --headless --disable-gpu --no-pdf-header-footer \
-  --print-to-pdf="resume/Henry-Blair-CV.pdf" \
-  "https://henryblair.online/resume/"
+Anything you want people to be able to download — CV, posters, slides — goes in
+`_downloadable/`. Each build copies it to `downloads/`, which is what the site
+serves. `_downloadable/` itself is gitignored; the published copies are what get
+committed.
+
+Versioned files get a stable public URL through `DOWNLOAD_ALIASES` in
+`projects.py`:
+
+```python
+DOWNLOAD_ALIASES = {"Henry_Blair_CV_*.pdf": "Henry-Blair-CV.pdf"}
 ```
+
+Drop `Henry_Blair_CV_2026_Dec.pdf` in beside the August one and the newest match
+is served at `/downloads/Henry-Blair-CV.pdf` — the link on the resume page, and
+any link already emailed or printed, keeps working and starts serving the new
+file. The build says which version it picked.
+
+To link a poster from a project, put the PDF in `_downloadable/` and reference
+`/downloads/<filename>` in that project's `materials` list in `projects.py`.
 
 Previewing before you push:
 

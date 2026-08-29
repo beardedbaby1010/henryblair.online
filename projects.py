@@ -23,6 +23,14 @@ SOURCE_ROOTS = [
     "~/mnt",          # the folder mounts used when Claude builds the site
 ]
 
+# ---------------------------------------------------------------- downloads
+# Anything dropped in _downloadable/ is published at /downloads/<same name>.
+# These patterns additionally publish the NEWEST match under a fixed URL, so links
+# that are already out in the world keep working when a new version lands.
+DOWNLOAD_ALIASES = {
+    "Henry_Blair_CV_*.pdf": "Henry-Blair-CV.pdf",
+}
+
 # ---------------------------------------------------------------- hand-written pages
 PAGES = [
     {"key": "about",   "tab": "About Me",           "href": "/about/",   "file": "about/index.html"},
@@ -420,7 +428,7 @@ PROJECTS = [
             "status_detail": "Bachelor of Science with Honors, Neuroscience and Behavioral Biology. "
                              "Defended April 2023; archived in the Emory Theses and Dissertations repository.",
             "materials": [
-                {"label": "Read the thesis (PDF, 49 pp)", "url": "/earlier/files/2023-honors-thesis.pdf"},
+                {"label": "Read the thesis (PDF, 49 pp)", "url": "/downloads/2023-honors-thesis.pdf"},
                 {"label": "Emory ETD record", "url": "https://etd.library.emory.edu/concern/etds/ms35tb215"},
             ],
             "next": "The sex-stratified result argues for replication in a larger cohort with enough "
@@ -579,7 +587,7 @@ PROJECTS = [
             ],
             "status_detail": "Presented as a poster through the STAR program at New York Medical College, "
                              "2019, under Dr. Jana Velíšková.",
-            "materials": [{"label": "Poster (PDF)", "url": "/earlier/files/2019-tbi-stress-pte-poster.pdf"}],
+            "materials": [{"label": "Poster (PDF)", "url": "/downloads/2019-tbi-stress-pte-poster.pdf"}],
             "sidefoot": "Velíšková lab · New York Medical College<br>STAR program · 2019",
         },
     },
@@ -629,8 +637,8 @@ PROJECTS = [
                              "poster. My first study — run as a high-school student through the STAR "
                              "program at New York Medical College.",
             "materials": [
-                {"label": "Paper (PDF, 20 pp)", "url": "/earlier/files/2018-estrogen-novelty-paper.pdf"},
-                {"label": "Poster (PDF)", "url": "/earlier/files/2018-estrogen-novelty-poster.pdf"},
+                {"label": "Paper (PDF, 20 pp)", "url": "/downloads/2018-estrogen-novelty-paper.pdf"},
+                {"label": "Poster (PDF)", "url": "/downloads/2018-estrogen-novelty-poster.pdf"},
             ],
             "next": "Eight years later the same question — what estrogen does when it is taken away, and "
                     "what happens when it is given back — is the subject of the vaginal-estrogen study on "

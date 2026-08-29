@@ -3,4 +3,5 @@
 __pycache__/
 _source/
 _secrets/
+_downloadable/
 .trash/

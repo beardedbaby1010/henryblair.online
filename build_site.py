@@ -507,6 +507,55 @@ def build_auto_hub(p):
     note("-> projects/%s/index.html  (generated hub)" % p["slug"])
     return True
 
+# ------------------------------------------------------------------ downloads
+
+def build_downloads():
+    """Copy _downloadable/ into downloads/, and give versioned files a stable public name.
+
+    Drop a file in _downloadable/ and it is published. Files matching a pattern in
+    DOWNLOAD_ALIASES are additionally published under a fixed URL, so a link that has
+    been emailed or printed keeps working when a new version of the file lands: the
+    newest match wins, and the old version stops being served."""
+    src = os.path.join(ROOT, "_downloadable")
+    out = os.path.join(ROOT, "downloads")
+    if not os.path.isdir(src):
+        warn("no _downloadable/ folder — nothing to publish as a download"); return True
+    os.makedirs(out, exist_ok=True)
+
+    published = {}
+    for name in sorted(os.listdir(src)):
+        if name.startswith("."):
+            continue
+        s_path = os.path.join(src, name)
+        if not os.path.isfile(s_path):
+            continue
+        d_path = os.path.join(out, name)
+        published[name] = s_path
+        if not os.path.exists(d_path) or os.path.getsize(d_path) != os.path.getsize(s_path):
+            open(d_path, "wb").write(open(s_path, "rb").read())
+
+    import fnmatch
+    for pattern, alias in getattr(CFG, "DOWNLOAD_ALIASES", {}).items():
+        matches = [n for n in published if fnmatch.fnmatch(n, pattern)]
+        if not matches:
+            warn("no file in _downloadable/ matches %s (alias %s not published)" % (pattern, alias))
+            continue
+        newest = max(matches, key=lambda n: os.path.getmtime(published[n]))
+        if len(matches) > 1:
+            note("%s → %d matches, serving the newest: %s" % (pattern, len(matches), newest))
+        open(os.path.join(out, alias), "wb").write(open(published[newest], "rb").read())
+        note("%s  →  /downloads/%s" % (newest, alias))
+
+    # anything in downloads/ that no longer has a source is stale
+    for name in sorted(os.listdir(out)):
+        if name.startswith("."):
+            continue
+        if name not in published and name not in getattr(CFG, "DOWNLOAD_ALIASES", {}).values():
+            warn("downloads/%s has no source in _downloadable/ — delete it or restore the source" % name)
+
+    note("published %d file(s) to downloads/" % len(published))
+    return True
+
 # ------------------------------------------------------------------ landing page
 
 def esc(s):
@@ -581,6 +630,7 @@ if __name__ == "__main__":
         ok &= build_gate(p)
     for pg in CFG.PAGES:
         set_nav(os.path.join(ROOT, pg["file"]), pg["key"])
+    ok &= build_downloads()
     ok &= build_home()
     print("Done." if ok else "Done, with problems (see above).")
     sys.exit(0 if ok else 1)
