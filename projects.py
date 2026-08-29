@@ -224,14 +224,17 @@ EARLIER = [
         "title": "Traumatic stress at the moment of brain injury and the risk of post-traumatic epilepsy",
         "kicker": "STAR program · Department of Cell Biology & Anatomy, New York Medical College · with Dr. Jana Velíšková",
         "year": 2019,
-        "summary": "Traumatic brain injury can set off epileptogenesis, and severe stress at the time of "
-                   "injury is thought to worsen it — but the stress contribution had not been tested directly. "
-                   "Adult male rats were stressed by submersion before a weight-drop cortical contusion; "
-                   "controls swam freely before the same contusion. Open-field and elevated-plus-maze testing "
-                   "tracked locomotion and anxiety, and flurothyl seizure thresholds were measured at five and "
-                   "ten days. At five days the groups were indistinguishable; by ten days the stressed animals "
-                   "had a lower threshold for tonic-clonic seizures (p = 0.02) and seized longer — the "
-                   "interaction appearing inside the epileptogenic window rather than at the moment of injury.",
+        "summary": "Traumatic brain injury can set off epileptogenesis — the months or years of neuronal "
+                   "loss, mossy-fiber sprouting and shifting excitation that precede a first unprovoked "
+                   "seizure. Clinically, severe stress at the moment of injury is associated with worse "
+                   "outcomes, but preclinical work had studied stress and injury separately and never "
+                   "together. Adult male rats were submerged for 45 seconds before a controlled cortical "
+                   "impact; controls swam freely before the same impact. Open-field and elevated-plus-maze "
+                   "testing confirmed the stress manipulation, then flurothyl seizure thresholds were measured "
+                   "at five and ten days. At five days the groups were indistinguishable; by ten days the "
+                   "stressed animals had a lower threshold for tonic-clonic seizures (p = 0.02) and seized "
+                   "longer — the interaction emerging inside the epileptogenic window rather than at the "
+                   "moment of injury.",
         "thumb": "/earlier/thumbs/2019-tbi-stress-pte-poster.jpg",
         "links": [{"label": "Poster (PDF)", "url": "/earlier/files/2019-tbi-stress-pte-poster.pdf"}],
     },
@@ -240,15 +243,18 @@ EARLIER = [
         "title": "Estrogen and the dentate gyrus: response to spatial and environmental novelty",
         "kicker": "STAR program · New York Medical College · with Dr. Jana Velíšková",
         "year": 2018,
-        "summary": "Estrogen receptors are dense in the dentate gyrus, the structure behind pattern "
-                   "separation and spatial discrimination, and in vitro work in the lab had shown estradiol "
-                   "changing long-term potentiation there — but what that did to behavior was open. Eighteen "
+        "summary": "Roughly 200,000 oophorectomies are performed in the United States each year, each one "
+                   "producing surgical menopause and a sudden drop in estradiol; many of those women then take "
+                   "estrogen therapy partly for cognition. Estrogen receptors are dense in the dentate gyrus, "
+                   "the structure behind pattern separation, and in vitro work in the lab had shown estradiol "
+                   "altering long-term potentiation there — but the behavioral consequence was open. Eighteen "
                    "ovariectomized rats received β-estradiol (2 µg/day for four days) or oil, then met an "
                    "environmental change (a new arena) and a metric change (objects moved from 30 to 50 cm). "
                    "Estradiol-replaced animals explored significantly less after the environmental change "
                    "(p = 0.028), consistent with estradiol shaping dentate-mediated learning. Written up for "
                    "the Junior Science and Humanities Symposium and presented as a poster — my first study, "
-                   "run as a high-school student in the STAR program.",
+                   "run as a high-school student in the STAR program, and the first time I worked on what "
+                   "estrogen does after it is taken away.",
         "thumb": "/earlier/thumbs/2018-estrogen-novelty-poster.jpg",
         "links": [{"label": "Paper (PDF, 20 pp)", "url": "/earlier/files/2018-estrogen-novelty-paper.pdf"},
                   {"label": "Poster (PDF)", "url": "/earlier/files/2018-estrogen-novelty-poster.pdf"}],
