@@ -26,6 +26,7 @@ import projects as CFG
 SECRETS = os.path.join(ROOT, "_secrets", "passwords.json")
 GATECACHE = os.path.join(ROOT, "_secrets", ".gatecache.json")
 PBKDF2_ITERATIONS = 250_000
+MASTER_KEY_ID = "masterkey"
 
 def expand(p):
     """Resolve a path from projects.py.
@@ -210,22 +211,75 @@ def load_secrets():
         out = json.load(open(SECRETS))
     return out
 
-def encrypt(data: bytes, password: str):
-    """PBKDF2-SHA256 → 32-byte AES key + 32-byte MAC key. AES-256-CBC, then HMAC over iv|ct.
-    Uses only the standard library plus the openssl binary that ships with macOS."""
-    salt = os.urandom(16)
-    dk = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, PBKDF2_ITERATIONS, 64)
-    ek, mk = dk[:32], dk[32:]
-    iv = os.urandom(16)
-    r = subprocess.run(["openssl", "enc", "-aes-256-cbc", "-K", ek.hex(), "-iv", iv.hex()],
-                       input=data, capture_output=True)
+def _aes(key: bytes, iv: bytes, data: bytes, decrypt=False):
+    cmd = ["openssl", "enc", "-aes-256-cbc", "-K", key.hex(), "-iv", iv.hex()]
+    if decrypt: cmd.insert(2, "-d")
+    r = subprocess.run(cmd, input=data, capture_output=True)
     if r.returncode != 0:
         raise RuntimeError("openssl: " + r.stderr.decode()[:200])
-    ct = r.stdout
-    mac = hmac.new(mk, iv + ct, hashlib.sha256).digest()
-    b64 = lambda b: base64.b64encode(b).decode()
-    return {"v": 1, "kdf": "PBKDF2-SHA256", "it": PBKDF2_ITERATIONS, "cipher": "AES-256-CBC",
-            "salt": b64(salt), "iv": b64(iv), "mac": b64(mac), "ct": b64(ct)}
+    return r.stdout
+
+
+def read_file(path, what):
+    """Read a source file, saying something useful when it cannot be read.
+
+    A file stored in iCloud but not downloaded locally raises EDEADLK here rather
+    than a missing-file error, which is confusing the first time you meet it."""
+    try:
+        return open(path, "rb").read()
+    except OSError as e:
+        warn("could not read %s: %s" % (path, e))
+        warn("   if it lives in iCloud, open it once in Finder to download it, then re-run")
+        return None
+
+
+def passphrases_for(item_id, secrets):
+    """The keyslots for one protected item: its own passphrase, plus the master.
+
+    MASTER_KEY_ID is not itself a protected item — it is a passphrase that opens
+    everything. An item with only a master passphrase and none of its own is still
+    protected; an item with neither is not published at all."""
+    keys = []
+    own = secrets.get(item_id)
+    if own:
+        keys.append((item_id, own))
+    master = secrets.get(MASTER_KEY_ID)
+    if master and master != own:
+        keys.append((MASTER_KEY_ID, master))
+    return keys
+
+
+def encrypt(data: bytes, passwords):
+    """Encrypt once, unlock with any of several passphrases.
+
+    The file is encrypted under a random 64-byte content key (32 for AES, 32 for the
+    HMAC). That content key is then wrapped separately under each passphrase — the
+    same keyslot idea disk encryption uses. Adding a master passphrase therefore does
+    not weaken the per-item ones and does not mean encrypting the file twice; each
+    slot is an independent envelope around the same key.
+
+    `passwords` is a list of (label, passphrase). Order is irrelevant — the page tries
+    every slot and uses whichever one the entered passphrase opens."""
+    b64 = lambda x: base64.b64encode(x).decode()
+    ck = os.urandom(64)
+    ck_enc, ck_mac = ck[:32], ck[32:]
+    iv = os.urandom(16)
+    ct = _aes(ck_enc, iv, data)
+    mac = hmac.new(ck_mac, iv + ct, hashlib.sha256).digest()
+
+    slots = []
+    for label, pw in passwords:
+        salt = os.urandom(16)
+        dk = hashlib.pbkdf2_hmac("sha256", pw.encode(), salt, PBKDF2_ITERATIONS, 64)
+        kek, kmac = dk[:32], dk[32:]
+        wiv = os.urandom(16)
+        wct = _aes(kek, wiv, ck)
+        slots.append({"label": label, "salt": b64(salt), "iv": b64(wiv), "ct": b64(wct),
+                      "mac": b64(hmac.new(kmac, wiv + wct, hashlib.sha256).digest())})
+
+    return {"v": 2, "kdf": "PBKDF2-SHA256", "it": PBKDF2_ITERATIONS, "cipher": "AES-256-CBC",
+            "iv": b64(iv), "ct": b64(ct), "mac": b64(mac), "slots": slots}
+
 
 GATE_PAGE = """<!doctype html>
 <html lang="en">
@@ -298,6 +352,7 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
   var blob = JSON.parse(document.getElementById('payload').textContent);
   var f = document.getElementById('f'), msg = document.getElementById('msg'), go = document.getElementById('go');
   var b64 = function(s){ return Uint8Array.from(atob(s), function(c){ return c.charCodeAt(0); }); };
+  var cat = function(a,b){ var o=new Uint8Array(a.length+b.length); o.set(a); o.set(b,a.length); return o; };
 
   f.addEventListener('submit', function(e){
     e.preventDefault();
@@ -308,29 +363,48 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
       msg.textContent='This browser will only decrypt over https. Open the page at https://henryblair.online.';
       return;
     }
-    go.disabled = true; msg.className='msg'; msg.textContent='Deriving key…';
+    go.disabled = true; msg.className='msg'; msg.textContent='Checking…';
     setTimeout(function(){ unlock(pw); }, 20);
   });
 
-  function unlock(pw){
-    var enc = new TextEncoder();
-    crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits'])
+  // Try each keyslot in turn. A slot opens only if its HMAC verifies, so a wrong
+  // passphrase is rejected rather than producing garbage — and whichever slot the
+  // passphrase belongs to (its own, or the master) yields the same content key.
+  function openSlot(pw, i){
+    if(i >= blob.slots.length){ return Promise.reject(new Error('no slot')); }
+    var slot = blob.slots[i], enc = new TextEncoder();
+    return crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits'])
       .then(function(base){
         return crypto.subtle.deriveBits(
-          {name:'PBKDF2', salt:b64(blob.salt), iterations:blob.it, hash:'SHA-256'}, base, 512);
+          {name:'PBKDF2', salt:b64(slot.salt), iterations:blob.it, hash:'SHA-256'}, base, 512);
       })
       .then(function(bits){
-        var ek = new Uint8Array(bits, 0, 32), mk = new Uint8Array(bits, 32, 32);
-        var iv = b64(blob.iv), ct = b64(blob.ct), mac = b64(blob.mac);
-        var signed = new Uint8Array(iv.length + ct.length);
-        signed.set(iv); signed.set(ct, iv.length);
-        return crypto.subtle.importKey('raw', mk, {name:'HMAC', hash:'SHA-256'}, false, ['verify'])
-          .then(function(mkey){ return crypto.subtle.verify('HMAC', mkey, mac, signed); })
+        var kek = new Uint8Array(bits,0,32), kmac = new Uint8Array(bits,32,32);
+        var wiv = b64(slot.iv), wct = b64(slot.ct);
+        return crypto.subtle.importKey('raw', kmac, {name:'HMAC',hash:'SHA-256'}, false, ['verify'])
+          .then(function(k){ return crypto.subtle.verify('HMAC', k, b64(slot.mac), cat(wiv,wct)); })
           .then(function(ok){
-            if(!ok){ throw new Error('bad passphrase'); }
-            return crypto.subtle.importKey('raw', ek, {name:'AES-CBC'}, false, ['decrypt']);
+            if(!ok){ return openSlot(pw, i+1); }          // not this slot — try the next
+            return crypto.subtle.importKey('raw', kek, {name:'AES-CBC'}, false, ['decrypt'])
+              .then(function(k){ return crypto.subtle.decrypt({name:'AES-CBC', iv:wiv}, k, wct); })
+              .then(function(ck){ return new Uint8Array(ck); });
+          });
+      });
+  }
+
+  function unlock(pw){
+    openSlot(pw, 0)
+      .then(function(ck){
+        msg.textContent = 'Decrypting…';
+        var ckEnc = ck.slice(0,32), ckMac = ck.slice(32,64);
+        var iv = b64(blob.iv), ct = b64(blob.ct);
+        return crypto.subtle.importKey('raw', ckMac, {name:'HMAC',hash:'SHA-256'}, false, ['verify'])
+          .then(function(k){ return crypto.subtle.verify('HMAC', k, b64(blob.mac), cat(iv,ct)); })
+          .then(function(ok){
+            if(!ok){ throw new Error('content failed integrity check'); }
+            return crypto.subtle.importKey('raw', ckEnc, {name:'AES-CBC'}, false, ['decrypt']);
           })
-          .then(function(key){ return crypto.subtle.decrypt({name:'AES-CBC', iv:iv}, key, ct); });
+          .then(function(k){ return crypto.subtle.decrypt({name:'AES-CBC', iv:iv}, k, ct); });
       })
       .then(function(pt){
         var url = URL.createObjectURL(new Blob([pt], {type:'application/pdf'}));
@@ -351,15 +425,16 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
 </html>
 """
 
-def write_gate(out, title, subtitle, blurb, back_url, back_label, filename, data, password, cache_key):
+def write_gate(out, title, subtitle, blurb, back_url, back_label, filename, data, passwords, cache_key):
     """Encrypt `data` under `password` and write a passphrase page to `out`.
     Skips the work when neither the file nor the passphrase has changed."""
-    fingerprint = hashlib.sha256(data + password.encode() + str(PBKDF2_ITERATIONS).encode()).hexdigest()
+    keymat = "".join("%s:%s" % (l, pw) for l, pw in sorted(passwords))
+    fingerprint = hashlib.sha256(data + keymat.encode() + str(PBKDF2_ITERATIONS).encode()).hexdigest()
     cache = json.load(open(GATECACHE)) if os.path.exists(GATECACHE) else {}
     if cache.get(cache_key) == fingerprint and os.path.exists(out):
-        note("%s — gate unchanged" % cache_key)
+        note("%s — gate unchanged (%d passphrase%s)" % (cache_key, len(passwords), "" if len(passwords)==1 else "s"))
         return True
-    payload = encrypt(data, password)
+    payload = encrypt(data, passwords)
     html = GATE_PAGE % {
         "title": title, "subtitle": subtitle, "note": blurb,
         "back_url": back_url, "back_label": back_label,
@@ -372,7 +447,9 @@ def write_gate(out, title, subtitle, blurb, back_url, back_label, filename, data
     cache[cache_key] = fingerprint
     os.makedirs(os.path.dirname(GATECACHE), exist_ok=True)
     json.dump(cache, open(GATECACHE, "w"), indent=1)
-    note("-> %s  (%.1f MB encrypted)" % (os.path.relpath(out, ROOT), os.path.getsize(out) / 1e6))
+    note("-> %s  (%.1f MB encrypted, %d keyslot%s: %s)"
+         % (os.path.relpath(out, ROOT), os.path.getsize(out) / 1e6, len(passwords),
+            "" if len(passwords)==1 else "s", ", ".join(l for l, _ in passwords)))
     return True
 
 
@@ -387,11 +464,14 @@ def build_gate(p):
         warn("   fix the path in projects.py and re-run")
         return False
     secrets = load_secrets()
-    pw = secrets.get(slug)
-    if not pw:
-        warn("%s: no passphrase in _secrets/passwords.json — gate not built" % slug)
+    keys = passphrases_for(slug, secrets)
+    if not keys:
+        warn("%s: no passphrase in _secrets/passwords.txt — gate not built" % slug)
         return False
 
+    data = read_file(src, "manuscript")
+    if data is None:
+        return False
     return write_gate(
         out=os.path.join(ROOT, "projects", slug, "paper", "index.html"),
         title=esc(p["title"]),
@@ -399,7 +479,7 @@ def build_gate(p):
         blurb="",
         back_url="/projects/%s/" % slug, back_label="back to the project",
         filename=os.path.basename(src),
-        data=open(src, "rb").read(), password=pw, cache_key="project:" + slug)
+        data=data, passwords=keys, cache_key="project:" + slug)
 
 
 # ------------------------------------------------------------------ gated downloads
@@ -419,21 +499,31 @@ def build_download_gates(published):
         src = published.get(name)
         if not src:
             warn("DOWNLOAD_GATES lists %s but it is not in _downloadable/" % name); ok = False; continue
-        pw = secrets.get(name)
-        if not pw:
+        keys = passphrases_for(name, secrets)
+        if not keys:
             warn("no passphrase for %s in _secrets/passwords.txt — NOT published" % name); ok = False; continue
-        slug = re.sub(r"[^a-z0-9]+", "-", os.path.splitext(name)[0].lower()).strip("-")
+        data = read_file(src, "download")
+        if data is None:
+            ok = False; continue
+        slug = slugify(GATED_ALIASES.get(name, os.path.splitext(name)[0]))
         ok &= write_gate(
             out=os.path.join(ROOT, "downloads", slug, "index.html"),
             title=esc(meta.get("title", name)),
             subtitle=esc(meta.get("subtitle", "")),
             blurb=esc(meta.get("note", "")),
             back_url=meta.get("back_url", "/"), back_label=meta.get("back_label", "back to the portfolio"),
-            filename=name, data=open(src, "rb").read(), password=pw, cache_key="download:" + name)
+            filename=name, data=data, passwords=keys, cache_key="download:" + name)
     return ok
 
 
 # ------------------------------------------------------------------ downloads
+
+ALIAS_URLS = {}       # alias file name -> the URL that actually serves it
+GATED_ALIASES = {}    # gated source file -> stable alias stem to publish the gate under
+
+def slugify(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
 
 def build_downloads():
     """Copy _downloadable/ into downloads/, and give versioned files a stable public name.
@@ -463,18 +553,78 @@ def build_downloads():
 
     import fnmatch
     for pattern, alias in getattr(CFG, "DOWNLOAD_ALIASES", {}).items():
-        matches = [n for n in published if fnmatch.fnmatch(n, pattern) and n not in gates]
+        matches = [n for n in published if fnmatch.fnmatch(n, pattern)]
         if not matches:
-            warn("no ungated file in _downloadable/ matches %s (alias %s not published)" % (pattern, alias))
+            warn("nothing in _downloadable/ matches %s (alias %s not published)" % (pattern, alias))
             continue
         newest = max(matches, key=lambda n: os.path.getmtime(published[n]))
         if len(matches) > 1:
             note("%s → %d matches, serving the newest: %s" % (pattern, len(matches), newest))
-        open(os.path.join(out, alias), "wb").write(open(published[newest], "rb").read())
-        note("%s  →  /downloads/%s" % (newest, alias))
+        if newest in gates:
+            # gated: the stable URL is the passphrase page, not a file
+            ALIAS_URLS[alias] = "/downloads/%s/" % slugify(os.path.splitext(alias)[0])
+            GATED_ALIASES[newest] = os.path.splitext(alias)[0]
+            note("%s  →  %s  (passphrase required)" % (newest, ALIAS_URLS[alias]))
+        else:
+            open(os.path.join(out, alias), "wb").write(open(published[newest], "rb").read())
+            ALIAS_URLS[alias] = "/downloads/%s" % alias
+            note("%s  →  /downloads/%s" % (newest, alias))
 
     note("published %d file(s) to downloads/" % len([n for n in published if n not in gates]))
-    return build_download_gates(published)
+    ok = build_download_gates(published)
+    prune_downloads(published, gates)
+    fix_cv_link()
+    return ok
+
+
+def prune_downloads(published, gates):
+    """Remove anything in downloads/ that this build did not just publish.
+
+    This is the safety net that matters: when a file becomes gated, the copy
+    published earlier in the clear must stop being served. Leaving it would put an
+    unprotected URL right beside the passphrase page. Anything unexpected is
+    removed (or, if it cannot be deleted, moved out of the site and reported)."""
+    out = os.path.join(ROOT, "downloads")
+    expected = {n for n in published if n not in gates}
+    expected |= {os.path.basename(u.rstrip("/")) for u in ALIAS_URLS.values()}
+    expected |= {slugify(GATED_ALIASES.get(n, os.path.splitext(n)[0])) for n in gates if n in published}
+    for name in sorted(os.listdir(out)):
+        if name.startswith(".") or name in expected:
+            continue
+        path = os.path.join(out, name)
+        why = "now behind a passphrase" if name in gates else "no longer in _downloadable/"
+        try:
+            if os.path.isdir(path):
+                import shutil; shutil.rmtree(path)
+            else:
+                os.remove(path)
+            note("removed downloads/%s (%s)" % (name, why))
+        except OSError:
+            quarantine = os.path.join(ROOT, ".trash", "stale-downloads")
+            os.makedirs(quarantine, exist_ok=True)
+            os.rename(path, os.path.join(quarantine, name))
+            warn("downloads/%s (%s) could not be deleted — moved to .trash/stale-downloads/" % (name, why))
+
+
+def fix_cv_link():
+    """Keep the resume page's Download button pointing at wherever the CV really is.
+
+    Gating the CV moves it from /downloads/Henry-Blair-CV.pdf to a passphrase page,
+    and ungating it moves it back. The button follows automatically rather than
+    quietly 404-ing."""
+    url = ALIAS_URLS.get("Henry-Blair-CV.pdf")
+    if not url:
+        return
+    path = os.path.join(ROOT, "resume", "index.html")
+    html = open(path, encoding="utf-8").read()
+    new = re.sub(r'(<a class="btn" href=")[^"]*(")', lambda m: m.group(1) + url + m.group(2), html, count=1)
+    if url.endswith("/"):
+        new = new.replace('download="Henry-Blair-CV.pdf">Download PDF<', '>Download CV (passphrase)<')
+    else:
+        new = new.replace('>Download CV (passphrase)<', ' download="Henry-Blair-CV.pdf">Download PDF<')
+    if new != html:
+        open(path, "w", encoding="utf-8").write(new)
+        note("resume download button → %s" % url)
 
 
 # ------------------------------------------------------------------ generated hubs (from config)
@@ -510,6 +660,21 @@ AUTO_HUB = """<!doctype html>
 </body>
 </html>
 """
+
+def material_url(url, label):
+    """Point a materials link at the gate when its file is gated.
+
+    Lets projects.py keep naming the file — /downloads/poster.pdf — while the build
+    decides whether that resolves to the file or to its passphrase page, so gating
+    something later never leaves a dead link behind."""
+    gates = getattr(CFG, "DOWNLOAD_GATES", {})
+    if url.startswith("/downloads/"):
+        name = url[len("/downloads/"):]
+        if name in gates:
+            stem = GATED_ALIASES.get(name, os.path.splitext(name)[0])
+            return "/downloads/%s/" % slugify(stem), label + " — passphrase"
+    return url, label
+
 
 def auto_sections(p):
     h = p.get("hub", {})
@@ -568,7 +733,9 @@ def auto_sections(p):
 
     if h.get("materials"):
         body = '  <h2>Materials</h2>\n  <div class="dls">'
-        body += "".join('<a class="dl" href="%s">%s</a>' % (m["url"], esc(m["label"])) for m in h["materials"])
+        for m in h["materials"]:
+            u, lab = material_url(m["url"], m["label"])
+            body += '<a class="dl" href="%s">%s</a>' % (u, esc(lab))
         body += '</div>\n'
         sec("materials", "Materials", body)
 

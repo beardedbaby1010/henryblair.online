@@ -36,11 +36,16 @@ DOWNLOAD_ALIASES = {
 # site, so there is no unprotected URL. Give each one a passphrase in
 # _secrets/passwords.txt, keyed by the same file name.
 DOWNLOAD_GATES = {
-    # "2024-maude-msre-poster.pdf": {
-    #     "title": "MSRE poster — vessel-sealing device adverse events",
-    #     "subtitle": "Conference poster · SURS Focal Therapy 2024",
-    #     "back_url": "/projects/maude-sealing-devices/", "back_label": "back to the project",
-    # },
+    "2024-maude-msre-poster.pdf": {
+        "title": "Analysis of adverse events, robotic urological surgeries",
+        "subtitle": "Conference poster · Society of Urologic Robotic Surgeons Focal Therapy, 2024",
+        "back_url": "/projects/maude-sealing-devices/", "back_label": "back to the project",
+    },
+    "Henry_Blair_CV_2026_Aug.pdf": {
+        "title": "Curriculum vitae — Henry M. Blair",
+        "subtitle": "Updated August 2026",
+        "back_url": "/resume/", "back_label": "back to the resume",
+    },
 }
 
 # ---------------------------------------------------------------- hand-written pages
@@ -110,6 +115,8 @@ PROJECTS = [
                    "which needs an in-office ultrasound, at odds with the telemedicine pathway the same "
                    "guidelines endorse. We asked whether women can estimate their own PVR.",
         "tags": ["Overactive bladder", "Telemedicine", "Guidelines", "Access to care"],
+        "paper": {"pdf": "Maimo_Work/OAB Proj/PVR/Henry Edits V7 PVR Manuscript Family Practice.pdf",
+                  "label": "Manuscript V7", "note": "Submitted to Family Practice (OUP)."},
         "page": {"kind": "auto"},
         "hub": {
             "people": ["Henry M. Blair", "Colby Rondeau", "Allison Polland, MD"],
@@ -159,6 +166,8 @@ PROJECTS = [
                    "travel burden relate to access and disease severity — and whether ADI is even a valid "
                    "instrument in a dense, transit-rich city.",
         "tags": ["Overactive bladder", "Health equity", "Area Deprivation Index", "Urban health"],
+        "paper": {"pdf": "_source/manuscripts/ADI-and-Travel-Time-V3.pdf",
+                  "label": "Manuscript V3", "note": "With Colby Rondeau and Dr. Allison Polland."},
         "page": {"kind": "auto"},
         "hub": {
             "people": ["Henry M. Blair", "Allison Polland, MD"],
@@ -205,6 +214,8 @@ PROJECTS = [
                    "treatment goals and how much nighttime urination patients are willing to tolerate — "
                    "outcomes beyond the number.",
         "tags": ["Nocturia", "Patient-reported outcomes", "Trial design"],
+        "paper": {"pdf": "Maimo_Work/Oliver Menken/Henry - V3 - What Do Patients with Nocturia Want Treated_ Patient-Defined Goals and Tolerance Beyond Void Count.pdf",
+                  "label": "Manuscript V3", "note": "With Oliver Menken."},
         "page": {"kind": "auto"},
         "hub": {
             "people": ["Henry M. Blair", "Oliver Menken"],
