@@ -678,6 +678,52 @@ def material_url(url, label):
     return url, label
 
 
+def render_blocks(items, slug):
+    """Render an ordered list of content blocks inside a hub section.
+
+    Block kinds: h3, prose, bullets, callout, figure, table, stats. A section is
+    just a list of these, so a hub can be as thorough as its material allows
+    without needing its own hand-written page."""
+    out = []
+    for b in items:
+        if "h3" in b:
+            out.append('  <h3>%s</h3>' % b["h3"])
+        if "prose" in b:
+            for para in ([b["prose"]] if isinstance(b["prose"], str) else b["prose"]):
+                out.append('  <p>%s</p>' % para)
+        if "bullets" in b:
+            out.append('  <ul class="pitfalls">' +
+                       "".join('<li>%s</li>' % x for x in b["bullets"]) + '</ul>')
+        if "callout" in b:
+            out.append('  <div class="callout">%s</div>' % b["callout"])
+        if "stats" in b:
+            out.append('  <div class="statrow">' + "".join(
+                '<div class="stat"><div class="statv">%s</div><div class="statl">%s</div>'
+                '%s</div>' % (esc(v), esc(l), ('<div class="stats">%s</div>' % esc(sub)) if sub else "")
+                for v, l, sub in [(x[0], x[1], x[2] if len(x) > 2 else "") for x in b["stats"]]) + '</div>')
+        if "figure" in b:
+            f = b["figure"]
+            out.append('  <figure><img src="figures/%s" alt="%s">\n'
+                       '  <figcaption>%s</figcaption></figure>'
+                       % (f["src"], esc(f.get("alt", f.get("caption", "")))[:120], f.get("caption", "")))
+        if "table" in b:
+            t = b["table"]
+            head = "".join('<th>%s</th>' % h for h in t["head"])
+            rows = ""
+            for r in t["rows"]:
+                cls = ""
+                if isinstance(r, dict):
+                    cls, r = ' class="%s"' % r.get("cls", ""), r["cells"]
+                cells = "".join('<td%s>%s</td>' % (' class="n"' if i else "", c)
+                                for i, c in enumerate(r))
+                rows += "<tr%s>%s</tr>" % (cls, cells)
+            out.append('  <div class="tblwrap"><table><thead><tr>%s</tr></thead>'
+                       '<tbody>%s</tbody></table></div>' % (head, rows))
+            if t.get("note"):
+                out.append('  <p class="tblnote">%s</p>' % t["note"])
+    return "\n".join(out) + "\n"
+
+
 def auto_sections(p):
     h = p.get("hub", {})
     out, nav = [], []
@@ -704,6 +750,14 @@ def auto_sections(p):
               'are finished, the way the completed projects on this site are. What is below is the design '
               'and the current state, written up as it stands.</div>\n')
     sec("overview", "Overview", o)
+
+    for cs in h.get("sections", []):
+        body = '  <h2>%s%s</h2>\n' % (esc(cs["title"]),
+                                     (' <span class="snap">%s</span>' % esc(cs["tag"])) if cs.get("tag") else "")
+        if cs.get("intro"):
+            body += '  <p class="secintro">%s</p>\n' % cs["intro"]
+        body += render_blocks(cs.get("blocks", []), p["slug"])
+        sec(cs["id"], cs.get("nav", cs["title"]), body)
 
     if h.get("question"):
         sec("question", "The question", '  <h2>The question</h2>\n  <p>%s</p>\n' % h["question"])

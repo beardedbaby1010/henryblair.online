@@ -109,99 +109,368 @@ PROJECTS = [
     {
         "slug": "oab-pvr", "tab": "PVR Self-Estimation", "group": "current",
         "title": "Can women self-estimate their post-void residual?",
-        "kicker": "Prospective study · Maimonides Medical Center",
+        "kicker": "Cross-sectional study · Department of Urogynecology, Maimonides Medical Center",
         "status": "Submitted — Family Practice (Oxford University Press)",
         "summary": "AUA guidelines require a post-void residual measurement to diagnose overactive bladder — "
                    "which needs an in-office ultrasound, at odds with the telemedicine pathway the same "
-                   "guidelines endorse. We asked whether women can estimate their own PVR.",
-        "tags": ["Overactive bladder", "Telemedicine", "Guidelines", "Access to care"],
+                   "guidelines endorse. One hundred women estimated their own residual before it was measured.",
+        "stats": [("100", "women enrolled"), ("22%", "estimated within 30%"),
+                  ("95%", "had a normal residual"), ("0", "met retention criteria")],
+        "tags": ["Overactive bladder", "Telemedicine", "Guidelines", "Access to care", "Primary care"],
+        "page": {"kind": "auto"},
         "paper": {"pdf": "Maimo_Work/OAB Proj/PVR/Henry Edits V7 PVR Manuscript Family Practice.pdf",
                   "label": "Manuscript V7", "note": "Submitted to Family Practice (OUP)."},
-        "page": {"kind": "auto"},
         "hub": {
-            "people": ["Henry M. Blair", "Colby Rondeau", "Allison Polland, MD"],
-            "lede": "A guideline can contradict itself. AUA guidance endorses telemedicine as a way to "
-                    "evaluate overactive bladder, and separately requires a post-void residual measurement "
-                    "to make the diagnosis — which requires the office visit telemedicine was meant to "
-                    "avoid. This study asks whether the requirement can be met another way: can a woman "
-                    "estimate her own PVR?",
-            "question": "If in-office PVR measurement is what blocks telemedical evaluation of overactive "
-                        "bladder, can patients estimate their own residual accurately enough to substitute "
-                        "for it — and if not, is the requirement doing enough work to justify the barrier?",
-            "approach": [
-                "Women presenting with overactive-bladder symptoms estimated their post-void residual "
-                "before it was measured by bladder scan, following earlier work in which patients estimated "
-                "<b>voided</b> volumes accurately.",
-                "Agreement between estimated and measured PVR was assessed against the thresholds that "
-                "actually matter clinically — incomplete emptying and frank retention — rather than by "
-                "correlation alone.",
-                "The prevalence of incomplete emptying and retention in this population was measured "
-                "directly, since the value of a screening requirement depends on how often it finds "
-                "anything.",
+            "people": ["Colby Rondeau", "Henry M. Blair", "Sumyia Razzak", "Sarah Chaudhary",
+                       "Trashana Smith", "Michael Silver", "Allison Polland, MD"],
+            "lede": "A guideline can contradict itself. AUA and SUFU guidance endorses telemedicine for the "
+                    "initial evaluation of overactive bladder, and separately requires a post-void residual "
+                    "measurement to exclude retention — which requires the in-office bladder ultrasound that "
+                    "telemedicine was meant to avoid, and that most primary-care offices do not own. The "
+                    "practical question for a family physician is not whether PVR <i>can</i> be measured, but "
+                    "whether it <i>must</i> be, before treatment can safely begin.",
+            "status_detail": "Submitted to <i>Family Practice</i> (Oxford University Press). Approved by the "
+                             "Maimonides Medical Center IRB. I am corresponding author.",
+            "sections": [
+                {
+                    "id": "design", "title": "How the study was built", "nav": "How it was built",
+                    "intro": "Single-centre cross-sectional study at a urogynecology practice in Brooklyn — "
+                             "a dense urban setting — designed so that a negative result would still answer "
+                             "the clinical question.",
+                    "blocks": [
+                        {"h3": "Who was included"},
+                        {"prose": "English-speaking women aged 18–85 presenting with bladder complaints — "
+                                  "urgency, frequency, sensation of incomplete emptying, hesitancy or "
+                                  "incontinence. Women over 85 were excluded to preserve deidentification "
+                                  "given how few there were."},
+                        {"h3": "Who was excluded, and why it matters"},
+                        {"prose": "Anyone with a documented history of catheterization or incomplete "
+                                  "emptying. That exclusion is the study's most consequential design "
+                                  "decision and its main limitation: it removes precisely the women most "
+                                  "likely to have an elevated residual, which is why the retention rate here "
+                                  "is not a population baseline."},
+                        {"h3": "How the estimate was elicited"},
+                        {"prose": "Participants were told that normal bladder capacity is 300–500 mL and a "
+                                  "normal residual under 50–100 mL, then shown pre-filled reference balloons "
+                                  "at 5, 10, 100 and 200 mL — anchoring the estimate to something physical "
+                                  "rather than a number in the abstract. Immediately after voiding they gave "
+                                  "an estimate, and ultrasound measurement followed."},
+                        {"h3": "What counted as accurate"},
+                        {"prose": "Pre-specified as within 30% of the measured value — equivalently, an "
+                                  "estimated-to-measured ratio between 0.7 and 1.3 — following Drangsholt et "
+                                  "al., in which women estimated <i>voided</i> volumes to that margin. "
+                                  "Analysis was by Mann-Whitney U for predictors of accuracy and linear "
+                                  "regression of estimated against measured volume."},
+                        {"table": {
+                            "head": ["Category", "Post-void residual (mL)"],
+                            "rows": [["Normal", "&lt; 100"], ["Acceptably elevated", "100 – &lt;200"],
+                                     ["Incomplete emptying", "200 – &lt;300"], ["Retention", "≥ 300"]],
+                            "note": "<b>Table 1.</b> Retention-risk categories, modified from Ballstaedt et al. "
+                                    "The original ≥300 mL and ≥400 mL tiers were combined to align with the AUA "
+                                    "threshold for chronic urinary retention."}},
+                    ],
+                },
+                {
+                    "id": "cohort", "title": "Who took part", "nav": "Who took part", "tag": "Table 2",
+                    "blocks": [
+                        {"prose": "One hundred women, median age 68 (IQR 55–76), median inter-void interval "
+                                  "2 hours. Measured residuals ranged from 1 to 241 mL."},
+                        {"table": {
+                            "head": ["Characteristic", "Value"],
+                            "rows": [["Age, years — median (IQR)", "68 (55.3–76.0)"],
+                                     ["Inter-void interval, hours — median (IQR)", "2 (1–3)"],
+                                     ["Caffeinated drinks, cups — median (IQR)", "1.0 (0.6–2.0)"],
+                                     ["Non-caffeinated drinks, cups — median (IQR)", "5.0 (3.1–7.0)"],
+                                     ["Presenting: urinary frequency", "82%"],
+                                     ["Presenting: urinary incontinence", "66%"],
+                                     ["Presenting: sensation of incomplete emptying", "33%"],
+                                     ["Presenting: hesitancy", "21%"],
+                                     ["Urgency without incontinence", "62%"],
+                                     ["Nocturia", "60%"],
+                                     ["Urgency incontinence", "51%"],
+                                     ["Stress incontinence", "47%"],
+                                     ["Anxiety", "20%"], ["Type 2 diabetes", "18%"],
+                                     ["Depression", "16%"], ["Diuretic use", "5%"],
+                                     ["Prior pelvic radiation", "2%"]],
+                            "note": "<b>Table 2.</b> Symptoms and comorbidities were yes/no survey items; "
+                                    "continuous variables are medians with interquartile range."}},
+                    ],
+                },
+                {
+                    "id": "results", "title": "What the measurements showed", "nav": "What it shows",
+                    "tag": "Table 3 · Figures 1–3",
+                    "blocks": [
+                        {"stats": [("95%", "normal residual (<100 mL)", "4% acceptably elevated"),
+                                   ("1%", "incomplete emptying", "a single participant"),
+                                   ("0%", "met retention criteria", "none reached 300 mL"),
+                                   ("29.5 mL", "mean measured residual", "vs 43.0 mL estimated")]},
+                        {"h3": "The estimates were not accurate"},
+                        {"prose": "Twenty-two per cent of women estimated within 30% of their measured "
+                                  "value. Estimated and measured volumes were significantly but weakly "
+                                  "correlated (slope 0.21, 95% CI 0.06–0.36; p = 0.006), with R² = 0.076 — "
+                                  "the self-estimate explains about 8% of the variance, which is a real "
+                                  "association and a useless one for any individual patient."},
+                        {"figure": {"src": "fig1.jpg",
+                                    "caption": "<b>Figure 1.</b> Measured versus estimated post-void residual, "
+                                               "stratified by retention category."}},
+                        {"h3": "Category accuracy is a mirage"},
+                        {"prose": "Eighty-five per cent of women named the correct residual category — but "
+                                  "almost entirely because nearly everyone was normal and nearly everyone "
+                                  "guessed normal. Among the 15 who estimated an elevation, only 3 had any "
+                                  "elevation at all. Self-identification of an abnormal residual has poor "
+                                  "positive predictive value."},
+                        {"table": {
+                            "head": ["Estimated category", "Normal", "Acceptably elevated",
+                                     "Incomplete emptying", "Retention", "Total", "Correctly classified"],
+                            "rows": [["Normal", "83", "1", "1", "0", "85", "97.6%"],
+                                     ["Acceptably elevated", "10", "2", "0", "0", "12", "16.7%"],
+                                     ["Incomplete emptying", "2", "1", "0", "0", "3", "0%"],
+                                     ["Retention", "0", "0", "0", "0", "0", "—"],
+                                     {"cls": "up", "cells": ["Measured total", "95", "4", "1", "0", "100", "85.0%"]}],
+                            "note": "<b>Table 3, Panel B.</b> Rows are what participants estimated; columns are "
+                                    "what was measured. Correctly classified is the diagonal divided by the "
+                                    "row total — the proportion of women choosing a category who were right."}},
+                        {"figure": {"src": "fig2.jpg",
+                                    "caption": "<b>Figure 2.</b> Distribution of estimated and measured "
+                                               "post-void residual volumes."}},
+                        {"h3": "Nothing predicted who would estimate well"},
+                        {"prose": "Mann-Whitney U tests across every urinary symptom and comorbidity — "
+                                  "frequency, incomplete emptying, hesitancy, incontinence, urgency, "
+                                  "nocturia, anxiety, depression, diabetes, diuretic use, prior pelvic "
+                                  "radiation — found no significant association with estimation accuracy "
+                                  "(all p &gt; 0.12). There is no subgroup in whom self-estimation can be "
+                                  "trusted more."},
+                        {"figure": {"src": "fig3.jpg",
+                                    "caption": "<b>Figure 3.</b> Estimation accuracy across urinary symptoms "
+                                               "and comorbidities."}},
+                    ],
+                },
+                {
+                    "id": "argument", "title": "The argument the paper actually makes", "nav": "The argument",
+                    "blocks": [
+                        {"callout": "<b>The headline hypothesis failed, and the clinically useful finding "
+                                    "came from the denominator.</b> Women cannot estimate their own residual "
+                                    "— so self-estimation is not a substitute for measurement. But almost "
+                                    "none of them needed the measurement: 95% normal, one woman with "
+                                    "incomplete emptying, nobody in retention."},
+                        {"prose": "That reframes the requirement. If the point of measuring PVR before "
+                                  "treating overactive bladder is to catch retention, and retention is "
+                                  "essentially absent in women presenting with OAB symptoms and no history "
+                                  "of incomplete emptying, then the requirement is buying very little at the "
+                                  "cost of an in-office visit — a visit that, for some women, is the reason "
+                                  "care does not happen at all."},
+                        {"prose": "The paper therefore argues for deferral rather than substitution: in "
+                                  "low-risk women, treatment can reasonably begin in primary care or by "
+                                  "telemedicine, with measurement reserved for those whose history warrants "
+                                  "it. Reassurance comes from the low baseline risk, not from the patient's "
+                                  "guess."},
+                    ],
+                },
+                {
+                    "id": "limitations", "title": "Limitations", "nav": "Limitations",
+                    "blocks": [
+                        {"bullets": [
+                            "<b>The excluded women are the ones at risk.</b> Excluding prior catheterization "
+                            "or documented incomplete emptying enriched the cohort toward low residuals by "
+                            "design. The 1% and 0% figures describe women presenting with OAB symptoms "
+                            "without that history — not population baselines.",
+                            "<b>Ultrasound, not catheterization.</b> Straight catheterization is the "
+                            "reference standard; bladder ultrasound was used as non-invasive and previously "
+                            "shown not to differ significantly.",
+                            "<b>One measurement, one moment.</b> Residual volume varies between voids and "
+                            "over time; a cross-sectional design cannot capture that.",
+                            "<b>Anchoring may have inflated estimates.</b> Reference balloons and stated "
+                            "normal ranges were given to make estimates meaningful, and may have pushed "
+                            "symptomatic women toward guessing high.",
+                            "<b>Concurrent OAB medication was not recorded</b>, and it changes emptying "
+                            "independently of underlying function.",
+                            "<b>Women only.</b> A prostate creates an obstruction risk with no analogue "
+                            "here, so none of this transfers to men.",
+                        ]},
+                    ],
+                },
             ],
-            "findings": [
-                "Women could <b>not</b> reliably estimate their own PVR — self-estimation is not a "
-                "substitute for measurement.",
-                "But incomplete emptying was rare and no woman met criteria for retention.",
-                "So the argument the paper makes is not that patients can self-measure; it is that the "
-                "requirement can be safely deferred for low-risk women with OAB symptoms and no retention "
-                "history — which reopens the telemedicine pathway the guidelines already endorse.",
-            ],
-            "findings_note": "<b>A negative result doing useful work.</b> The headline finding failed; the "
-                             "clinically relevant one came from the denominator. Both are reported.",
-            "status_detail": "Submitted to <i>Family Practice</i> (Oxford University Press).",
-            "next": "If the deferral argument holds, the natural follow-on is a telemedicine pathway with "
-                    "an explicit low-risk rule, tested prospectively against in-office evaluation.",
-            "sidefoot": "Henry M. Blair · Colby Rondeau · Dr. Allison Polland<br>Department of Urology, Maimonides Medical Center",
-            "in_progress": True,
+            "next": "A longitudinal design correlating symptoms with both measured and estimated residual "
+                    "over time, and a low-risk rule tested prospectively against in-office evaluation — the "
+                    "study that would turn a deferral argument into a pathway.",
+            "sidefoot": "Colby Rondeau · Henry M. Blair · Dr. Allison Polland<br>Department of Urogynecology, "
+                        "Maimonides Medical Center<br>Brooklyn, NY · 2024–2025",
         },
     },
 
     {
         "slug": "oab-adi", "tab": "Deprivation & Access", "group": "current",
         "title": "Does neighborhood deprivation predict urogynecologic access in Brooklyn?",
-        "kicker": "Retrospective cohort · Maimonides Medical Center",
+        "kicker": "Cross-sectional study · Maimonides Medical Center · Nov 2024 – Aug 2025",
         "status": "Manuscript V3",
-        "summary": "A companion overactive-bladder study testing whether the Area Deprivation Index and "
-                   "travel burden relate to access and disease severity — and whether ADI is even a valid "
-                   "instrument in a dense, transit-rich city.",
-        "tags": ["Overactive bladder", "Health equity", "Area Deprivation Index", "Urban health"],
+        "summary": "The Area Deprivation Index stands in for a patient's material circumstances across "
+                   "American health services research. It was built where distance means a car. Brooklyn is "
+                   "not that place — so does it measure what it claims to measure here?",
+        "stats": [("120", "women enrolled"), ("30 vs 30 min", "travel time, disadvantaged vs advantaged"),
+                  ("$5.00 vs $2.95", "travel cost"), ("91.5% vs 77.2%", "urge frequency (p = 0.033)")],
+        "tags": ["Overactive bladder", "Health equity", "Area Deprivation Index", "Urban health", "Telehealth"],
+        "page": {"kind": "auto"},
         "paper": {"pdf": "_source/manuscripts/ADI-and-Travel-Time-V3.pdf",
                   "label": "Manuscript V3", "note": "With Colby Rondeau and Dr. Allison Polland."},
-        "page": {"kind": "auto"},
         "hub": {
-            "people": ["Henry M. Blair", "Allison Polland, MD"],
-            "lede": "The Area Deprivation Index is used across American health services research as a "
-                    "stand-in for a patient's material circumstances. It was built on neighborhoods where "
-                    "distance means a car. Brooklyn is not that place — and if the index's mechanism is "
-                    "travel burden, it may not measure what it claims to measure here.",
-            "question": "Do neighborhood deprivation and travel burden predict access to urogynecologic "
-                        "care and severity at presentation in Brooklyn — and is ADI a valid instrument in "
-                        "a dense city with robust public transit?",
-            "approach": [
-                "Patients seen for overactive bladder were linked to their neighborhood ADI and to "
-                "estimates of travel time and travel cost to the clinic.",
-                "Two questions were asked separately: whether deprivation tracks access and severity, and "
-                "whether ADI behaves as a valid instrument in this setting at all.",
-                "Symptom severity at presentation and follow-up attendance were the outcomes, rather than "
-                "a single composite of 'access'.",
+            "people": ["Colby Rondeau", "Luke Jenusaitis", "Elizabeth DeSellier", "Rebecca Bergmann",
+                       "Peace Deh", "Michael Silver", "Henry M. Blair", "Allison Polland, MD"],
+            "lede": "Deprivation indices are used as a proxy for the barriers a patient faces, and the "
+                    "barrier they most directly encode is travel: in most of the country, a poorer "
+                    "neighborhood means a longer, costlier trip to specialty care. New York has a subway. "
+                    "This study asks whether the index still tracks access where the transit system does "
+                    "not care how wealthy your block is.",
+            "status_detail": "Manuscript V3. Single-centre cross-sectional study, IRB approved, enrolling "
+                             "November 2024 – August 2025. I am co-corresponding author.",
+            "sections": [
+                {
+                    "id": "design", "title": "How the study was built", "nav": "How it was built",
+                    "intro": "A survey study designed so that the null result would still say something — "
+                             "by measuring travel burden directly rather than inferring it from the index.",
+                    "blocks": [
+                        {"h3": "Who was included"},
+                        {"prose": "English-speaking women aged 18–85 presenting for evaluation of overactive "
+                                  "bladder — urgency, frequency, perceived incomplete emptying, hesitancy or "
+                                  "incontinence. Women with known incomplete emptying, prior catheterization "
+                                  "or a current catheter were excluded, as were women over 85, to preserve "
+                                  "deidentification. Of 144 approached, 120 met criteria."},
+                        {"h3": "How deprivation was measured"},
+                        {"prose": "Participants located their home on the Neighborhood Atlas — the "
+                                  "University of Wisconsin's Area Deprivation Index map — and the ADI value "
+                                  "for that block group was recorded, from 1 (least deprived) to 10 (most). "
+                                  "Because the distribution in this population was so compressed, scores "
+                                  "were dichotomized at advantaged (ADI ≤ 2) versus disadvantaged (ADI ≥ 3), "
+                                  "following Gill et al. in a population with similarly limited variation."},
+                        {"h3": "What was measured instead of assumed"},
+                        {"prose": "Travel time, travel cost, mode of transport (public versus private) and "
+                                  "whether the patient was accompanied — asked directly, rather than modelled "
+                                  "from address. Symptom severity was captured by presenting complaint and by "
+                                  "self-reported inter-void interval as a proxy."},
+                        {"h3": "Powering and analysis"},
+                        {"prose": "Sixty participants per group gives 80% power at α = 0.05 for an effect "
+                                  "size of 0.65 on a two-sided Wilcoxon-Mann-Whitney test — that is, a 65% "
+                                  "probability that a random observation from one group exceeds one from the "
+                                  "other. Continuous variables were compared with Wilcoxon rank-sum and "
+                                  "reported as medians with IQR; categorical variables with chi-square, or "
+                                  "Fisher's exact where expected counts fell below five. Comparisons beyond "
+                                  "the pre-specified travel-time and travel-cost outcomes were exploratory "
+                                  "and not adjusted for multiple testing."},
+                        {"callout": "<b>Why the powering matters for reading this study.</b> The design was "
+                                    "sized to detect a moderate difference. It did not find one — which is a "
+                                    "more informative null than an underpowered study failing to reject."},
+                    ],
+                },
+                {
+                    "id": "travel", "title": "Travel burden did not differ", "nav": "Travel burden",
+                    "tag": "Table 2 · Figure 1",
+                    "blocks": [
+                        {"stats": [("30 vs 30 min", "median travel time", "IQR 23.5–45 vs 15–40; p = 0.085"),
+                                   ("$5.00 vs $2.95", "median travel cost", "IQR 0.88–11.50 vs 0–7.00; p = 0.062"),
+                                   ("31.7% vs 20%", "public transport use", "p = 0.144"),
+                                   ("23.3% vs 31.7%", "accompanied to the visit", "p = 0.307")]},
+                        {"prose": "Neither primary outcome differed significantly. Both showed a trend in the "
+                                  "expected direction — disadvantaged women travelling somewhat longer and "
+                                  "paying somewhat more — and both distributions overlapped substantially, "
+                                  "with only modest upward shifts."},
+                        {"figure": {"src": "fig1.jpg",
+                                    "caption": "<b>Figure 1.</b> Distributions of travel time and travel cost "
+                                               "by ADI group. The overlap is the finding."}},
+                        {"callout": "<b>A trend worth naming honestly.</b> p = 0.062 on cost is not "
+                                    "significance, and the paper does not claim it. But a recurring $2 "
+                                    "difference each way, across a treatment course requiring repeated "
+                                    "visits, can matter to a patient even when it does not reach α = 0.05."},
+                        {"figure": {"src": "fig2.jpg",
+                                    "caption": "<b>Figure 2.</b> Transport mode and visit accompaniment by "
+                                               "ADI group."}},
+                    ],
+                },
+                {
+                    "id": "symptoms", "title": "One difference did appear", "nav": "Symptoms",
+                    "tag": "Table 1",
+                    "blocks": [
+                        {"prose": "Disadvantaged women endorsed <b>urinary urge frequency</b> as a presenting "
+                                  "complaint far more often — 91.5% versus 77.2% (p = 0.033). No other "
+                                  "presenting complaint or comorbidity differed."},
+                        {"table": {
+                            "head": ["Measure", "Disadvantaged", "Advantaged", "p"],
+                            "rows": [{"cls": "up", "cells": ["Urinary urge frequency", "91.5%", "77.2%", "0.033"]},
+                                     ["Urinary frequency (without urge)", "76.7%", "75.0%", "0.831"],
+                                     ["Inter-void interval, hours (median)", "2 (1–3)", "2 (1–3)", "0.753"],
+                                     ["Median age, years", "61.5", "68.5", "0.331"],
+                                     ["Travel time, minutes (median)", "30", "30", "0.085"],
+                                     ["Travel cost, dollars (median)", "5.00", "2.95", "0.062"],
+                                     ["Public transportation", "31.7%", "20.0%", "0.144"],
+                                     ["Accompanied to visit", "23.3%", "31.7%", "0.307"]],
+                            "note": "<b>Table 1–2, selected rows.</b> Wilcoxon rank-sum for continuous "
+                                    "variables, chi-square or Fisher's exact for categorical."}},
+                        {"prose": "The distinction between the two frequency items is the interesting part: "
+                                  "plain frequency was identical between groups, while <i>urge</i> frequency "
+                                  "— the more bothersome symptom — was not. That points at a difference in "
+                                  "burden or in delay before presenting, rather than a difference in how far "
+                                  "anyone had to travel."},
+                        {"h3": "Everything else was null"},
+                        {"prose": "Exploratory comparisons across the remaining survey items — leaking with "
+                                  "urgency, leaking with Valsalva, urgency-related rushing, nocturia, "
+                                  "prolapse symptoms, estimated and measured post-void residual, caffeine and "
+                                  "non-caffeine intake, and telehealth experience and willingness — showed no "
+                                  "significant differences by ADI group."},
+                    ],
+                },
+                {
+                    "id": "reading", "title": "How to read a null result", "nav": "Reading the null",
+                    "blocks": [
+                        {"callout": "<b>Two explanations fit the data, and they have opposite implications.</b> "
+                                    "Either transit genuinely equalizes travel burden in New York, or the "
+                                    "index failed to identify who is disadvantaged here."},
+                        {"h3": "The transit explanation"},
+                        {"prose": "A subway system that costs the same from every neighborhood removes the "
+                                  "mechanism through which deprivation usually produces travel burden. If "
+                                  "that is what happened, the finding is encouraging: dense transit narrows "
+                                  "one specialty-care disparity, and attention should move to the barriers "
+                                  "it does not touch."},
+                        {"h3": "The instrument explanation"},
+                        {"prose": "ADI weights home value heavily. In a city where a modest apartment costs "
+                                  "what a comfortable house costs elsewhere, that weighting compresses and "
+                                  "left-skews the deprivation distribution — which is exactly why scores had "
+                                  "to be dichotomized at 2 rather than at the conventional midpoint. On this "
+                                  "reading the null says the index is mis-calibrated for dense urban housing "
+                                  "markets, and studies using it here may be measuring housing cost rather "
+                                  "than deprivation."},
+                        {"prose": "The urge-frequency difference slightly favours the second reading: the "
+                                  "groups <i>did</i> differ in something clinically real, so the "
+                                  "dichotomization was not pure noise — it simply did not track travel."},
+                        {"h3": "Either way, telehealth looks acceptable"},
+                        {"prose": "Willingness to use video visits was high in both groups (71.4% and 67.3%), "
+                                  "which makes remote care a plausible way to reduce travel burden regardless "
+                                  "of which explanation holds."},
+                    ],
+                },
+                {
+                    "id": "limitations", "title": "Limitations", "nav": "Limitations",
+                    "blocks": [
+                        {"bullets": [
+                            "<b>Single centre, one city.</b> Findings describe a Brooklyn urogynecology "
+                            "clinic; the transit explanation is by construction not generalizable to "
+                            "car-dependent settings.",
+                            "<b>Compressed ADI distribution.</b> Dichotomizing at ADI 2 was forced by the "
+                            "population's homogeneity and departs from conventional cut-points, which limits "
+                            "comparison with other ADI literature.",
+                            "<b>Self-reported travel.</b> Time and cost came from patients rather than from "
+                            "routing data, and are subject to recall.",
+                            "<b>Exploratory comparisons were not corrected</b> for multiple testing, so the "
+                            "urge-frequency difference should be treated as hypothesis-generating.",
+                            "<b>Everyone surveyed had already arrived.</b> The women who could not make the "
+                            "trip at all are, by construction, absent from a clinic-based sample — the "
+                            "hardest limitation for any access study to escape.",
+                        ]},
+                    ],
+                },
             ],
-            "findings": [
-                "ADI did not track access or severity in this population — the expected gradient was "
-                "largely absent.",
-                "Travel cost and travel time, measured directly, were associated with poorer follow-up and "
-                "with more severe presentation.",
-                "Disadvantaged women were more likely to report urge urinary frequency.",
-            ],
-            "findings_note": "<b>The methodological point.</b> Where transit blunts distance, a deprivation "
-                             "index built on car-dependent geography can go quiet while the underlying "
-                             "barrier is still there and still measurable — a caution about importing "
-                             "these indices into urban populations unexamined.",
-            "status_detail": "Manuscript V3.",
-            "next": "Replication in other transit-dense cities would establish whether this is a Brooklyn "
-                    "finding or a property of urban geography generally.",
-            "sidefoot": "Henry M. Blair · Dr. Allison Polland<br>Department of Urology, Maimonides Medical Center",
-            "in_progress": True,
+            "next": "A larger multisite study across cities with different transit density would separate "
+                    "the two explanations directly: if the null persists where transit is strong and "
+                    "disappears where it is not, the mechanism is transit rather than the instrument.",
+            "sidefoot": "Colby Rondeau · Henry M. Blair · Dr. Allison Polland<br>Maimonides Medical Center · "
+                        "SUNY Downstate<br>Brooklyn, NY · 2024–2025",
         },
     },
 
