@@ -8,7 +8,7 @@
   overflow:hidden;text-overflow:ellipsis}
 .hubbar .ht span{font-weight:400;color:var(--mut)}
 
-.hubside{position:fixed;top:calc(var(--sitebar) + var(--hubtop));left:0;bottom:0;width:var(--hubside);
+.hubside{position:fixed;top:max(calc(var(--sitebar) + var(--hubtop)),calc(var(--badge) + 14px));left:0;bottom:0;width:var(--hubside);
   overflow-y:auto;padding:14px 10px;background:#fbfbfa;border-right:1px solid var(--line)}
 .hubside a{display:block;color:var(--ink2);padding:8px 13px;font-size:13.5px;font-weight:600;
   text-decoration:none;border-left:3px solid transparent}

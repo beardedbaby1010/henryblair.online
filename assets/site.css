@@ -2,7 +2,7 @@
    (project pages carry their own CSS; build_site.py only injects the tab bar) */
 :root{
   --ink:#111; --ink2:#33383c; --mut:#6b6f73; --line:#d9dbdd; --bg:#f4f4f2;
-  --surf:#fff; --accent:#1c4f7c; --sitebar:34px; --badge:76px;
+  --surf:#fff; --accent:#1c4f7c; --sitebar:34px; --badge:114px;
   --sans:ui-sans-serif,-apple-system,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
 }
@@ -15,7 +15,7 @@ body{margin:0;padding-top:var(--sitebar);background:var(--bg);color:var(--ink);
 .sb-badge{position:fixed;top:0;left:0;width:var(--badge);height:var(--badge);z-index:120;
   background:#111;display:flex;align-items:center;justify-content:center;
   border-right:1px solid #333;border-bottom:1px solid #333;text-decoration:none}
-.sb-badge img{width:calc(var(--badge) - 18px);height:calc(var(--badge) - 18px);border-radius:50%;
+.sb-badge img{width:76%;height:76%;border-radius:50%;
   display:block;transition:transform .15s ease,box-shadow .15s ease}
 .sb-badge:hover img{transform:scale(1.05);box-shadow:0 0 0 2px var(--bg)}
 .sb-badge:focus-visible img{outline:2px solid #fff;outline-offset:2px}
@@ -128,7 +128,6 @@ footer a{color:var(--ink)}
 
 @media(max-width:640px){
   :root{--badge:52px}
-  .sb-badge img{width:40px;height:40px}
 }
 
 /* ---------- resume ---------- */
