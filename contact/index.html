@@ -56,17 +56,7 @@
     </div>
   </div>
 
-  <div class="ch">
-    <a href="https://www.linkedin.com/in/henry-blair-102773203/" target="_blank" rel="noopener" aria-label="LinkedIn"><img class="ic" src="/assets/icons/linkedin.png" alt="" width="40" height="40"></a>
-    <div class="k">LinkedIn</div>
-    <div class="v"><a href="https://www.linkedin.com/in/henry-blair-102773203/" target="_blank" rel="noopener">linkedin.com/in/henry-blair</a></div>
-  </div>
 
-  <div class="ch">
-    <a href="https://orcid.org/0000-0002-4270-1556" target="_blank" rel="noopener" aria-label="ORCID"><img class="ic" src="/assets/icons/orcid.png" alt="" width="40" height="40"></a>
-    <div class="k">ORCID</div>
-    <div class="v"><a href="https://orcid.org/0000-0002-4270-1556" target="_blank" rel="noopener">0000-0002-4270-1556</a></div>
-  </div>
 
   <div class="ch">
     <img class="ic" src="/assets/icons/phone.png" alt="" width="40" height="40">
@@ -77,11 +67,6 @@
     </div>
   </div>
 
-  <div class="ch">
-    <a href="https://www.instagram.com/henryblair/" target="_blank" rel="noopener" aria-label="Instagram"><img class="ic" src="/assets/icons/instagram.png" alt="" width="40" height="40"></a>
-    <div class="k">Instagram</div>
-    <div class="v"><a href="https://www.instagram.com/henryblair/" target="_blank" rel="noopener">@henryblair</a></div>
-  </div>
 
   <div class="ch">
     <img class="ic" src="/assets/icons/education.png" alt="" width="40" height="40">
@@ -98,6 +83,19 @@
     </div>
   </div>
 
+</div>
+
+<div class="social">
+  <a class="soc ob-link" data-u="henry.blair" data-d="downstate.edu" aria-label="Email">
+    <img src="/assets/icons/email.png" alt="Email" width="54" height="54"></a>
+  <a class="soc tel-link" data-a="914" data-b="708" data-c="9909" aria-label="Phone">
+    <img src="/assets/icons/phone.png" alt="Phone" width="54" height="54"></a>
+  <a class="soc" href="https://orcid.org/0000-0002-4270-1556" target="_blank" rel="noopener" aria-label="ORCID">
+    <img src="/assets/icons/orcid.png" alt="ORCID" width="54" height="54"></a>
+  <a class="soc" href="https://www.linkedin.com/in/henry-blair-102773203/" target="_blank" rel="noopener" aria-label="LinkedIn">
+    <img src="/assets/icons/linkedin.png" alt="LinkedIn" width="54" height="54"></a>
+  <a class="soc" href="https://www.instagram.com/henryblair/" target="_blank" rel="noopener" aria-label="Instagram">
+    <img src="/assets/icons/instagram.png" alt="Instagram" width="54" height="54"></a>
 </div>
 
 <footer>
@@ -118,6 +116,12 @@ document.querySelectorAll('.ob-tel').forEach(function(el){
   var d = el.dataset, n = '(' + d.a + ') ' + d.b + '-' + d.c;
   var link = document.createElement('a');
   link.href = 'tel:+1' + d.a + d.b + d.c; link.textContent = n; el.appendChild(link);
+});
+document.querySelectorAll('.ob-link').forEach(function(el){
+  el.href = 'mailto:' + el.dataset.u + String.fromCharCode(64) + el.dataset.d;
+});
+document.querySelectorAll('.tel-link').forEach(function(el){
+  var d = el.dataset; el.href = 'tel:+1' + d.a + d.b + d.c;
 });
 document.querySelectorAll('.yr').forEach(function(e){e.textContent=new Date().getFullYear()});
 </script>
