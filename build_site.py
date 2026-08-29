@@ -48,6 +48,15 @@ PROJECTS = [
     # {"slug": "next-project", "tab": "Next Project", "source": "_source/hub.html"},
 ]
 
+# Hand-written pages, in tab order. Each file must contain the
+# <!--SITENAV--> ... <!--/SITENAV--> markers; the tab bar is written into them.
+PAGES = [
+    {"key": "about",   "tab": "About Me",           "href": "/about/",   "file": "about/index.html"},
+    {"key": "contact", "tab": "Contact Me",         "href": "/contact/", "file": "contact/index.html"},
+    {"key": "resume",  "tab": "Resume",             "href": "/resume/",  "file": "resume/index.html"},
+    {"key": "home",    "tab": "Research Portfolio", "href": "/",         "file": "index.html"},
+]
+
 SITEBAR_CSS = """
 <style id="site-nav-css">
 :root{--sitebar:34px}
@@ -91,11 +100,15 @@ PAPER_CARD_PUBLIC = ('<a class="navcard" href="mailto:%s?subject=Request%%20for%
 PAPER_LINK = '<a href="#paper" data-sec="paper">The paper</a>'
 
 
-def nav_html(active_slug=None, private=False):
-    tabs = ['<a href="/"%s>Portfolio</a>' % ('' if active_slug else ' aria-current="page"')]
-    for p in PROJECTS:
-        cur = ' aria-current="page"' if p["slug"] == active_slug else ''
-        tabs.append('<a href="/projects/%s/"%s>%s</a>' % (p["slug"], cur, p["tab"]))
+def nav_html(active=None, private=False):
+    """active is a PAGES key or a project slug."""
+    tabs = []
+    for pg in PAGES:
+        cur = ' aria-current="page"' if pg["key"] == active else ''
+        tabs.append('<a href="%s"%s>%s</a>' % (pg["href"], cur, pg["tab"]))
+    for pr in PROJECTS:
+        cur = ' aria-current="page"' if pr["slug"] == active else ''
+        tabs.append('<a href="/projects/%s/"%s>%s</a>' % (pr["slug"], cur, pr["tab"]))
     badge = '<span class="sb-private">Private link · full manuscript</span>' if private else ''
     return ('<div class="sitebar">\n'
             '  <a class="sb-brand" href="/">Henry M. Blair</a>\n'
@@ -159,20 +172,27 @@ def build_project(p):
     return True
 
 
-def update_home():
-    path = os.path.join(ROOT, "index.html")
-    html = open(path, encoding="utf-8").read()
-    new = re.sub(r"<!--SITENAV-->.*?<!--/SITENAV-->",
-                 "<!--SITENAV-->\n" + nav_html(None) + "\n<!--/SITENAV-->", html, flags=re.S)
-    if new != html:
-        open(path, "w", encoding="utf-8").write(new)
-        print("  refreshed tab bar in index.html")
+def update_pages():
+    """Write the current tab bar into every hand-written page."""
+    for pg in PAGES:
+        path = os.path.join(ROOT, pg["file"])
+        if not os.path.exists(path):
+            print("  !! missing page: %s" % pg["file"]); continue
+        html = open(path, encoding="utf-8").read()
+        if "<!--SITENAV-->" not in html:
+            print("  !! no SITENAV markers in %s" % pg["file"]); continue
+        new = re.sub(r"<!--SITENAV-->.*?<!--/SITENAV-->",
+                     "<!--SITENAV-->\n" + nav_html(pg["key"]) + "\n<!--/SITENAV-->",
+                     html, flags=re.S)
+        if new != html:
+            open(path, "w", encoding="utf-8").write(new)
+            print("  tab bar -> %s" % pg["file"])
 
 
 if __name__ == "__main__":
     print("Building site in %s" % ROOT)
     print("PUBLISH_FULL = %s" % PUBLISH_FULL)
     ok = all([build_project(p) for p in PROJECTS])
-    update_home()
+    update_pages()
     print("Done." if ok else "Done, with problems (see above).")
     sys.exit(0 if ok else 1)

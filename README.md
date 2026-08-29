@@ -3,12 +3,34 @@
 Research portfolio for Henry M. Blair. Static site, hosted on GitHub Pages.
 
 ```
-index.html                    landing page (the "Portfolio" tab)
+index.html                    Research Portfolio tab (the landing page)
+about/index.html              About Me tab
+contact/index.html            Contact Me tab
+resume/index.html             Resume tab
+resume/Henry-Blair-CV.pdf     the downloadable CV
+assets/site.css               shared styles for all four pages above
 projects/<slug>/index.html    one page per project  -- GENERATED, don't hand-edit
 build_site.py                 the generator
 _source/                      the standalone project HTML files  -- GITIGNORED
-CNAME                         henryblair.online
-.nojekyll  404.html
+CNAME  .nojekyll  404.html
+```
+
+## The tab bar
+
+Tab order and labels live in one place: `PAGES` (hand-written pages) and
+`PROJECTS` (generated ones) at the top of `build_site.py`. Running the script
+rewrites the bar into every page between the `<!--SITENAV-->` markers, so a
+label change or a new tab is one edit plus one run -- never five files by hand.
+
+The CV PDF is printed from `resume/index.html` (the print stylesheet in
+`site.css` drops the tab bar, the download button and the footer). To
+regenerate it after editing the resume page:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --no-pdf-header-footer \
+  --print-to-pdf="resume/Henry-Blair-CV.pdf" \
+  "https://henryblair.online/resume/"
 ```
 
 ## What is public and what is not
