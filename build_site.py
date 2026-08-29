@@ -955,7 +955,8 @@ def prune_gates():
 
 
 # ------------------------------------------------------------------ cache-bust
-VERSIONED = ["assets/site.css", "assets/project.css", "assets/headshot-badge.png"]
+VERSIONED = ["assets/site.css", "assets/project.css", "assets/headshot-badge.png",
+              "assets/og-image.png"]
 
 def version_assets():
     """Stamp ?v=<content hash> onto the shared assets in every published page.
