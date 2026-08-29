@@ -70,7 +70,7 @@ HEAD_TAGS = """
 
 SITEBAR_CSS = """
 <style id="site-nav-css">
-:root{--sitebar:34px;--badge:114px}
+:root{--sitebar:34px;--badge:160px}
 .sb-badge{position:fixed;top:0;left:0;width:var(--badge);height:var(--badge);z-index:120;background:#111;
   display:flex;align-items:center;justify-content:center;border-right:1px solid #333;
   border-bottom:1px solid #333;border-radius:0;text-decoration:none}

@@ -2,7 +2,7 @@
    (project pages carry their own CSS; build_site.py only injects the tab bar) */
 :root{
   --ink:#111; --ink2:#33383c; --mut:#6b6f73; --line:#d9dbdd; --bg:#f4f4f2;
-  --surf:#fff; --accent:#1c4f7c; --sitebar:34px; --badge:114px;
+  --surf:#fff; --accent:#1c4f7c; --sitebar:34px; --badge:160px;
   --sans:ui-sans-serif,-apple-system,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
 }
