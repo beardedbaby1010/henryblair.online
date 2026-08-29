@@ -18,6 +18,18 @@ NOPUSH=0
 if [ "$1" = "--no-push" ]; then NOPUSH=1; shift; fi
 MSG="${1:-Update site — $(date '+%b %-d, %Y')}"
 
+# ---- clear stale git locks --------------------------------------------------
+# A git run that is killed (or one from a sandbox that cannot unlink files)
+# leaves .git/*.lock behind, and every later git command refuses to run. If no
+# git process is actually alive, the lock is debris — clear it and carry on.
+if ! pgrep -x git >/dev/null 2>&1; then
+  for L in .git/index.lock .git/HEAD.lock .git/config.lock .git/objects/maintenance.lock; do
+    if [ -e "$L" ]; then
+      rm -f "$L" && say "${YEL}▸ Cleared stale $L${OFF}"
+    fi
+  done
+fi
+
 say "${BLU}▸ Building${OFF}"
 python3 build_site.py
 
