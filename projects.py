@@ -203,6 +203,54 @@ PROJECTS = [
 # Emory honors thesis, college and high-school posters. Fill this in and the
 # build renders an "Earlier work" section on the portfolio page.
 EARLIER = [
-    # {"title": "...", "kicker": "...", "year": "2023", "summary": "...",
-    #  "pdf": "~/path/to/poster.pdf", "thumb": "~/path/to/poster.jpg"},
+
+    {
+        "title": "Altered functional connectivity of the anterior insula in attention networks",
+        "kicker": "Honors thesis · Neuroscience and Behavioral Biology, Emory University · advisor Opal Ousley, PhD",
+        "year": 2023,
+        "summary": "The anterior insula has been studied in autism for years with conflicting results. "
+                   "Analyzing sex separately, I measured ROI-to-ROI resting-state connectivity between the "
+                   "anterior insula and the salience and ventral attention networks. Connectivity differed by "
+                   "sex in opposite directions — increased in autistic girls, decreased in autistic boys — "
+                   "most clearly at the temporoparietal junction and supramarginal gyrus, and preliminary "
+                   "regressions related that connectivity to symptom scores (SRS-2, SCQ, ADI-R). A finding "
+                   "that argues sex belongs in the analysis rather than in the covariates. Defended April 2023.",
+        "thumb": "/earlier/thumbs/2023-honors-thesis.jpg",
+        "links": [{"label": "Read the thesis (PDF, 49 pp)", "url": "/earlier/files/2023-honors-thesis.pdf"},
+                  {"label": "Emory ETD record", "url": "https://etd.library.emory.edu/concern/etds/ms35tb215"}],
+    },
+
+    {
+        "title": "Traumatic stress at the moment of brain injury and the risk of post-traumatic epilepsy",
+        "kicker": "STAR program · Department of Cell Biology & Anatomy, New York Medical College · with Dr. Jana Velíšková",
+        "year": 2019,
+        "summary": "Traumatic brain injury can set off epileptogenesis, and severe stress at the time of "
+                   "injury is thought to worsen it — but the stress contribution had not been tested directly. "
+                   "Adult male rats were stressed by submersion before a weight-drop cortical contusion; "
+                   "controls swam freely before the same contusion. Open-field and elevated-plus-maze testing "
+                   "tracked locomotion and anxiety, and flurothyl seizure thresholds were measured at five and "
+                   "ten days. At five days the groups were indistinguishable; by ten days the stressed animals "
+                   "had a lower threshold for tonic-clonic seizures (p = 0.02) and seized longer — the "
+                   "interaction appearing inside the epileptogenic window rather than at the moment of injury.",
+        "thumb": "/earlier/thumbs/2019-tbi-stress-pte-poster.jpg",
+        "links": [{"label": "Poster (PDF)", "url": "/earlier/files/2019-tbi-stress-pte-poster.pdf"}],
+    },
+
+    {
+        "title": "Estrogen and the dentate gyrus: response to spatial and environmental novelty",
+        "kicker": "STAR program · New York Medical College · with Dr. Jana Velíšková",
+        "year": 2018,
+        "summary": "Estrogen receptors are dense in the dentate gyrus, the structure behind pattern "
+                   "separation and spatial discrimination, and in vitro work in the lab had shown estradiol "
+                   "changing long-term potentiation there — but what that did to behavior was open. Eighteen "
+                   "ovariectomized rats received β-estradiol (2 µg/day for four days) or oil, then met an "
+                   "environmental change (a new arena) and a metric change (objects moved from 30 to 50 cm). "
+                   "Estradiol-replaced animals explored significantly less after the environmental change "
+                   "(p = 0.028), consistent with estradiol shaping dentate-mediated learning. Written up for "
+                   "the Junior Science and Humanities Symposium and presented as a poster — my first study, "
+                   "run as a high-school student in the STAR program.",
+        "thumb": "/earlier/thumbs/2018-estrogen-novelty-poster.jpg",
+        "links": [{"label": "Paper (PDF, 20 pp)", "url": "/earlier/files/2018-estrogen-novelty-paper.pdf"},
+                  {"label": "Poster (PDF)", "url": "/earlier/files/2018-estrogen-novelty-poster.pdf"}],
+    },
 ]

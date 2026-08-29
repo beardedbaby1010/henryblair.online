@@ -403,7 +403,10 @@ def build_home():
                  'Maimonides without a hub of their own yet — each gets one as its analysis closes.</p>\n\n'
                  + "\n\n".join(card(p) for p in others))
     if getattr(CFG, "EARLIER", None):
-        body += '\n\n<h2 class="sect">Earlier work</h2>\n\n' + "\n\n".join(earlier_card(e) for e in CFG.EARLIER)
+        body += ('\n\n<h2 class="sect">Earlier work</h2>\n'
+                 '<p class="sectnote">Where the method came from: bench and imaging work at Emory and '
+                 'New York Medical College, beginning in high school through the STAR program.</p>\n\n'
+                 + "\n\n".join(earlier_card(e) for e in CFG.EARLIER))
     new = re.sub(r"<!--PROJECTS-->.*?<!--/PROJECTS-->",
                  "<!--PROJECTS-->\n" + body + "\n<!--/PROJECTS-->", html, flags=re.S)
     if new != html:
@@ -412,13 +415,18 @@ def build_home():
     return True
 
 def earlier_card(e):
-    thumb = ('<img class="pth" src="%s" alt="">' % e["thumb_url"]) if e.get("thumb_url") else ""
-    link = e.get("pdf_url")
-    inner = ('%s  <div class="kicker">%s · %s</div>\n  <h3>%s</h3>\n  <p>%s</p>\n'
-             % (thumb, esc(e.get("kicker", "")), esc(e.get("year", "")), esc(e["title"]), esc(e.get("summary", ""))))
-    if link:
-        return '<a class="proj earlier" href="%s">\n%s  <div class="open">Open the PDF &rarr;</div>\n</a>' % (link, inner)
-    return '<div class="proj flat earlier">\n%s</div>' % inner
+    thumb = ('<img class="pth" src="%s" alt="">' % e["thumb"]) if e.get("thumb") else ""
+    links = "".join('<a class="dl" href="%s">%s</a>' % (l["url"], esc(l["label"]))
+                    for l in e.get("links", []))
+    meta = " · ".join(x for x in [esc(e.get("kicker", "")), esc(str(e.get("year", "")))] if x)
+    return ('<div class="proj flat earlier">\n'
+            '%s  <div class="kicker">%s</div>\n'
+            '  <h3>%s</h3>\n'
+            '  <p>%s</p>\n'
+            '%s'
+            '</div>' % (thumb, meta, esc(e["title"]), esc(e["summary"]),
+                        ('  <div class="dls">%s</div>\n' % links) if links else ""))
+
 
 # ------------------------------------------------------------------ main
 
