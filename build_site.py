@@ -1,67 +1,54 @@
 #!/usr/bin/env python3
 """
-Build henryblair.online.
+build_site.py — turn projects.py into the site.
 
-Each project is authored elsewhere as one self-contained HTML file (the PCa
-project hub, for example). This script reads that file, adds the site tab bar,
-and writes the result into projects/<slug>/. The source file is never modified.
+  python3 build_site.py          build everything
+  ./publish "message"            build, check, commit, push
 
-Two variants are produced per project:
+What it writes
+  index.html                       project cards, in the order given in projects.py
+  projects/<slug>/index.html       generated hubs (manuscript section stripped) and
+                                   the tab bar for hand-written ones
+  projects/<slug>/paper/index.html a passphrase-gated manuscript (AES-256-CBC,
+                                   PBKDF2-SHA256, HMAC-SHA256; decrypted in the browser)
+  the tab bar in every hand-written page
 
-  PUBLIC  projects/<slug>/index.html
-          The hub with the full-manuscript section removed. This is what the
-          world sees. Safe to publish in a public repository.
-
-  FULL    projects/<slug>/<full_path>/index.html
-          The complete hub, manuscript included, at an unguessable URL and
-          marked noindex so search engines never list it.
-
-          Only built when PUBLISH_FULL = True below, and you should only set
-          that to True once this repository is PRIVATE (GitHub Pro). In a
-          public repo anyone can read the folder names here, so an unguessable
-          URL protects nothing.
-
-Sources live in _source/ , which is gitignored -- the manuscript never enters
-a commit.
-
-Add a project:  add to PROJECTS, add a card to index.html, run this, push.
+Nothing here is a source of truth. Copy lives in projects.py; passphrases live in
+_secrets/passwords.json; manuscripts live wherever projects.py points. All three
+are outside the commit except projects.py.
 """
-import os, re, sys
+import os, re, sys, json, base64, hashlib, hmac, subprocess
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, ROOT)
+import projects as CFG
 
-# Set True ONLY when this repository is private (requires GitHub Pro).
-PUBLISH_FULL = False
+SECRETS = os.path.join(ROOT, "_secrets", "passwords.json")
+GATECACHE = os.path.join(ROOT, "_secrets", ".gatecache.json")
+PBKDF2_ITERATIONS = 250_000
 
-CONTACT = "henrymblair@gmail.com"
+def expand(p):
+    """Resolve a path from projects.py.
 
-PROJECTS = [
-    {
-        "slug":   "adt-initiation",
-        "tab":    "ADT Initiation",
-        "source": "_source/pca_project_hub_standalone.html",
-        # remove the <section id="paper"> block from the public build
-        "strip_paper": True,
-        # where the complete version lives when PUBLISH_FULL is on
-        "full_path": "full-2f4cdd679f40",
-    },
-    {
-        "slug":   "ve-boxed-warning",
-        "tab":    "Vaginal Estrogen",
-        # hand-written page (projects/<slug>/index.html); the build only refreshes its tab bar
-        "static": True,
-    },
-    # {"slug": "next-project", "tab": "Next Project", "source": "_source/hub.html"},
-]
+    Absolute or ~-prefixed paths are used as given. Anything else is looked for
+    first inside the repo, then under each SOURCE_ROOTS entry in order; the first
+    hit wins. That way one machine's ~/Documents and another's mount point both
+    resolve the same config."""
+    if p.startswith("~") or os.path.isabs(p):
+        return os.path.expanduser(p)
+    local = os.path.normpath(os.path.join(ROOT, p))
+    if os.path.exists(local):
+        return local
+    for r in getattr(CFG, "SOURCE_ROOTS", []):
+        cand = os.path.join(os.path.expanduser(r), p)
+        if os.path.exists(cand):
+            return cand
+    return local
 
-# Hand-written pages, in tab order. Each file must contain the
-# <!--SITENAV--> ... <!--/SITENAV--> markers; the tab bar is written into them.
-PAGES = [
-    {"key": "about",   "tab": "About Me",           "href": "/about/",   "file": "about/index.html"},
-    {"key": "contact", "tab": "Contact Me",         "href": "/contact/", "file": "contact/index.html"},
-    {"key": "resume",  "tab": "Resume",             "href": "/resume/",  "file": "resume/index.html"},
-    {"key": "home",    "tab": "Research Portfolio", "href": "/",         "file": "index.html"},
-]
+def warn(msg):   print("  !! " + msg)
+def note(msg):   print("     " + msg)
+
+# ------------------------------------------------------------------ head + chrome
 
 HEAD_TAGS = """
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
@@ -90,10 +77,6 @@ SITEBAR_CSS = """
   text-decoration:none;border:0;border-right:1px solid #333;white-space:nowrap;font-weight:600}
 .sitebar .sb-tabs a:hover{color:#fff;background:#1c1c1c}
 .sitebar .sb-tabs a[aria-current="page"]{color:#111;background:#f4f4f2}
-.sitebar .sb-private{margin-left:auto;display:flex;align-items:center;padding:0 14px;
-  color:#e0b874;border-left:1px solid #333;letter-spacing:.09em;text-transform:uppercase;
-  font-size:10.5px;font-weight:700;white-space:nowrap}
-/* push the project's own chrome down by the height of the site bar */
 .topbar{top:34px}
 #side{top:calc(var(--top) + 34px)}
 main{padding-top:calc(var(--top) + 34px + 22px)}
@@ -102,127 +85,353 @@ main{padding-top:calc(var(--top) + 34px + 22px)}
   .topbar .brand span{display:none}
   .topbar .brand{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .topbar #q{width:120px}
-  .sitebar .sb-private{display:none}
 }
 @media print{.sitebar{display:none}.topbar{top:0}main{padding-top:0}}
 </style>
 """
 
-PAPER_CARD = ('<a class="navcard" href="#paper"><h3>Read the paper →</h3>'
-              '<p>The full manuscript as a navigable page, every table and figure inline.</p></a>')
-PAPER_CARD_PUBLIC = ('<a class="navcard" href="mailto:%s?subject=Request%%20for%%20the%%20ADT%%20initiation%%20manuscript">'
-                     '<h3>The paper — on request →</h3>'
-                     '<p>The manuscript is not posted publicly while the work is under review. '
-                     'Email me and I will send it.</p></a>') % CONTACT
-PAPER_LINK = '<a href="#paper" data-sec="paper">The paper</a>'
-
-
-def nav_html(active=None, private=False):
-    """active is a PAGES key or a project slug."""
+def nav_html(active=None):
     tabs = []
-    for pg in PAGES:
+    for pg in CFG.PAGES:
         cur = ' aria-current="page"' if pg["key"] == active else ''
         tabs.append('<a href="%s"%s>%s</a>' % (pg["href"], cur, pg["tab"]))
-    for pr in PROJECTS:
+    for pr in CFG.PROJECTS:
+        if not pr.get("tab"):
+            continue
         cur = ' aria-current="page"' if pr["slug"] == active else ''
         tabs.append('<a href="/projects/%s/"%s>%s</a>' % (pr["slug"], cur, pr["tab"]))
-    badge = '<span class="sb-private">Private link · full manuscript</span>' if private else ''
     return ('<div class="sitebar">\n'
             '  <a class="sb-brand" href="/">Henry M. Blair</a>\n'
             '  <nav class="sb-tabs">' + "".join(tabs) + '</nav>\n'
-            '  ' + badge + '\n'
             '</div>')
 
+def set_nav(path, active):
+    if not os.path.exists(path):
+        warn("missing page: %s" % os.path.relpath(path, ROOT)); return False
+    html = open(path, encoding="utf-8").read()
+    if "<!--SITENAV-->" not in html:
+        warn("no SITENAV markers in %s" % os.path.relpath(path, ROOT)); return False
+    new = re.sub(r"<!--SITENAV-->.*?<!--/SITENAV-->",
+                 "<!--SITENAV-->\n" + nav_html(active) + "\n<!--/SITENAV-->", html, flags=re.S)
+    if new != html:
+        open(path, "w", encoding="utf-8").write(new)
+    return True
 
-def strip_paper(html):
-    """Remove the full-manuscript section, its sidebar link, and its nav card."""
+# ------------------------------------------------------------------ generated hubs
+
+PAPER_LINK = '<a href="#paper" data-sec="paper">The paper</a>'
+PAPER_CARD = ('<a class="navcard" href="#paper"><h3>Read the paper →</h3>'
+              '<p>The full manuscript as a navigable page, every table and figure inline.</p></a>')
+
+def paper_card(slug, gated):
+    if gated:
+        return ('<a class="navcard" href="/projects/%s/paper/"><h3>The manuscript →</h3>'
+                '<p>Behind a passphrase while the work is unpublished. If I sent you one, it opens here.</p></a>'
+                % slug)
+    return ('<a class="navcard" href="mailto:henrymblair@gmail.com"><h3>The paper — on request →</h3>'
+            '<p>The manuscript is not posted publicly. Email me and I will send it.</p></a>')
+
+def strip_paper(html, slug, gated):
     start = html.find('<section id="paper" class="sec">')
     if start == -1:
-        print("     note: no paper section found, nothing stripped")
-        return html
+        note("no paper section found, nothing stripped"); return html
     end = html.find('</section>', start)
     removed = (end + len('</section>')) - start
     html = html[:start] + html[end + len('</section>'):]
     html = html.replace(PAPER_LINK, '')
     if PAPER_CARD in html:
-        html = html.replace(PAPER_CARD, PAPER_CARD_PUBLIC)
+        html = html.replace(PAPER_CARD, paper_card(slug, gated))
     else:
-        print("     note: paper nav card not found; check the source markup")
-    print("     stripped manuscript section (%.1f MB)" % (removed / 1e6))
+        note("paper nav card not found; check the source markup")
+    note("stripped manuscript section (%.1f MB)" % (removed / 1e6))
     return html
 
-
-def wrap(html, slug, private):
+def wrap(html, slug):
     html = re.sub(r'<style id="site-nav-css">.*?</style>', '', html, flags=re.S)
     html = html.replace("</head>", HEAD_TAGS + SITEBAR_CSS + "</head>", 1)
-    if private:
-        html = html.replace('<meta charset="utf-8">',
-                            '<meta charset="utf-8">\n<meta name="robots" content="noindex,nofollow">', 1)
     m = re.search(r"<body[^>]*>", html)
     i = m.end()
-    return html[:i] + "\n" + nav_html(slug, private) + "\n" + html[i:]
+    return html[:i] + "\n" + nav_html(slug) + "\n" + html[i:]
 
-
-def write(path, html):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    open(path, "w", encoding="utf-8").write(html)
-    print("     -> %s  (%.1f MB)" % (os.path.relpath(path, ROOT), os.path.getsize(path) / 1e6))
-
-
-def build_project(p):
-    if p.get("static"):
-        path = os.path.join(ROOT, "projects", p["slug"], "index.html")
-        if not os.path.exists(path):
-            print("  !! %s is marked static but %s is missing" % (p["slug"], path)); return False
-        html = open(path, encoding="utf-8").read()
-        if "<!--SITENAV-->" not in html:
-            print("  !! no SITENAV markers in %s" % path); return False
-        new = re.sub(r"<!--SITENAV-->.*?<!--/SITENAV-->",
-                     "<!--SITENAV-->\n" + nav_html(p["slug"]) + "\n<!--/SITENAV-->", html, flags=re.S)
-        if new != html:
-            open(path, "w", encoding="utf-8").write(new)
-        print("  %s (hand-written) — tab bar refreshed" % p["slug"])
+def build_project_page(p):
+    page = p.get("page")
+    if not page:
         return True
-    src = os.path.normpath(os.path.join(ROOT, p["source"]))
+    out = os.path.join(ROOT, "projects", p["slug"], "index.html")
+    if page["kind"] == "static":
+        ok = set_nav(out, p["slug"])
+        note("%s — hand-written page, tab bar refreshed" % p["slug"])
+        return ok
+    src = expand(page["source"])
     if not os.path.exists(src):
-        print("  !! source not found: %s" % src)
+        warn("%s: source not found: %s" % (p["slug"], src))
+        warn("   fix the path in projects.py and re-run; the card still renders meanwhile")
         return False
-    print("  %s" % p["slug"])
     raw = open(src, encoding="utf-8", errors="replace").read()
-
-    pub = strip_paper(raw) if p.get("strip_paper") else raw
-    write(os.path.join(ROOT, "projects", p["slug"], "index.html"), wrap(pub, p["slug"], False))
-
-    full_dir = os.path.join(ROOT, "projects", p["slug"], p.get("full_path", "full"))
-    if PUBLISH_FULL:
-        write(os.path.join(full_dir, "index.html"), wrap(raw, p["slug"], True))
-    elif os.path.exists(os.path.join(full_dir, "index.html")):
-        print("     PUBLISH_FULL is off but %s exists -- delete that folder before pushing"
-              % os.path.relpath(full_dir, ROOT))
+    html = strip_paper(raw, p["slug"], bool(p.get("paper"))) if page.get("strip_paper") else raw
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    open(out, "w", encoding="utf-8").write(wrap(html, p["slug"]))
+    note("-> projects/%s/index.html  (%.1f MB)" % (p["slug"], os.path.getsize(out) / 1e6))
     return True
 
+# ------------------------------------------------------------------ passphrase gate
 
-def update_pages():
-    """Write the current tab bar into every hand-written page."""
-    for pg in PAGES:
-        path = os.path.join(ROOT, pg["file"])
-        if not os.path.exists(path):
-            print("  !! missing page: %s" % pg["file"]); continue
-        html = open(path, encoding="utf-8").read()
-        if "<!--SITENAV-->" not in html:
-            print("  !! no SITENAV markers in %s" % pg["file"]); continue
-        new = re.sub(r"<!--SITENAV-->.*?<!--/SITENAV-->",
-                     "<!--SITENAV-->\n" + nav_html(pg["key"]) + "\n<!--/SITENAV-->",
-                     html, flags=re.S)
-        if new != html:
-            open(path, "w", encoding="utf-8").write(new)
-            print("  tab bar -> %s" % pg["file"])
+def load_secrets():
+    if not os.path.exists(SECRETS):
+        return {}
+    return json.load(open(SECRETS))
 
+def encrypt(data: bytes, password: str):
+    """PBKDF2-SHA256 → 32-byte AES key + 32-byte MAC key. AES-256-CBC, then HMAC over iv|ct.
+    Uses only the standard library plus the openssl binary that ships with macOS."""
+    salt = os.urandom(16)
+    dk = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, PBKDF2_ITERATIONS, 64)
+    ek, mk = dk[:32], dk[32:]
+    iv = os.urandom(16)
+    r = subprocess.run(["openssl", "enc", "-aes-256-cbc", "-K", ek.hex(), "-iv", iv.hex()],
+                       input=data, capture_output=True)
+    if r.returncode != 0:
+        raise RuntimeError("openssl: " + r.stderr.decode()[:200])
+    ct = r.stdout
+    mac = hmac.new(mk, iv + ct, hashlib.sha256).digest()
+    b64 = lambda b: base64.b64encode(b).decode()
+    return {"v": 1, "kdf": "PBKDF2-SHA256", "it": PBKDF2_ITERATIONS, "cipher": "AES-256-CBC",
+            "salt": b64(salt), "iv": b64(iv), "mac": b64(mac), "ct": b64(ct)}
+
+GATE_PAGE = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>%(title)s — manuscript</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="/assets/site.css">
+%(head)s
+<style>
+.gatewrap{max-width:560px;margin:0 auto;padding:64px clamp(18px,5vw,40px) 80px}
+.lock{background:var(--surf);border:1px solid var(--line);border-top:3px solid #111;padding:28px 30px}
+.lock h1{font-family:var(--serif);font-size:27px;margin:0 0 6px;letter-spacing:-.01em}
+.lock .sub{color:var(--mut);font-size:14px;margin:0 0 20px}
+.lock label{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mut);font-weight:700;margin-bottom:7px}
+.lock input{width:100%%;padding:11px 13px;border:1px solid #bbb;background:#fafafa;font-size:15px;
+  font-family:inherit;border-radius:2px}
+.lock input:focus{outline:none;border-color:#111;background:#fff}
+.lock button{margin-top:14px;background:#111;color:#fff;border:1px solid #111;padding:11px 20px;
+  font-size:13.5px;font-weight:700;letter-spacing:.03em;cursor:pointer;font-family:inherit}
+.lock button:hover{background:var(--accent);border-color:var(--accent)}
+.lock button[disabled]{opacity:.55;cursor:default}
+.msg{margin-top:14px;font-size:13.5px;min-height:20px}
+.msg.err{color:#a2372c}
+.meta{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mut)}
+.reader{display:none;max-width:1100px;margin:0 auto;padding:22px clamp(14px,4vw,30px) 40px}
+.reader.on{display:block}
+.readerbar{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between;
+  padding-bottom:12px;border-bottom:2px solid #111;margin-bottom:14px}
+.readerbar h1{font-family:var(--serif);font-size:22px;margin:0}
+.readerbar .r{font-size:13px;color:var(--mut)}
+iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
+</style>
+</head>
+<body>
+
+%(nav)s
+
+<div class="gatewrap" id="gate">
+  <div class="lock">
+    <h1>%(title)s</h1>
+    <p class="sub">%(label)s · %(note)s</p>
+    <form id="f">
+      <label for="pw">Passphrase</label>
+      <input id="pw" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"
+             placeholder="the passphrase I sent you">
+      <button id="go" type="submit">Unlock</button>
+    </form>
+    <div class="msg" id="msg"></div>
+    <div class="meta">The file on this page is encrypted (AES-256-CBC, PBKDF2-SHA256, %(iters)s iterations).
+      It is decrypted in your browser and never leaves it. Without the passphrase there is nothing to read —
+      not in the page source, not in the repository.<br><br>
+      <a href="/projects/%(slug)s/">← back to the project</a></div>
+  </div>
+</div>
+
+<div class="reader" id="reader">
+  <div class="readerbar">
+    <h1>%(title)s</h1>
+    <div class="r"><a id="dl" download="%(filename)s">Download PDF</a> · <a href="/projects/%(slug)s/">back to the project</a></div>
+  </div>
+  <iframe id="frame" title="%(title)s"></iframe>
+</div>
+
+<script id="payload" type="application/json">%(payload)s</script>
+<script>
+(function(){
+  var blob = JSON.parse(document.getElementById('payload').textContent);
+  var f = document.getElementById('f'), msg = document.getElementById('msg'), go = document.getElementById('go');
+  var b64 = function(s){ return Uint8Array.from(atob(s), function(c){ return c.charCodeAt(0); }); };
+
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    var pw = document.getElementById('pw').value;
+    if(!pw){ return; }
+    if(!(window.crypto && crypto.subtle)){
+      msg.className='msg err';
+      msg.textContent='This browser will only decrypt over https. Open the page at https://henryblair.online.';
+      return;
+    }
+    go.disabled = true; msg.className='msg'; msg.textContent='Deriving key…';
+    setTimeout(function(){ unlock(pw); }, 20);
+  });
+
+  function unlock(pw){
+    var enc = new TextEncoder();
+    crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits'])
+      .then(function(base){
+        return crypto.subtle.deriveBits(
+          {name:'PBKDF2', salt:b64(blob.salt), iterations:blob.it, hash:'SHA-256'}, base, 512);
+      })
+      .then(function(bits){
+        var ek = new Uint8Array(bits, 0, 32), mk = new Uint8Array(bits, 32, 32);
+        var iv = b64(blob.iv), ct = b64(blob.ct), mac = b64(blob.mac);
+        var signed = new Uint8Array(iv.length + ct.length);
+        signed.set(iv); signed.set(ct, iv.length);
+        return crypto.subtle.importKey('raw', mk, {name:'HMAC', hash:'SHA-256'}, false, ['verify'])
+          .then(function(mkey){ return crypto.subtle.verify('HMAC', mkey, mac, signed); })
+          .then(function(ok){
+            if(!ok){ throw new Error('bad passphrase'); }
+            return crypto.subtle.importKey('raw', ek, {name:'AES-CBC'}, false, ['decrypt']);
+          })
+          .then(function(key){ return crypto.subtle.decrypt({name:'AES-CBC', iv:iv}, key, ct); });
+      })
+      .then(function(pt){
+        var url = URL.createObjectURL(new Blob([pt], {type:'application/pdf'}));
+        document.getElementById('frame').src = url;
+        document.getElementById('dl').href = url;
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('reader').className = 'reader on';
+      })
+      .catch(function(){
+        go.disabled = false;
+        msg.className = 'msg err';
+        msg.textContent = 'That passphrase did not work.';
+      });
+  }
+})();
+</script>
+</body>
+</html>
+"""
+
+def build_gate(p):
+    paper = p.get("paper")
+    if not paper:
+        return True
+    slug = p["slug"]
+    src = expand(paper["pdf"])
+    if not os.path.exists(src):
+        warn("%s: manuscript not found: %s" % (slug, src))
+        warn("   fix the path in projects.py and re-run")
+        return False
+    secrets = load_secrets()
+    pw = secrets.get(slug)
+    if not pw:
+        warn("%s: no passphrase in _secrets/passwords.json — gate not built" % slug)
+        return False
+
+    data = open(src, "rb").read()
+    fingerprint = hashlib.sha256(data + pw.encode() + str(PBKDF2_ITERATIONS).encode()).hexdigest()
+    cache = json.load(open(GATECACHE)) if os.path.exists(GATECACHE) else {}
+    out = os.path.join(ROOT, "projects", slug, "paper", "index.html")
+
+    if cache.get(slug) == fingerprint and os.path.exists(out):
+        note("%s — gate unchanged" % slug)
+        return True
+
+    payload = encrypt(data, pw)
+    html = GATE_PAGE % {
+        "title": p["title"], "slug": slug, "head": HEAD_TAGS,
+        "label": paper.get("label", "Manuscript"),
+        "note": paper.get("note", "Unpublished."),
+        "iters": "{:,}".format(PBKDF2_ITERATIONS),
+        "filename": os.path.basename(src),
+        "nav": nav_html(slug),
+        "payload": json.dumps(payload),
+    }
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    open(out, "w", encoding="utf-8").write(html)
+    cache[slug] = fingerprint
+    os.makedirs(os.path.dirname(GATECACHE), exist_ok=True)
+    json.dump(cache, open(GATECACHE, "w"), indent=1)
+    note("-> projects/%s/paper/index.html  (%.1f MB encrypted)" % (slug, os.path.getsize(out) / 1e6))
+    return True
+
+# ------------------------------------------------------------------ landing page
+
+def esc(s):
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+def card(p):
+    linked = bool(p.get("page"))
+    stats = "".join('<div class="stat"><div class="v">%s</div><div class="l">%s</div></div>'
+                    % (esc(v), esc(l)) for v, l in p.get("stats", []))
+    tags = "".join('<span class="tag">%s</span>' % esc(t) for t in p.get("tags", []))
+    inner = (
+        '  <div class="kicker">%s</div>\n'
+        '  <h3>%s</h3>\n'
+        '  <p>%s</p>\n' % (esc(p["kicker"]), esc(p["title"]), esc(p["summary"]))
+    )
+    if stats:
+        inner += '  <div class="stats">%s</div>\n' % stats
+    if tags:
+        inner += '  <div class="tags">%s</div>\n' % tags
+    inner += ('  <div class="open">Open the project hub &rarr;</div>\n' if linked
+              else '  <div class="statusline">%s</div>\n' % esc(p["status"]))
+    if linked:
+        return '<a class="proj" href="/projects/%s/">\n%s</a>' % (p["slug"], inner)
+    return '<div class="proj flat">\n%s</div>' % inner
+
+def build_home():
+    path = os.path.join(ROOT, "index.html")
+    html = open(path, encoding="utf-8").read()
+    if "<!--PROJECTS-->" not in html:
+        warn("index.html has no <!--PROJECTS--> markers; cards not written"); return False
+    featured = [p for p in CFG.PROJECTS if p.get("page")]
+    others   = [p for p in CFG.PROJECTS if not p.get("page")]
+    body = "\n\n".join(card(p) for p in featured)
+    if others:
+        body += ('\n\n<h2 class="sect">Also underway</h2>\n<p class="sectnote">Active projects at '
+                 'Maimonides without a hub of their own yet — each gets one as its analysis closes.</p>\n\n'
+                 + "\n\n".join(card(p) for p in others))
+    if getattr(CFG, "EARLIER", None):
+        body += '\n\n<h2 class="sect">Earlier work</h2>\n\n' + "\n\n".join(earlier_card(e) for e in CFG.EARLIER)
+    new = re.sub(r"<!--PROJECTS-->.*?<!--/PROJECTS-->",
+                 "<!--PROJECTS-->\n" + body + "\n<!--/PROJECTS-->", html, flags=re.S)
+    if new != html:
+        open(path, "w", encoding="utf-8").write(new)
+        note("-> index.html  (%d cards)" % (len(featured) + len(others)))
+    return True
+
+def earlier_card(e):
+    thumb = ('<img class="pth" src="%s" alt="">' % e["thumb_url"]) if e.get("thumb_url") else ""
+    link = e.get("pdf_url")
+    inner = ('%s  <div class="kicker">%s · %s</div>\n  <h3>%s</h3>\n  <p>%s</p>\n'
+             % (thumb, esc(e.get("kicker", "")), esc(e.get("year", "")), esc(e["title"]), esc(e.get("summary", ""))))
+    if link:
+        return '<a class="proj earlier" href="%s">\n%s  <div class="open">Open the PDF &rarr;</div>\n</a>' % (link, inner)
+    return '<div class="proj flat earlier">\n%s</div>' % inner
+
+# ------------------------------------------------------------------ main
 
 if __name__ == "__main__":
-    print("Building site in %s" % ROOT)
-    print("PUBLISH_FULL = %s" % PUBLISH_FULL)
-    ok = all([build_project(p) for p in PROJECTS])
-    update_pages()
+    print("Building %s" % ROOT)
+    ok = True
+    for p in CFG.PROJECTS:
+        if p.get("page") or p.get("paper"):
+            print("  %s" % p["slug"])
+        ok &= build_project_page(p)
+        ok &= build_gate(p)
+    for pg in CFG.PAGES:
+        set_nav(os.path.join(ROOT, pg["file"]), pg["key"])
+    ok &= build_home()
     print("Done." if ok else "Done, with problems (see above).")
     sys.exit(0 if ok else 1)

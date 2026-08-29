@@ -2,4 +2,5 @@
 *.pyc
 __pycache__/
 _source/
+_secrets/
 .trash/

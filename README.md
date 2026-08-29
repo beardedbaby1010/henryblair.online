@@ -56,6 +56,45 @@ repo requires GitHub Pro (~$4/month). In a public repo anyone can read the
 folder names and open the file directly, so the unguessable URL protects
 nothing.
 
+## How the site is put together
+
+`projects.py` is the single source of truth. Every project's copy, card numbers,
+page source and gated manuscript is one entry there; `build_site.py` reads it and
+writes the site. To change what the portfolio says about a project, or to point it
+at a different file, edit `projects.py` and run `./publish`.
+
+Source paths are resolved against `SOURCE_ROOTS` at the top of `projects.py`
+(first root that has the file wins), so moving `Maimo_Work` means editing one
+line, not ten paths. A missing file is reported by name and the build continues —
+the card still renders, it just loses its link.
+
+## Passphrase-gated manuscripts
+
+An unpublished manuscript is AES-256-CBC encrypted at build time and decrypted in
+the reader's browser with WebCrypto. The published page contains ciphertext only:
+without the passphrase there is nothing to read in the page source or in the
+repository. Key derivation is PBKDF2-SHA256 at 250,000 iterations, and an
+HMAC-SHA256 over the ciphertext is verified before decryption, so a wrong
+passphrase fails cleanly instead of producing garbage.
+
+Passphrases live in `_secrets/passwords.json`, one per project slug. That folder
+is gitignored — it must never be committed. Losing it means picking new
+passphrases and rebuilding, nothing worse.
+
+```json
+{ "adt-initiation": "…", "ve-boxed-warning": "…" }
+```
+
+Notes:
+
+- Encryption only re-runs when the PDF or its passphrase changes, so the
+  committed file stays stable across publishes (the fingerprint cache is
+  `_secrets/.gatecache.json`).
+- WebCrypto needs a secure context. The gate works on https://henryblair.online
+  and on `http://localhost:8000`, but not from a `file://` preview.
+- Encryption uses the `openssl` binary that ships with macOS plus the Python
+  standard library; nothing to install.
+
 ## Publishing: one command
 
 ```bash

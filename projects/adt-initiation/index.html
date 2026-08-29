@@ -119,10 +119,6 @@ tr.refsec td{background:#e9e9e6;font-weight:700;text-transform:uppercase;font-si
   text-decoration:none;border:0;border-right:1px solid #333;white-space:nowrap;font-weight:600}
 .sitebar .sb-tabs a:hover{color:#fff;background:#1c1c1c}
 .sitebar .sb-tabs a[aria-current="page"]{color:#111;background:#f4f4f2}
-.sitebar .sb-private{margin-left:auto;display:flex;align-items:center;padding:0 14px;
-  color:#e0b874;border-left:1px solid #333;letter-spacing:.09em;text-transform:uppercase;
-  font-size:10.5px;font-weight:700;white-space:nowrap}
-/* push the project's own chrome down by the height of the site bar */
 .topbar{top:34px}
 #side{top:calc(var(--top) + 34px)}
 main{padding-top:calc(var(--top) + 34px + 22px)}
@@ -131,7 +127,6 @@ main{padding-top:calc(var(--top) + 34px + 22px)}
   .topbar .brand span{display:none}
   .topbar .brand{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .topbar #q{width:120px}
-  .sitebar .sb-private{display:none}
 }
 @media print{.sitebar{display:none}.topbar{top:0}main{padding-top:0}}
 </style>
@@ -139,7 +134,6 @@ main{padding-top:calc(var(--top) + 34px + 22px)}
 <div class="sitebar">
   <a class="sb-brand" href="/">Henry M. Blair</a>
   <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/">Contact Me</a><a href="/resume/">Resume</a><a href="/">Research Portfolio</a><a href="/projects/adt-initiation/" aria-current="page">ADT Initiation</a><a href="/projects/ve-boxed-warning/">Vaginal Estrogen</a></nav>
-  
 </div>
 
 <header class="topbar"><button id="menu" aria-label="Menu">☰</button>
@@ -167,7 +161,7 @@ main{padding-top:calc(var(--top) + 34px + 22px)}
    <div class="cards3">
      <a class="navcard" href="#derivation"><h3>How the cohorts were built →</h3><p>Full derivation from 61,114,901 network patients to every numerator, with the query-builder logic.</p></a>
      <a class="navcard" href="#figures"><h3>The figures →</h3><p>Screening, intensification, agent mix, comorbidity and disparities — the manuscript figures.</p></a>
-     <a class="navcard" href="mailto:henrymblair@gmail.com?subject=Request%20for%20the%20ADT%20initiation%20manuscript"><h3>The paper — on request →</h3><p>The manuscript is not posted publicly while the work is under review. Email me and I will send it.</p></a>
+     <a class="navcard" href="/projects/adt-initiation/paper/"><h3>The manuscript →</h3><p>Behind a passphrase while the work is unpublished. If I sent you one, it opens here.</p></a>
    </div>
  </section>
 
