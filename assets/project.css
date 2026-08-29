@@ -31,7 +31,7 @@ main.hub{margin-left:var(--hubside);max-width:1160px;
 .masthead2{border-top:2px solid #111;border-bottom:1px solid var(--line);padding:22px 0 26px}
 .masthead2 .tag{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:700}
 .masthead2 h1{font-family:var(--serif);font-size:clamp(28px,4.4vw,42px);line-height:1.08;margin:10px 0 8px}
-.masthead2 .authors{font-size:14px;color:var(--mut);margin:0 0 14px}
+.masthead2 .authors{font-size:14px;color:var(--mut);margin:0 0 14px;max-width:none}
 .masthead2 .lede{font-size:16.5px;max-width:74ch;margin:0}
 
 .statrow{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #111;margin:22px 0 4px;background:#fff}
