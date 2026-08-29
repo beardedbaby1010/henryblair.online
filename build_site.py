@@ -954,6 +954,48 @@ def prune_gates():
                 warn("retired %s (moved to .trash/retired-gates/)" % os.path.relpath(dirpath, ROOT))
 
 
+# ------------------------------------------------------------------ cache-bust
+VERSIONED = ["assets/site.css", "assets/project.css", "assets/headshot-badge.png"]
+
+def version_assets():
+    """Stamp ?v=<content hash> onto the shared assets in every published page.
+
+    GitHub Pages tells browsers to cache /assets/* for a while, so a visitor who
+    saw the site before a CSS change keeps the old stylesheet against the new
+    HTML — which is how a restyled element ends up rendering unstyled. A hash in
+    the query string makes each new version a different URL, so the change lands
+    immediately and unchanged assets stay cached."""
+    import re
+    stamps = {}
+    for rel in VERSIONED:
+        f = os.path.join(ROOT, rel)
+        if os.path.exists(f):
+            stamps[rel] = hashlib.sha256(open(f, "rb").read()).hexdigest()[:10]
+    if not stamps:
+        return True
+    pat = re.compile(r'/(' + "|".join(re.escape(r) for r in stamps) + r')(\?v=[0-9a-f]+)?')
+    touched = 0
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        dirnames[:] = [d for d in dirnames
+                       if d not in (".git", ".trash", "_source", "_secrets", "_downloadable", "__pycache__")]
+        for name in filenames:
+            if not name.endswith(".html"):
+                continue
+            f = os.path.join(dirpath, name)
+            try:
+                html = open(f, encoding="utf-8", errors="replace").read()
+            except OSError as e:
+                warn("could not version %s (%s)" % (os.path.relpath(f, ROOT), e))
+                continue
+            new = pat.sub(lambda m: "/" + m.group(1) + "?v=" + stamps[m.group(1)], html)
+            if new != html:
+                open(f, "w", encoding="utf-8").write(new)
+                touched += 1
+    note("stamped %d page(s) with asset versions (%s)"
+         % (touched, ", ".join(sorted(v for v in stamps.values()))))
+    return True
+
+
 if __name__ == "__main__":
     print("Building %s" % ROOT)
     ok = True
@@ -967,5 +1009,6 @@ if __name__ == "__main__":
     ok &= build_downloads()
     prune_gates()
     ok &= build_home()
+    ok &= version_assets()
     print("Done." if ok else "Done, with problems (see above).")
     sys.exit(0 if ok else 1)

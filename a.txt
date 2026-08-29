@@ -1,0 +1,23 @@
+Tab	People
+ADT Initiation		Henry M. Blair
+Vaginal Estrogen	Henry M. Blair · Arshia Sandozi, MD (also from the source hub)
+PVR Self-Estimation	Colby Rondeau, MD · Henry M. Blair · Sumyia Razzak · Sarah Chaudhary · Trashana Smith · Michael Silver · Allison Polland, MD
+Deprivation & Access	Colby Rondeau, MD · Luke Jenusaitis, MD · Elizabeth DeSellier · Rebecca Bergmann · Peace Deh · Michael Silver · Henry M. Blair · Allison Polland, MD
+Nocturia Goals	Oliver Menken · Henry M. Blair
+Retzius-Sparing RARP	Edward Wu, MD · Henry M. Blair · Ervin Teper, MD · David Silver, MD
+Focal Therapy	Henry M. Blair
+Ketamine Cystitis	Henry M. Blair
+Urogyn Survey	Henry M. Blair · Allison Polland, MD
+AUA Core Videos	Henry M. Blair · Allison Polland, MD
+MAUDE Device Safety	Henry M. Blair · Christopher Edwards · Ariel Schulman, MD · Jacob Khurgin, MD
+Med-Ed AI	Henry M. Blair
+
+Earlier work
+
+Tab	People
+Honors Thesis	Henry M. Blair · Advisor: Opal Ousley, PhD · Committee: Gillian Hue, PhD · James Rilling, PhD
+EP2 & Status Epilepticus	Nicholas H. Varvel, PhD (PI) · Raymond Dingledine, PhD
+Monocyte Engraftment	Nicholas H. Varvel, PhD (PI)
+5xFAD Inflammation	Nicholas H. Varvel, PhD · Thota Ganesh, PhD
+TBI & Stress	Henry M. Blair · Aakash Raav · Aryan Malhotra · Jana Velíšková, MD, PhD
+Estrogen & Dentate Gyrus	Henry M. Blair · Raissa Souza · Sejal Schudasama · Justin Garrel · Jana Velíšková, MD, PhD
