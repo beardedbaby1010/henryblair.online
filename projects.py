@@ -41,9 +41,10 @@ PAGES = [
 
 PROJECTS = [
 
+    # ============================================================ current work
+
     {
-        "slug": "adt-initiation",
-        "tab": "ADT Initiation",
+        "slug": "adt-initiation", "tab": "ADT Initiation", "group": "current",
         "title": "The Missed Moment of ADT Initiation",
         "kicker": "Retrospective aggregate cohort study · TriNetX US Collaborative Network",
         "status": "Manuscript V7 · in preparation",
@@ -55,15 +56,14 @@ PROJECTS = [
                   ("41.1%", "intensified when metastatic"),
                   ("3.6×",  "screening tracks prior bone disease"),
                   ("35,851","men on ADT")],
-        "tags": ["Prostate cancer", "ADT", "Bone health", "Treatment intensification", "TriNetX", "Health equity"],
+        "tags": ["Prostate cancer", "ADT", "Bone health", "Treatment intensification", "TriNetX"],
         "page": {"kind": "generated", "source": "_source/pca_project_hub_standalone.html", "strip_paper": True},
         "paper": {"pdf": "Maimo_Work/PCa/Henry - PCa Manuscript V7.pdf",
-                  "label": "Manuscript V7", "note": "In preparation; not yet under review."},
+                  "label": "Manuscript V7", "note": "In preparation."},
     },
 
     {
-        "slug": "ve-boxed-warning",
-        "tab": "Vaginal Estrogen",
+        "slug": "ve-boxed-warning", "tab": "Vaginal Estrogen", "group": "current",
         "title": "Prescribing After the Warning Disappeared",
         "kicker": "Retrospective cohort study · TriNetX Global Collaborative Network",
         "status": "Manuscript V3",
@@ -73,7 +73,7 @@ PROJECTS = [
                    "warning had most deterred.",
         "stats": [("+14.3%", "use per woman seen"),
                   ("1.29",   "rate ratio in breast-cancer survivors"),
-                  ("1.47 / 0.88", "estrogen positive control vs negative controls"),
+                  ("1.47 / 0.88", "positive vs negative controls"),
                   ("192,157","women on vaginal estrogen")],
         "tags": ["Menopause", "GSM", "FDA labeling", "Pharmacoepidemiology", "Breast cancer", "TriNetX"],
         "page": {"kind": "static"},
@@ -81,182 +81,561 @@ PROJECTS = [
                   "label": "Manuscript V3", "note": "Co-authored with Dr. Arshia Sandozi."},
     },
 
-    # ---- card-only for now; give each a "page" entry when its hub is built ----
-
     {
-        "slug": "retzius-retention",
-        "tab": None,
-        "title": "Urinary retention after Retzius-sparing prostatectomy",
-        "kicker": "Retrospective cohort · Maimonides Medical Center",
-        "status": "Manuscript V1 · with Drs. Teper & Silver",
-        "summary": "Retzius-sparing robotic prostatectomy gives men better early continence, but preserving "
-                   "the anterior compartment may cost postoperative retention — and no study has examined "
-                   "retention as a primary outcome. In ~200 patients I am measuring its incidence and testing "
-                   "predictors: membranous urethral length, intravesical prostatic protrusion, prostate "
-                   "volume, baseline LUTS, PSA, diabetes, frailty, and peri-operative alpha-blocker, 5-ARI "
-                   "and ADT use.",
-        "tags": ["Prostate cancer", "RARP", "Urinary retention", "Surgical outcomes"],
-        "page": None,
-        "sources": {"folder": "Maimo_Work/RxRS-RARP"},
-    },
-
-    {
-        "slug": "oab-pvr",
-        "tab": None,
+        "slug": "oab-pvr", "tab": "PVR Self-Estimation", "group": "current",
         "title": "Can women self-estimate their post-void residual?",
-        "kicker": "Prospective study · with Colby Rondeau and Dr. Polland",
+        "kicker": "Prospective study · Maimonides Medical Center",
         "status": "Submitted — Family Practice (Oxford University Press)",
         "summary": "AUA guidelines require a post-void residual measurement to diagnose overactive bladder — "
                    "which needs an in-office ultrasound, at odds with the telemedicine pathway the same "
-                   "guidelines endorse. Women could not estimate their own PVR reliably; but incomplete "
-                   "emptying was rare and no woman met criteria for retention, so the in-office requirement "
-                   "may be safely deferred for low-risk women, opening the door to telemedicine.",
+                   "guidelines endorse. We asked whether women can estimate their own PVR.",
         "tags": ["Overactive bladder", "Telemedicine", "Guidelines", "Access to care"],
-        "page": None,
-        "sources": {"folder": "Maimo_Work/Colby - OAB + PVR"},
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Colby Rondeau", "Allison Polland, MD"],
+            "lede": "A guideline can contradict itself. AUA guidance endorses telemedicine as a way to "
+                    "evaluate overactive bladder, and separately requires a post-void residual measurement "
+                    "to make the diagnosis — which requires the office visit telemedicine was meant to "
+                    "avoid. This study asks whether the requirement can be met another way: can a woman "
+                    "estimate her own PVR?",
+            "question": "If in-office PVR measurement is what blocks telemedical evaluation of overactive "
+                        "bladder, can patients estimate their own residual accurately enough to substitute "
+                        "for it — and if not, is the requirement doing enough work to justify the barrier?",
+            "approach": [
+                "Women presenting with overactive-bladder symptoms estimated their post-void residual "
+                "before it was measured by bladder scan, following earlier work in which patients estimated "
+                "<b>voided</b> volumes accurately.",
+                "Agreement between estimated and measured PVR was assessed against the thresholds that "
+                "actually matter clinically — incomplete emptying and frank retention — rather than by "
+                "correlation alone.",
+                "The prevalence of incomplete emptying and retention in this population was measured "
+                "directly, since the value of a screening requirement depends on how often it finds "
+                "anything.",
+            ],
+            "findings": [
+                "Women could <b>not</b> reliably estimate their own PVR — self-estimation is not a "
+                "substitute for measurement.",
+                "But incomplete emptying was rare and no woman met criteria for retention.",
+                "So the argument the paper makes is not that patients can self-measure; it is that the "
+                "requirement can be safely deferred for low-risk women with OAB symptoms and no retention "
+                "history — which reopens the telemedicine pathway the guidelines already endorse.",
+            ],
+            "findings_note": "<b>A negative result doing useful work.</b> The headline finding failed; the "
+                             "clinically relevant one came from the denominator. Both are reported.",
+            "status_detail": "Submitted to <i>Family Practice</i> (Oxford University Press).",
+            "next": "If the deferral argument holds, the natural follow-on is a telemedicine pathway with "
+                    "an explicit low-risk rule, tested prospectively against in-office evaluation.",
+            "sidefoot": "Henry M. Blair · Colby Rondeau · Dr. Allison Polland<br>Department of Urology, Maimonides Medical Center",
+            "in_progress": True,
+        },
     },
 
     {
-        "slug": "oab-adi",
-        "tab": None,
+        "slug": "oab-adi", "tab": "Deprivation & Access", "group": "current",
         "title": "Does neighborhood deprivation predict urogynecologic access in Brooklyn?",
         "kicker": "Retrospective cohort · Maimonides Medical Center",
         "status": "Manuscript V3",
         "summary": "A companion overactive-bladder study testing whether the Area Deprivation Index and "
-                   "travel burden relate to access and disease severity — and whether ADI is even valid in a "
-                   "dense, transit-rich city. It did not track access or severity in Brooklyn, likely because "
-                   "public transit blunts the travel barriers seen elsewhere; disadvantaged women were, "
-                   "however, more likely to report urge frequency.",
+                   "travel burden relate to access and disease severity — and whether ADI is even a valid "
+                   "instrument in a dense, transit-rich city.",
         "tags": ["Overactive bladder", "Health equity", "Area Deprivation Index", "Urban health"],
-        "page": None,
-        "sources": {"folder": "Maimo_Work/OAB Proj"},
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Allison Polland, MD"],
+            "lede": "The Area Deprivation Index is used across American health services research as a "
+                    "stand-in for a patient's material circumstances. It was built on neighborhoods where "
+                    "distance means a car. Brooklyn is not that place — and if the index's mechanism is "
+                    "travel burden, it may not measure what it claims to measure here.",
+            "question": "Do neighborhood deprivation and travel burden predict access to urogynecologic "
+                        "care and severity at presentation in Brooklyn — and is ADI a valid instrument in "
+                        "a dense city with robust public transit?",
+            "approach": [
+                "Patients seen for overactive bladder were linked to their neighborhood ADI and to "
+                "estimates of travel time and travel cost to the clinic.",
+                "Two questions were asked separately: whether deprivation tracks access and severity, and "
+                "whether ADI behaves as a valid instrument in this setting at all.",
+                "Symptom severity at presentation and follow-up attendance were the outcomes, rather than "
+                "a single composite of 'access'.",
+            ],
+            "findings": [
+                "ADI did not track access or severity in this population — the expected gradient was "
+                "largely absent.",
+                "Travel cost and travel time, measured directly, were associated with poorer follow-up and "
+                "with more severe presentation.",
+                "Disadvantaged women were more likely to report urge urinary frequency.",
+            ],
+            "findings_note": "<b>The methodological point.</b> Where transit blunts distance, a deprivation "
+                             "index built on car-dependent geography can go quiet while the underlying "
+                             "barrier is still there and still measurable — a caution about importing "
+                             "these indices into urban populations unexamined.",
+            "status_detail": "Manuscript V3.",
+            "next": "Replication in other transit-dense cities would establish whether this is a Brooklyn "
+                    "finding or a property of urban geography generally.",
+            "sidefoot": "Henry M. Blair · Dr. Allison Polland<br>Department of Urology, Maimonides Medical Center",
+            "in_progress": True,
+        },
     },
 
     {
-        "slug": "nocturia-goals",
-        "tab": None,
+        "slug": "nocturia-goals", "tab": "Nocturia Goals", "group": "current",
         "title": "What do patients with nocturia actually want treated?",
-        "kicker": "Patient-reported outcomes · with Oliver Menken",
+        "kicker": "Patient-reported outcomes · Maimonides Medical Center",
         "status": "Manuscript V3",
-        "summary": "Nocturia trials fixate on nightly void count, but that may not be what patients care "
-                   "about. This study examines patient-defined treatment goals and how much nighttime "
-                   "urination patients will tolerate — outcomes beyond the void count.",
+        "summary": "Nocturia trials fixate on nightly void count. This project examines patient-defined "
+                   "treatment goals and how much nighttime urination patients are willing to tolerate — "
+                   "outcomes beyond the number.",
         "tags": ["Nocturia", "Patient-reported outcomes", "Trial design"],
-        "page": None,
-        "sources": {"folder": "Maimo_Work/Oliver Menken"},
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Oliver Menken"],
+            "lede": "Nocturia trials are built on a countable outcome: voids per night. It is easy to "
+                    "measure and easy to compare, and it may not be the thing patients are trying to "
+                    "change. A treatment that removes one void from three may or may not be a treatment "
+                    "that changes a life.",
+            "question": "What outcomes do patients with nocturia actually want from treatment, and how much "
+                        "nighttime urination will they tolerate before it matters to them?",
+            "approach": [
+                "Patients define their own treatment goals rather than choosing from a fixed instrument.",
+                "Tolerability thresholds are elicited directly — how many voids a night is acceptable — "
+                "instead of inferred from symptom scores.",
+                "Patient-defined goals are compared against the void-count endpoints trials use, to see "
+                "how far apart the two actually sit.",
+            ],
+            "status_detail": "Manuscript V3.",
+            "next": "If patient-defined goals diverge from void count, the argument follows for a "
+                    "goal-attainment endpoint in nocturia trials.",
+            "sidefoot": "Henry M. Blair · Oliver Menken<br>Department of Urology, Maimonides Medical Center",
+            "in_progress": True,
+        },
     },
 
     {
-        "slug": "focal-therapy-continence",
-        "tab": None,
+        "slug": "retzius-retention", "tab": "Retzius-Sparing RARP", "group": "current",
+        "title": "Urinary retention after Retzius-sparing prostatectomy",
+        "kicker": "Retrospective cohort · Maimonides Medical Center",
+        "status": "Manuscript V1 · IRB protocol in place for a prospective follow-on",
+        "summary": "Retzius-sparing robotic prostatectomy gives men better early continence, but preserving "
+                   "the anterior compartment may cost postoperative retention — and no study has examined "
+                   "retention as a primary outcome or identified who is at risk.",
+        "tags": ["Prostate cancer", "RARP", "Urinary retention", "Surgical outcomes"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Ervin Teper, MD", "David Silver, MD"],
+            "lede": "Retzius-sparing robotic prostatectomy is chosen for a reason: men regain continence "
+                    "sooner. The anatomy that buys that advantage — an untouched anterior compartment — is "
+                    "also the anatomy that could obstruct. Retention after the operation has been reported "
+                    "in passing, never as the outcome of interest, and nobody has said which men are at risk.",
+            "question": "What is the incidence of urinary retention after Retzius-sparing RARP, and which "
+                        "preoperative measurements predict it?",
+            "approach": [
+                "A retrospective cohort of roughly 200 consecutive patients who underwent Retzius-sparing "
+                "RARP, with retention as the primary outcome rather than an incidental complication.",
+                "Anatomic predictors: membranous urethral length, intravesical prostatic protrusion and "
+                "prostate volume.",
+                "Clinical predictors: baseline LUTS, PSA, diabetes, prior retention, prior "
+                "ureteral or urethral procedures, cardiovascular and cerebrovascular disease, and a "
+                "modified frailty index.",
+                "Pharmacologic exposure before and after surgery: alpha-blockers, 5-ARIs and ADT.",
+            ],
+            "status_detail": "Manuscript V1. An IRB protocol and a 48-reference literature review are in "
+                             "place for a prospective follow-on study.",
+            "next": "The prospective study, in which the candidate predictors are measured before surgery "
+                    "rather than reconstructed from charts — the design that can turn an association into "
+                    "a preoperative risk estimate a surgeon could act on.",
+            "sidefoot": "Henry M. Blair · Dr. Ervin Teper · Dr. David Silver<br>Department of Urology, Maimonides Medical Center",
+            "in_progress": True,
+        },
+    },
+
+    {
+        "slug": "focal-therapy-continence", "tab": "Focal Therapy", "group": "current",
         "title": "Continence outcomes after focal therapy for prostate cancer",
         "kicker": "Chart review · Maimonides Medical Center",
         "status": "Early stage",
         "summary": "Urinary outcomes — incontinence and leakage — after HIFU and irreversible "
-                   "electroporation, the two ablative options offered in place of whole-gland treatment.",
-        "tags": ["Prostate cancer", "Focal therapy", "HIFU", "Continence"],
-        "page": None,
+                   "electroporation, the ablative options offered in place of whole-gland treatment.",
+        "tags": ["Prostate cancer", "Focal therapy", "HIFU", "Irreversible electroporation", "Continence"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair"],
+            "lede": "Focal therapy is offered on a continence argument: treat part of the gland, spare the "
+                    "function. That argument deserves outcome data from the men who took it.",
+            "question": "What are the urinary continence outcomes — incontinence, leakage — after HIFU and "
+                        "irreversible electroporation for prostate cancer?",
+            "approach": [
+                "Chart review of patients treated with HIFU or irreversible electroporation.",
+                "Continence and leakage as the primary outcomes, recorded against baseline function.",
+            ],
+            "status_detail": "Early stage — cohort assembly underway.",
+            "sidefoot": "Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
+            "in_progress": True,
+        },
     },
 
     {
-        "slug": "ketamine-cystitis",
-        "tab": None,
+        "slug": "ketamine-cystitis", "tab": "Ketamine Cystitis", "group": "current",
         "title": "Ketamine cystitis in the United States",
         "kicker": "National epidemiology",
         "status": "Early stage",
         "summary": "Characterizing the incidence and demographics of ketamine-associated cystitis over the "
-                   "past decade — age, geography, and trajectory — positioned to be the largest study of its "
-                   "kind to date.",
-        "tags": ["Ketamine cystitis", "Epidemiology", "Substance use"],
-        "page": None,
+                   "past decade — positioned to be the largest study of its kind to date.",
+        "tags": ["Ketamine cystitis", "Epidemiology", "Substance use", "Real-world data"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair"],
+            "lede": "Ketamine use has moved in a decade from club drug to prescribed treatment for "
+                    "depression and chronic pain. Its bladder toxicity is well described in case series "
+                    "and poorly described at national scale — which is a problem if prescribing keeps "
+                    "rising.",
+            "question": "How common is ketamine-associated cystitis in the United States, who develops it, "
+                        "and how has that changed over the past decade?",
+            "approach": [
+                "A national real-world cohort, sized to be the largest characterization of this condition "
+                "to date.",
+                "Incidence over time, with attention to whether any change tracks the growth in "
+                "therapeutic ketamine rather than recreational use alone.",
+                "Demographics: age, sex and geography.",
+            ],
+            "status_detail": "Early stage — cohort definition in progress.",
+            "sidefoot": "Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
+            "in_progress": True,
+        },
     },
 
     {
-        "slug": "urogyn-perceptions",
-        "tab": None,
+        "slug": "urogyn-perceptions", "tab": "Urogyn Survey", "group": "current",
         "title": "How urology residents perceive urogynecology",
         "kicker": "National survey · every U.S. urology residency",
         "status": "Data collection underway",
         "summary": "A survey distributed to every urology residency in the country, measuring residents' "
-                   "knowledge of the urogynecology field and what shapes their perception of it — the "
-                   "pipeline question behind a subspecialty shortage.",
-        "tags": ["Urogynecology", "Medical education", "Workforce"],
-        "page": None,
-        "sources": {"folder": "Maimo_Work/Urogynecology Impressions"},
+                   "knowledge of urogynecology and what shapes their perception of it — the pipeline "
+                   "question behind a subspecialty shortage.",
+        "tags": ["Urogynecology", "Medical education", "Workforce", "Survey"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Allison Polland, MD"],
+            "lede": "Subspecialty shortages are usually described in terms of positions and pay. Before "
+                    "either, there is what trainees think the field is — and residents choose from the "
+                    "picture they have, not the one that is accurate.",
+            "question": "What do U.S. urology residents know about urogynecology, how do they perceive the "
+                        "field, and what shapes that perception during training?",
+            "approach": [
+                "A survey instrument distributed to every urology residency program in the country.",
+                "Knowledge and perception measured separately, since a field can be well regarded and "
+                "poorly understood, or the reverse.",
+                "Exposure during training recorded alongside, so perception can be read against how much "
+                "of the field a resident has actually seen.",
+            ],
+            "status_detail": "Data collection underway.",
+            "sidefoot": "Henry M. Blair · Dr. Allison Polland<br>Department of Urology, Maimonides Medical Center",
+            "in_progress": True,
+        },
     },
 
     {
-        "slug": "aua-core-videos",
-        "tab": None,
+        "slug": "aua-core-videos", "tab": "AUA Core Videos", "group": "current",
         "title": "AUA Core Curriculum instructional videos",
-        "kicker": "American Urological Association",
-        "status": "Produced",
+        "kicker": "American Urological Association · Core Curriculum",
+        "status": "Produced · sacral neuromodulation and pessary fitting",
         "summary": "Instructional videos for the AUA's Core Curriculum: sacral neuromodulation device "
-                   "implantation, and pessary fitting.",
-        "tags": ["Medical education", "Surgical video", "AUA"],
-        "page": None,
-        "sources": {"folder": "Maimo_Work/Video_abstracts"},
+                   "implantation, and pessary fitting — procedures taught mostly by watching, filmed so "
+                   "they can be watched.",
+        "tags": ["Medical education", "Surgical video", "Sacral neuromodulation", "Pessary", "AUA"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Allison Polland, MD"],
+            "lede": "Two procedures that residents learn by standing next to someone doing them. The AUA "
+                    "Core Curriculum is where that apprenticeship is written down for everyone; these are "
+                    "the two entries I filmed, scripted and cut.",
+            "question": "How do you teach a procedure whose difficulty is entirely in the hands — where to "
+                        "stand, what to feel for, what the wrong answer looks like — to someone who cannot "
+                        "be in the room?",
+            "approach": [
+                "<b>Sacral neuromodulation device implantation</b> — lead placement and implantation, "
+                "filmed stepwise with the anatomy called out as it appears.",
+                "<b>Pessary fitting</b> — sizing and fitting, including the judgment that decides between "
+                "sizes rather than only the technique.",
+                "Scripted against the AUA's Core Curriculum format, filmed in theatre, and cut with "
+                "captions so a step can be found without watching the whole thing.",
+            ],
+            "videos": [
+                {"title": "Sacral neuromodulation device implantation",
+                 "caption": "Final cut is with the AUA. It will be posted here, or linked to the AUA's "
+                            "curriculum, once it is released."},
+                {"title": "Pessary fitting",
+                 "caption": "Final cut is with the AUA. It will be posted here, or linked to the AUA's "
+                            "curriculum, once it is released."},
+            ],
+            "status_detail": "Both videos produced. Final cuts sit with the AUA for the Core Curriculum; "
+                             "they will be embedded on this page or linked to the AUA's own release.",
+            "sidefoot": "Henry M. Blair · Dr. Allison Polland<br>Department of Urology, Maimonides Medical Center",
+        },
     },
-]
 
-# ---------------------------------------------------------------- earlier work
-# Emory honors thesis, college and high-school posters. Fill this in and the
-# build renders an "Earlier work" section on the portfolio page.
-EARLIER = [
+    # ============================================================ earlier work
 
     {
-        "title": "Altered functional connectivity of the anterior insula in attention networks",
-        "kicker": "Honors thesis · Neuroscience and Behavioral Biology, Emory University · advisor Opal Ousley, PhD",
-        "year": 2023,
+        "slug": "insula-autism-thesis", "tab": "Honors Thesis", "group": "earlier",
+        "title": "Altered functional connectivity of the anterior insula in attention networks of autistic individuals",
+        "kicker": "Honors thesis · Neuroscience and Behavioral Biology, Emory University · 2023",
+        "status": "Defended April 2023 · Emory ETD",
         "summary": "The anterior insula has been studied in autism for years with conflicting results. "
-                   "Analyzing sex separately, I measured ROI-to-ROI resting-state connectivity between the "
-                   "anterior insula and the salience and ventral attention networks. Connectivity differed by "
-                   "sex in opposite directions — increased in autistic girls, decreased in autistic boys — "
-                   "most clearly at the temporoparietal junction and supramarginal gyrus, and preliminary "
-                   "regressions related that connectivity to symptom scores (SRS-2, SCQ, ADI-R). A finding "
-                   "that argues sex belongs in the analysis rather than in the covariates. Defended April 2023.",
-        "thumb": "/earlier/thumbs/2023-honors-thesis.jpg",
-        "links": [{"label": "Read the thesis (PDF, 49 pp)", "url": "/earlier/files/2023-honors-thesis.pdf"},
-                  {"label": "Emory ETD record", "url": "https://etd.library.emory.edu/concern/etds/ms35tb215"}],
+                   "Analyzing sex separately rather than adjusting it away, connectivity with the attention "
+                   "networks moved in opposite directions in autistic girls and autistic boys.",
+        "tags": ["Autism", "fMRI", "Functional connectivity", "Sex differences", "Anterior insula"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Advisor: Opal Ousley, PhD",
+                       "Committee: Gillian Hue, PhD · James Rilling, PhD"],
+            "lede": "The anterior insula sits at the junction of the salience and ventral attention "
+                    "networks — the machinery that decides what is worth attending to. It has been "
+                    "implicated in autism for over a decade, with findings that contradict each other: "
+                    "hyperconnectivity in some cohorts, hypoconnectivity in others. One explanation for "
+                    "conflicting results is that a real effect is being averaged away.",
+            "question": "Does anterior insula connectivity with the salience and ventral attention networks "
+                        "differ in autism — and does it differ by sex, in a literature that has mostly "
+                        "treated sex as a covariate?",
+            "approach": [
+                "ROI-to-ROI resting-state functional connectivity between the anterior insula and "
+                "pre-specified regions of the salience and ventral attention networks.",
+                "Males and females analyzed separately rather than pooled with sex as a covariate — the "
+                "decision the whole thesis turns on.",
+                "Standard preprocessing across all scans, with ROIs defined a priori and MNI coordinates "
+                "reported.",
+                "Connectivity matrices regressed against symptom instruments — SRS-2, SCQ and ADI-R — to "
+                "test whether the differences carry behavioral meaning.",
+            ],
+            "findings": [
+                "Connectivity differed significantly between autistic and non-autistic children, "
+                "concentrated at the temporoparietal junction and supramarginal gyrus.",
+                "The direction reversed by sex: <b>increased</b> connectivity in autistic females, "
+                "<b>decreased</b> in autistic males — an effect that cancels toward null when the sexes "
+                "are pooled.",
+                "Preliminary regressions related resting-state connectivity in autistic females to symptom "
+                "scores, suggesting connectivity may carry information about severity.",
+            ],
+            "findings_note": "<b>Why the conflicting literature may be conflicting.</b> If the effect runs "
+                             "in opposite directions by sex, then cohorts differing in sex composition will "
+                             "disagree — and averaging across sex will find less than either half contains.",
+            "status_detail": "Bachelor of Science with Honors, Neuroscience and Behavioral Biology. "
+                             "Defended April 2023; archived in the Emory Theses and Dissertations repository.",
+            "materials": [
+                {"label": "Read the thesis (PDF, 49 pp)", "url": "/earlier/files/2023-honors-thesis.pdf"},
+                {"label": "Emory ETD record", "url": "https://etd.library.emory.edu/concern/etds/ms35tb215"},
+            ],
+            "next": "The sex-stratified result argues for replication in a larger cohort with enough "
+                    "autistic girls to power the female analysis on its own — the sample constraint that "
+                    "has shaped this literature from the start.",
+            "sidefoot": "Henry M. Blair · Emory University<br>Advisor: Dr. Opal Ousley<br>Defended April 2023",
+        },
     },
 
     {
+        "slug": "varvel-ep2-status-epilepticus", "tab": "EP2 & Status Epilepticus", "group": "earlier",
+        "title": "Peripheral myeloid EP2 activation after status epilepticus",
+        "kicker": "Varvel lab · Pharmacology and Chemical Biology, Emory University School of Medicine",
+        "status": "Lab work · published as Varvel et al., J Neurosci 2021",
+        "summary": "After status epilepticus a multi-part inflammatory response follows, driven partly by "
+                   "COX-2 signalling through the EP2 receptor. This work isolated the contribution of "
+                   "peripheral myeloid cells — the immune cells that arrive from outside the brain.",
+        "tags": ["Epilepsy", "Neuroinflammation", "Status epilepticus", "Myeloid cells", "EP2"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Nicholas H. Varvel, PhD (principal investigator)", "Raymond Dingledine, PhD"],
+            "lede": "Status epilepticus is followed by inflammation that does not simply accompany the "
+                    "injury but contributes to it. The question this line of work asks is which cells are "
+                    "responsible — brain-resident microglia, or myeloid cells recruited from the "
+                    "periphery — because only one of those is reachable by a drug that does not cross "
+                    "into the brain.",
+            "question": "How much of the damaging inflammatory response after status epilepticus is driven "
+                        "by EP2 activation on peripheral myeloid cells rather than on brain-resident cells?",
+            "approach": [
+                "Mouse models of status epilepticus with genetic and pharmacologic manipulation of EP2 "
+                "signalling.",
+                "Gene expression and PCR-based readouts of the inflammatory response.",
+                "Separation of peripheral myeloid contribution from brain-resident microglial contribution.",
+            ],
+            "status_detail": "Work in Dr. Nicholas Varvel's laboratory at Emory. Published as Varvel NH, "
+                             "Espinosa-Garcia C, Hunter-Chang S, et al., <i>Journal of Neuroscience</i> "
+                             "2021;41(5):1105–1117.",
+            "about": ["<b>My contribution.</b> [Placeholder — describe your specific role on this project "
+                      "in your own words: which experiments, which techniques, over what period. I have "
+                      "deliberately not invented one. Edit this in projects.py.]",
+                      "I am not an author on the published paper; this page describes the laboratory "
+                      "project I worked on, with the publication cited as its outcome."],
+            "materials": [{"label": "Varvel et al., J Neurosci 2021 (DOI)",
+                           "url": "https://doi.org/10.1523/JNEUROSCI.2040-20.2020"}],
+            "sidefoot": "Varvel lab · Emory University School of Medicine",
+            "in_progress": True,
+        },
+    },
+
+    {
+        "slug": "varvel-monocyte-engraftment", "tab": "Monocyte Engraftment", "group": "earlier",
+        "title": "Brain-engrafted monocytes after microglia ablation",
+        "kicker": "Varvel lab · Pharmacology and Chemical Biology, Emory University School of Medicine",
+        "status": "Lab work · methods published in Methods Mol Biol 2019",
+        "summary": "When brain-resident microglia are ablated, monocytes from the periphery move in and "
+                   "take up residence. Whether those engrafted cells behave like the microglia they "
+                   "replaced is the question the method was built to answer.",
+        "tags": ["Neuroimmunology", "Microglia", "Monocytes", "Methods"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Nicholas H. Varvel, PhD (principal investigator)"],
+            "lede": "Microglia can be depleted and the brain repopulated by monocytes recruited from the "
+                    "blood. Those newcomers look like microglia and sit where microglia sat — but "
+                    "functional equivalence is an assumption, not an observation, and it matters for every "
+                    "therapy that proposes replacing brain immune cells.",
+            "question": "Do peripherally derived monocytes that engraft in the brain after microglial "
+                        "ablation function like the microglia they replace?",
+            "approach": [
+                "Microglial ablation in mouse models followed by engraftment of peripherally derived "
+                "monocytes.",
+                "Functional characterization of the engrafted population against resident microglia.",
+            ],
+            "status_detail": "Work in Dr. Nicholas Varvel's laboratory at Emory. Methods published as "
+                             "Varvel NH, Ransohoff RM, Neher JJ, <i>Methods in Molecular Biology</i> "
+                             "2019;2034:293–301.",
+            "about": ["<b>My contribution.</b> [Placeholder — describe your specific role in your own "
+                      "words. Edit this in projects.py.]",
+                      "I am not an author on the published methods chapter; this page describes the "
+                      "laboratory project I worked on."],
+            "materials": [{"label": "Methods Mol Biol 2019 (DOI)",
+                           "url": "https://doi.org/10.1007/978-1-4939-9658-2_22"}],
+            "sidefoot": "Varvel lab · Emory University School of Medicine",
+            "in_progress": True,
+        },
+    },
+
+    {
+        "slug": "varvel-5xfad-inflammation", "tab": "5xFAD Inflammation", "group": "earlier",
+        "title": "Sex-dependent inflammatory gene induction in prodromal Alzheimer's disease",
+        "kicker": "Varvel lab · Pharmacology and Chemical Biology, Emory University School of Medicine",
+        "status": "Lab work · published as Manji et al., J Alzheimers Dis 2019",
+        "summary": "In the 5xFAD mouse, inflammatory gene induction during the prodromal stage — before "
+                   "plaques dominate the picture — differs between males and females.",
+        "tags": ["Alzheimer's disease", "Neuroinflammation", "Sex differences", "5xFAD"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Nicholas H. Varvel, PhD", "Thota Ganesh, PhD"],
+            "lede": "Alzheimer's disease is roughly twice as common in women, and the inflammatory "
+                    "component of the disease is one place that difference could originate. The prodromal "
+                    "stage — before pathology is florid — is when a divergence would matter most and is "
+                    "hardest to see in people.",
+            "question": "Does inflammatory gene induction during the prodromal stage of Alzheimer's "
+                        "pathology differ by sex in the 5xFAD mouse?",
+            "approach": [
+                "5xFAD transgenic mice examined at the prodromal stage rather than after established "
+                "pathology.",
+                "Inflammatory gene expression profiled and compared between males and females.",
+            ],
+            "status_detail": "Work in Dr. Nicholas Varvel's laboratory at Emory. Published as Manji Z, "
+                             "Rojas A, Wang W, Dingledine R, Varvel NH, Ganesh T, <i>Journal of "
+                             "Alzheimer's Disease</i> 2019;70(4):1259–1274.",
+            "about": ["<b>My contribution.</b> [Placeholder — describe your specific role in your own "
+                      "words. Edit this in projects.py.]",
+                      "I am not an author on the published paper; this page describes the laboratory "
+                      "project I worked on."],
+            "materials": [{"label": "J Alzheimers Dis 2019 (DOI)", "url": "https://doi.org/10.3233/JAD-180678"}],
+            "sidefoot": "Varvel lab · Emory University School of Medicine",
+            "in_progress": True,
+        },
+    },
+
+    {
+        "slug": "tbi-stress-pte", "tab": "TBI & Stress", "group": "earlier",
         "title": "Traumatic stress at the moment of brain injury and the risk of post-traumatic epilepsy",
-        "kicker": "STAR program · Department of Cell Biology & Anatomy, New York Medical College · with Dr. Jana Velíšková",
-        "year": 2019,
-        "summary": "Traumatic brain injury can set off epileptogenesis — the months or years of neuronal "
-                   "loss, mossy-fiber sprouting and shifting excitation that precede a first unprovoked "
-                   "seizure. Clinically, severe stress at the moment of injury is associated with worse "
-                   "outcomes, but preclinical work had studied stress and injury separately and never "
-                   "together. Adult male rats were submerged for 45 seconds before a controlled cortical "
-                   "impact; controls swam freely before the same impact. Open-field and elevated-plus-maze "
-                   "testing confirmed the stress manipulation, then flurothyl seizure thresholds were measured "
-                   "at five and ten days. At five days the groups were indistinguishable; by ten days the "
-                   "stressed animals had a lower threshold for tonic-clonic seizures (p = 0.02) and seized "
-                   "longer — the interaction emerging inside the epileptogenic window rather than at the "
-                   "moment of injury.",
-        "thumb": "/earlier/thumbs/2019-tbi-stress-pte-poster.jpg",
-        "links": [{"label": "Poster (PDF)", "url": "/earlier/files/2019-tbi-stress-pte-poster.pdf"}],
+        "kicker": "Velíšková lab · Cell Biology & Anatomy, New York Medical College · STAR program · 2019",
+        "status": "Presented as a poster, 2019",
+        "summary": "Traumatic brain injury can set off epileptogenesis, and clinical data associate severe "
+                   "stress at the moment of injury with worse outcomes — but preclinical work had studied "
+                   "stress and injury only separately.",
+        "tags": ["Epilepsy", "TBI", "Post-traumatic epilepsy", "Stress", "Epileptogenesis"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Aakash Raav", "Aryan Malhotra", "Jana Velíšková, MD, PhD"],
+            "lede": "Post-traumatic epilepsy arrives late. Between the injury and the first unprovoked "
+                    "seizure lies epileptogenesis — neuronal loss, mossy-fiber sprouting, and a shift "
+                    "toward excitation in the hippocampus. Clinically, TBI rarely happens calmly, and "
+                    "severe stress at the time of injury is associated with worse progression. No one had "
+                    "delivered both insults together in an animal and watched what happened.",
+            "question": "Does a severe stress event at the moment of cortical contusion increase seizure "
+                        "susceptibility during the epileptogenic period?",
+            "approach": [
+                "Adult male rats were submerged for 45 seconds — a life-threatening stressor — immediately "
+                "before controlled cortical impact. Controls swam freely before the same impact.",
+                "Open-field and elevated-plus-maze testing confirmed the stress manipulation had worked, "
+                "rather than assuming it.",
+                "Seizure susceptibility was measured in a flurothyl chamber at five and ten days after "
+                "injury — two points inside the epileptogenic window.",
+            ],
+            "findings": [
+                "At five days the two groups were indistinguishable.",
+                "By ten days the stressed animals had a significantly lower threshold for tonic-clonic "
+                "seizures (p = 0.02) and spent longer seizing.",
+                "The interaction therefore emerges during epileptogenesis rather than at the moment of "
+                "injury — consistent with stress acting on the process that builds epilepsy, not on the "
+                "injury itself.",
+            ],
+            "status_detail": "Presented as a poster through the STAR program at New York Medical College, "
+                             "2019, under Dr. Jana Velíšková.",
+            "materials": [{"label": "Poster (PDF)", "url": "/earlier/files/2019-tbi-stress-pte-poster.pdf"}],
+            "sidefoot": "Velíšková lab · New York Medical College<br>STAR program · 2019",
+        },
     },
 
     {
+        "slug": "estrogen-dentate-gyrus", "tab": "Estrogen & Dentate Gyrus", "group": "earlier",
         "title": "Estrogen and the dentate gyrus: response to spatial and environmental novelty",
-        "kicker": "STAR program · New York Medical College · with Dr. Jana Velíšková",
-        "year": 2018,
-        "summary": "Roughly 200,000 oophorectomies are performed in the United States each year, each one "
-                   "producing surgical menopause and a sudden drop in estradiol; many of those women then take "
-                   "estrogen therapy partly for cognition. Estrogen receptors are dense in the dentate gyrus, "
-                   "the structure behind pattern separation, and in vitro work in the lab had shown estradiol "
-                   "altering long-term potentiation there — but the behavioral consequence was open. Eighteen "
-                   "ovariectomized rats received β-estradiol (2 µg/day for four days) or oil, then met an "
-                   "environmental change (a new arena) and a metric change (objects moved from 30 to 50 cm). "
-                   "Estradiol-replaced animals explored significantly less after the environmental change "
-                   "(p = 0.028), consistent with estradiol shaping dentate-mediated learning. Written up for "
-                   "the Junior Science and Humanities Symposium and presented as a poster — my first study, "
-                   "run as a high-school student in the STAR program, and the first time I worked on what "
-                   "estrogen does after it is taken away.",
-        "thumb": "/earlier/thumbs/2018-estrogen-novelty-poster.jpg",
-        "links": [{"label": "Paper (PDF, 20 pp)", "url": "/earlier/files/2018-estrogen-novelty-paper.pdf"},
-                  {"label": "Poster (PDF)", "url": "/earlier/files/2018-estrogen-novelty-poster.pdf"}],
+        "kicker": "Velíšková lab · New York Medical College · STAR program · 2018",
+        "status": "Paper and poster · Junior Science and Humanities Symposium",
+        "summary": "Around 200,000 oophorectomies are performed in the United States each year, each "
+                   "producing an abrupt loss of estradiol. What that loss — and its replacement — does to "
+                   "the dentate gyrus was the question of my first study.",
+        "tags": ["Estrogen", "Dentate gyrus", "Pattern separation", "Learning and memory"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Raissa Souza", "Sejal Schudasama", "Justin Garrel",
+                       "Jana Velíšková, MD, PhD"],
+            "lede": "Roughly 200,000 oophorectomies a year in the United States produce surgical menopause "
+                    "and a sudden drop in estradiol; many of those women then take estrogen partly for "
+                    "cognition. Estrogen receptors are dense in the dentate gyrus, the structure behind "
+                    "pattern separation, and the lab had already shown estradiol altering long-term "
+                    "potentiation there in vitro. What that did to behavior was open.",
+            "question": "Does estradiol replacement after ovariectomy change how animals respond to spatial "
+                        "and environmental novelty — the behavior the dentate gyrus is thought to support?",
+            "approach": [
+                "Eighteen ovariectomized Sprague-Dawley rats, replaced with β-estradiol (2 µg/day for four "
+                "days) or oil vehicle, assigned at random.",
+                "<b>Environmental change:</b> habituation across three trials in a circular arena with two "
+                "objects 30 cm apart, then a single trial in a new square arena with the objects unmoved.",
+                "<b>Metric change:</b> the same habituation, then the objects moved from 30 cm to 50 cm "
+                "apart.",
+                "Exploration scored from overhead video with ANY-maze, plus manual counts of rearing, "
+                "object exploration and zone crossings.",
+            ],
+            "findings": [
+                "Estradiol-replaced animals explored significantly less after the environmental change "
+                "than oil-injected controls (p = 0.028).",
+                "A similar direction followed the metric change.",
+                "Together: estradiol modulates dentate-gyrus-mediated responses to novelty — the "
+                "behavioral counterpart of the LTP differences the lab had recorded in vitro.",
+            ],
+            "findings_note": "<b>An honest limitation, noted at the time.</b> The metric change was run on "
+                             "the same day as the environmental change, so the animals were no longer "
+                             "meeting a novel environment when it began. The write-up called for repeating "
+                             "it on its own day with new animals.",
+            "status_detail": "Written up for the Junior Science and Humanities Symposium and presented as a "
+                             "poster. My first study — run as a high-school student through the STAR "
+                             "program at New York Medical College.",
+            "materials": [
+                {"label": "Paper (PDF, 20 pp)", "url": "/earlier/files/2018-estrogen-novelty-paper.pdf"},
+                {"label": "Poster (PDF)", "url": "/earlier/files/2018-estrogen-novelty-poster.pdf"},
+            ],
+            "next": "Eight years later the same question — what estrogen does when it is taken away, and "
+                    "what happens when it is given back — is the subject of the vaginal-estrogen study on "
+                    "this site.",
+            "sidefoot": "Velíšková lab · New York Medical College<br>STAR program · 2018",
+        },
     },
 ]

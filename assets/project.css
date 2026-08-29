@@ -86,3 +86,9 @@ main.hub{margin-left:var(--hubside);max-width:1160px;
   main.hub{margin-left:0;padding-top:18px}
 }
 @media print{.sitebar,.hubbar,.hubside{display:none}main.hub{margin:0;padding:0}}
+
+.wip{background:#fbf7ec;border:1px solid #e3d6b4;border-left:4px solid #c9a227;
+  padding:14px 18px;margin:18px 0;font-size:14px;color:#4a4433}
+.wip b{color:#3a3527}
+.hub figure video{width:100%;height:auto;display:block;background:#111}
+.hub .statrow .stat:only-child{border-right:0}

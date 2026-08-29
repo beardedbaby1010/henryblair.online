@@ -77,6 +77,8 @@ SITEBAR_CSS = """
   text-decoration:none;border:0;border-right:1px solid #333;white-space:nowrap;font-weight:600}
 .sitebar .sb-tabs a:hover{color:#fff;background:#1c1c1c}
 .sitebar .sb-tabs a[aria-current="page"]{color:#111;background:#f4f4f2}
+.sb-fade{position:fixed;top:0;right:0;width:46px;height:34px;z-index:101;pointer-events:none;
+  background:linear-gradient(to right,rgba(17,17,17,0),#111 70%)}
 .topbar{top:34px}
 #side{top:calc(var(--top) + 34px)}
 main{padding-top:calc(var(--top) + 34px + 22px)}
@@ -103,7 +105,7 @@ def nav_html(active=None):
     return ('<div class="sitebar">\n'
             '  <a class="sb-brand" href="/">Henry M. Blair</a>\n'
             '  <nav class="sb-tabs">' + "".join(tabs) + '</nav>\n'
-            '</div>')
+            '</div>\n<span class="sb-fade" aria-hidden="true"></span>')
 
 def set_nav(path, active):
     if not os.path.exists(path):
@@ -158,6 +160,8 @@ def build_project_page(p):
     if not page:
         return True
     out = os.path.join(ROOT, "projects", p["slug"], "index.html")
+    if page["kind"] == "auto":
+        return build_auto_hub(p)
     if page["kind"] == "static":
         ok = set_nav(out, p["slug"])
         note("%s — hand-written page, tab bar refreshed" % p["slug"])
@@ -365,6 +369,144 @@ def build_gate(p):
     note("-> projects/%s/paper/index.html  (%.1f MB encrypted)" % (slug, os.path.getsize(out) / 1e6))
     return True
 
+# ------------------------------------------------------------------ generated hubs (from config)
+
+AUTO_HUB = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>%(title)s — project</title>
+<meta name="description" content="%(desc)s">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/project.css">
+%(head)s
+</head>
+<body>
+
+<!--SITENAV-->%(nav)s<!--/SITENAV-->
+
+<header class="hubbar">
+  <div class="ht">%(title)s <span>· %(kicker)s</span></div>
+</header>
+
+<nav class="hubside">
+%(sidenav)s
+  <div class="sidefoot">%(sidefoot)s</div>
+</nav>
+
+<main class="hub">
+%(sections)s
+  <div class="pgfoot">%(footnote)s</div>
+</main>
+</body>
+</html>
+"""
+
+def _p(text):
+    return '<p>%s</p>' % text
+
+def auto_sections(p):
+    h = p.get("hub", {})
+    out, nav = [], []
+
+    def sec(sid, label, inner):
+        nav.append('  <a href="#%s">%s</a>' % (sid, label))
+        out.append('<section id="%s" class="sec">\n%s</section>' % (sid, inner))
+
+    # overview
+    stats = "".join('<div class="stat"><div class="statv">%s</div><div class="statl">%s</div></div>'
+                    % (esc(v), esc(l)) for v, l in p.get("stats", []))
+    o  = '  <div class="masthead2">\n'
+    o += '    <div class="tag">%s</div>\n' % esc(p["kicker"])
+    o += '    <h1>%s</h1>\n' % esc(p["title"])
+    if h.get("people"):
+        o += '    <p class="authors">%s</p>\n' % esc(" · ".join(h["people"]))
+    o += '    <p class="lede">%s</p>\n' % h.get("lede", esc(p["summary"]))
+    o += '  </div>\n'
+    if stats:
+        o += '  <div class="statrow">%s</div>\n' % stats
+    o += ('  <div class="callout"><b>Status.</b> %s</div>\n'
+          % h.get("status_detail", esc(p.get("status", ""))))
+    if h.get("in_progress"):
+        o += ('  <div class="wip"><b>This hub is still being built.</b> '
+              'The analysis is underway; the derivation, tables and figures will be posted here as '
+              'they are finished, the way the completed projects on this site are. What is below is '
+              'the design and the current state, written up as it stands.</div>\n')
+    sec("overview", "Overview", o)
+
+    if h.get("question"):
+        sec("question", "The question", '  <h2>The question</h2>\n  %s\n' % _p(h["question"]))
+
+    if h.get("approach"):
+        body = '  <h2>How it is being done</h2>\n  <ul class="pitfalls">\n'
+        body += "".join('    <li>%s</li>\n' % a for a in h["approach"])
+        body += '  </ul>\n'
+        sec("approach", "How it is done", body)
+
+    if h.get("findings"):
+        body = '  <h2>What it shows so far</h2>\n  <ul class="pitfalls">\n'
+        body += "".join('    <li>%s</li>\n' % f for f in h["findings"])
+        body += '  </ul>\n'
+        if h.get("findings_note"):
+            body += '  <div class="callout">%s</div>\n' % h["findings_note"]
+        sec("findings", "What it shows", body)
+
+    if h.get("videos"):
+        body = '  <h2>The videos</h2>\n'
+        for v in h["videos"]:
+            if v.get("src"):
+                body += ('  <figure><video controls preload="metadata" %s src="%s"></video>\n'
+                         '  <figcaption><b>%s.</b> %s</figcaption></figure>\n'
+                         % (('poster="%s"' % v["poster"]) if v.get("poster") else "",
+                            v["src"], esc(v["title"]), v.get("caption", "")))
+            else:
+                body += ('  <div class="gate"><h3>%s</h3><p>%s</p></div>\n'
+                         % (esc(v["title"]), v.get("caption", "Not yet posted.")))
+        sec("videos", "The videos", body)
+
+    if h.get("materials"):
+        body = '  <h2>Materials</h2>\n  <div class="dls">'
+        body += "".join('<a class="dl" href="%s">%s</a>' % (m["url"], esc(m["label"])) for m in h["materials"])
+        body += '</div>\n'
+        sec("materials", "Materials", body)
+
+    if p.get("paper"):
+        body = ('  <h2>The manuscript</h2>\n'
+                '  <div class="gate"><h3>%s</h3><p>%s Behind a passphrase while the work is '
+                'unpublished — <a href="/projects/%s/paper/">open it here</a> if I sent you one, or '
+                '<a href="mailto:henrymblair@gmail.com">email me</a>.</p></div>\n'
+                % (esc(p["paper"].get("label", "Manuscript")),
+                   esc(p["paper"].get("note", "")), p["slug"]))
+        sec("paper", "The manuscript", body)
+
+    if h.get("next"):
+        sec("next", "What comes next", '  <h2>What comes next</h2>\n  %s\n' % _p(h["next"]))
+
+    if h.get("about"):
+        sec("about", "About & provenance",
+            '  <h2>About &amp; provenance</h2>\n  <div class="keybox">%s</div>\n'
+            % "".join(_p(x) for x in h["about"]))
+
+    return "\n\n".join(out), "\n".join(nav)
+
+def build_auto_hub(p):
+    sections, sidenav = auto_sections(p)
+    h = p.get("hub", {})
+    html = AUTO_HUB % {
+        "title": esc(p["title"]), "kicker": esc(p["kicker"]),
+        "desc": esc(p["summary"][:180]), "head": HEAD_TAGS, "nav": nav_html(p["slug"]),
+        "sidenav": sidenav,
+        "sidefoot": h.get("sidefoot", "Henry M. Blair"),
+        "sections": sections,
+        "footnote": h.get("footnote", "This page is generated from projects.py — it grows as the work does."),
+    }
+    out = os.path.join(ROOT, "projects", p["slug"], "index.html")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    open(out, "w", encoding="utf-8").write(html)
+    note("-> projects/%s/index.html  (generated hub)" % p["slug"])
+    return True
+
 # ------------------------------------------------------------------ landing page
 
 def esc(s):
@@ -395,24 +537,23 @@ def build_home():
     html = open(path, encoding="utf-8").read()
     if "<!--PROJECTS-->" not in html:
         warn("index.html has no <!--PROJECTS--> markers; cards not written"); return False
-    featured = [p for p in CFG.PROJECTS if p.get("page")]
-    others   = [p for p in CFG.PROJECTS if not p.get("page")]
-    body = "\n\n".join(card(p) for p in featured)
-    if others:
-        body += ('\n\n<h2 class="sect">Also underway</h2>\n<p class="sectnote">Active projects at '
-                 'Maimonides without a hub of their own yet — each gets one as its analysis closes.</p>\n\n'
-                 + "\n\n".join(card(p) for p in others))
-    if getattr(CFG, "EARLIER", None):
+
+    current = [p for p in CFG.PROJECTS if p.get("group", "current") == "current"]
+    earlier = [p for p in CFG.PROJECTS if p.get("group") == "earlier"]
+
+    body = "\n\n".join(card(p) for p in current)
+    if earlier:
         body += ('\n\n<h2 class="sect">Earlier work</h2>\n'
-                 '<p class="sectnote">Where the method came from: bench and imaging work at Emory and '
+                 '<p class="sectnote">Where the method came from: imaging and bench work at Emory and '
                  'New York Medical College, beginning in high school through the STAR program.</p>\n\n'
-                 + "\n\n".join(earlier_card(e) for e in CFG.EARLIER))
+                 + "\n\n".join(card(p) for p in earlier))
     new = re.sub(r"<!--PROJECTS-->.*?<!--/PROJECTS-->",
                  "<!--PROJECTS-->\n" + body + "\n<!--/PROJECTS-->", html, flags=re.S)
     if new != html:
         open(path, "w", encoding="utf-8").write(new)
-        note("-> index.html  (%d cards)" % (len(featured) + len(others)))
+    note("-> index.html  (%d projects, %d earlier)" % (len(current), len(earlier)))
     return True
+
 
 def earlier_card(e):
     thumb = ('<img class="pth" src="%s" alt="">' % e["thumb"]) if e.get("thumb") else ""

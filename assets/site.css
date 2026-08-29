@@ -24,6 +24,8 @@ body{margin:0;padding-top:var(--sitebar);background:var(--bg);color:var(--ink);
   text-decoration:none;border:0;border-right:1px solid #333;white-space:nowrap;font-weight:600}
 .sitebar .sb-tabs a:hover{color:#fff;background:#1c1c1c}
 .sitebar .sb-tabs a[aria-current="page"]{color:#111;background:#f4f4f2}
+.sb-fade{position:fixed;top:0;right:0;width:46px;height:var(--sitebar);z-index:101;pointer-events:none;
+  background:linear-gradient(to right,rgba(17,17,17,0),#111 70%)}
 .sitebar .sb-private{margin-left:auto;display:flex;align-items:center;padding:0 14px;
   color:#e0b874;border-left:1px solid #333;letter-spacing:.09em;text-transform:uppercase;
   font-size:10.5px;font-weight:700;white-space:nowrap}
