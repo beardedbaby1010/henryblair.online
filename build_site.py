@@ -63,6 +63,17 @@ PAGES = [
     {"key": "home",    "tab": "Research Portfolio", "href": "/",         "file": "index.html"},
 ]
 
+HEAD_TAGS = """
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="Henry M. Blair">
+<meta property="og:image" content="https://henryblair.online/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+"""
+
 SITEBAR_CSS = """
 <style id="site-nav-css">
 :root{--sitebar:34px}
@@ -143,7 +154,7 @@ def strip_paper(html):
 
 def wrap(html, slug, private):
     html = re.sub(r'<style id="site-nav-css">.*?</style>', '', html, flags=re.S)
-    html = html.replace("</head>", SITEBAR_CSS + "</head>", 1)
+    html = html.replace("</head>", HEAD_TAGS + SITEBAR_CSS + "</head>", 1)
     if private:
         html = html.replace('<meta charset="utf-8">',
                             '<meta charset="utf-8">\n<meta name="robots" content="noindex,nofollow">', 1)
