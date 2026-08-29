@@ -118,7 +118,7 @@ PROJECTS = [
                   ("95%", "had a normal residual"), ("0", "met retention criteria")],
         "tags": ["Overactive bladder", "Telemedicine", "Guidelines", "Access to care", "Primary care"],
         "page": {"kind": "auto"},
-        "paper": {"pdf": "Maimo_Work/OAB Proj/PVR/Henry Edits V7 PVR Manuscript Family Practice.pdf",
+        "paper": {"pdf": "Maimo_Work/old_OAB Proj/PVR/Henry Edits V7 PVR Manuscript Family Practice.pdf",
                   "label": "Manuscript V7", "note": "Submitted to Family Practice (OUP)."},
         "hub": {
             "people": ["Colby Rondeau", "Henry M. Blair", "Sumyia Razzak", "Sarah Chaudhary",

@@ -70,8 +70,15 @@ HEAD_TAGS = """
 
 SITEBAR_CSS = """
 <style id="site-nav-css">
-:root{--sitebar:34px}
-.sitebar{position:fixed;top:0;left:0;right:0;height:34px;z-index:100;
+:root{--sitebar:34px;--badge:76px}
+.sb-badge{position:fixed;top:0;left:0;width:76px;height:76px;z-index:120;background:#111;
+  display:flex;align-items:center;justify-content:center;border-right:1px solid #333;
+  border-bottom:1px solid #333;border-radius:0;text-decoration:none}
+.sb-badge img{width:58px;height:58px;border-radius:50%;display:block;
+  transition:transform .15s ease,box-shadow .15s ease}
+.sb-badge:hover img{transform:scale(1.05);box-shadow:0 0 0 2px #f4f4f2}
+.sb-badge:focus-visible img{outline:2px solid #fff;outline-offset:2px}
+.sitebar{position:fixed;top:0;left:76px;right:0;height:34px;z-index:100;
   display:flex;align-items:stretch;background:#111;color:#fff;
   font-family:ui-sans-serif,-apple-system,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
   font-size:12px;overflow-x:auto;scrollbar-width:none}
@@ -86,11 +93,18 @@ SITEBAR_CSS = """
 .sitebar .sb-tabs a[aria-current="page"]{color:#111;background:#f4f4f2}
 .sb-fade{position:fixed;top:0;right:0;width:46px;height:34px;z-index:101;pointer-events:none;
   background:linear-gradient(to right,rgba(17,17,17,0),#111 70%)}
-.topbar{top:34px}
+.topbar{top:34px;left:76px}
+.hubbar{left:76px}
 #side{top:calc(var(--top) + 34px)}
 main{padding-top:calc(var(--top) + 34px + 22px)}
 .sec{scroll-margin-top:calc(var(--top) + 34px + 8px)}
 @media(max-width:640px){
+  :root{--badge:52px}
+  .sb-badge{width:52px;height:52px}
+  .sb-badge img{width:40px;height:40px}
+  .sitebar{left:52px}
+  .topbar{left:0}
+  .hubbar{left:52px}
   .topbar .brand span{display:none}
   .topbar .brand{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .topbar #q{width:120px}
@@ -98,6 +112,17 @@ main{padding-top:calc(var(--top) + 34px + 22px)}
 @media print{.sitebar{display:none}.topbar{top:0}main{padding-top:0}}
 </style>
 """
+
+# With this many tabs the bar always overflows, so the open one can sit off-screen
+# when a page loads. Centre it on load, without smooth-scrolling (which would look
+# like the page moving under the reader).
+TAB_SCROLL = ("(function(){function c(){var b=document.querySelector('.sitebar');"
+              "if(!b)return;var a=b.querySelector('[aria-current=\\'page\\']');if(!a)return;"
+              "var x=a.offsetLeft-(b.clientWidth-a.offsetWidth)/2;"
+              "b.scrollLeft=Math.max(0,Math.min(x,b.scrollWidth-b.clientWidth));}"
+              "c();if(document.readyState!=='complete'){window.addEventListener('load',c);}"
+              "window.addEventListener('resize',c);})();")
+
 
 def nav_html(active=None):
     tabs = []
@@ -109,10 +134,13 @@ def nav_html(active=None):
             continue
         cur = ' aria-current="page"' if pr["slug"] == active else ''
         tabs.append('<a href="/projects/%s/"%s>%s</a>' % (pr["slug"], cur, pr["tab"]))
-    return ('<div class="sitebar">\n'
+    return ('<a class="sb-badge" href="/" aria-label="Henry M. Blair — home">'
+            '<img src="/assets/headshot-badge.png" alt="" width="320" height="320"></a>\n'
+            '<div class="sitebar">\n'
             '  <a class="sb-brand" href="/">Henry M. Blair</a>\n'
             '  <nav class="sb-tabs">' + "".join(tabs) + '</nav>\n'
-            '</div>\n<span class="sb-fade" aria-hidden="true"></span>')
+            '</div>\n<span class="sb-fade" aria-hidden="true"></span>\n'
+            '<script>' + TAB_SCROLL + '</script>')
 
 def set_nav(path, active):
     if not os.path.exists(path):
@@ -429,7 +457,12 @@ def write_gate(out, title, subtitle, blurb, back_url, back_label, filename, data
     """Encrypt `data` under `password` and write a passphrase page to `out`.
     Skips the work when neither the file nor the passphrase has changed."""
     keymat = "".join("%s:%s" % (l, pw) for l, pw in sorted(passwords))
-    fingerprint = hashlib.sha256(data + keymat.encode() + str(PBKDF2_ITERATIONS).encode()).hexdigest()
+    # The page template and the shared nav are part of what gets written, so a change
+    # to either has to invalidate the cache — otherwise a gate keeps serving the old
+    # chrome long after the rest of the site has moved on.
+    template = (GATE_PAGE + nav_html(None) + HEAD_TAGS).encode()
+    fingerprint = hashlib.sha256(data + keymat.encode() + str(PBKDF2_ITERATIONS).encode()
+                                 + hashlib.sha256(template).digest()).hexdigest()
     cache = json.load(open(GATECACHE)) if os.path.exists(GATECACHE) else {}
     BUILT_GATES.add(os.path.abspath(out))
     if cache.get(cache_key) == fingerprint and os.path.exists(out):

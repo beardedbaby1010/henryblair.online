@@ -2,7 +2,7 @@
    The generated PCa hub carries its own styles; this is for pages authored here. */
 :root{--hubtop:52px;--hubside:232px}
 
-.hubbar{position:fixed;top:var(--sitebar);left:0;right:0;height:var(--hubtop);z-index:40;
+.hubbar{position:fixed;top:var(--sitebar);left:var(--badge);right:0;height:var(--hubtop);z-index:40;
   display:flex;align-items:center;gap:12px;padding:0 18px;background:#fff;border-bottom:2px solid #111}
 .hubbar .ht{font-weight:800;font-size:14.5px;letter-spacing:-.2px;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
@@ -78,6 +78,7 @@ main.hub{margin-left:var(--hubside);max-width:1160px;
   font-size:12px;color:var(--mut);text-align:center}
 
 @media(max-width:820px){
+  .hubbar{left:var(--badge)}
   .hubside{position:static;width:auto;height:auto;bottom:auto;display:flex;gap:4px;
     overflow-x:auto;padding:8px;border-right:0;border-bottom:1px solid var(--line);
     margin-top:calc(var(--sitebar) + var(--hubtop))}
