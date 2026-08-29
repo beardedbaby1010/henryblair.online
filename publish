@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# publish — rebuild the site, commit, and push. One command, from anywhere.
+#
+#   ./publish                       message defaults to "Update site — <date>"
+#   ./publish "Add VE project"      your own message
+#   ./publish --no-push "wip"       build and commit, but don't push yet
+#
+# The safety checks run BEFORE anything is committed. They exist because this
+# repository is public and the manuscripts are not.
+
+set -e
+cd "$(cd "$(dirname "$0")" && pwd)"          # the repo, wherever this script lives
+
+BOLD=$'\033[1m'; RED=$'\033[31m'; GRN=$'\033[32m'; YEL=$'\033[33m'; BLU=$'\033[34m'; OFF=$'\033[0m'
+say(){ printf '%s\n' "$1"; }
+
+NOPUSH=0
+if [ "$1" = "--no-push" ]; then NOPUSH=1; shift; fi
+MSG="${1:-Update site — $(date '+%b %-d, %Y')}"
+
+say "${BLU}▸ Building${OFF}"
+python3 build_site.py
+
+# ---- safety 1: never publish a manuscript into a public repo -----------------
+if grep -q '^PUBLISH_FULL = True' build_site.py; then
+  VIS=$(gh api "repos/beardedbaby1010/henryblair.online" --jq .private 2>/dev/null || echo unknown)
+  if [ "$VIS" != "true" ]; then
+    say "${RED}✗ PUBLISH_FULL is True but the repo is not private (visibility: ${VIS}).${OFF}"
+    say "  The full manuscript would be readable by anyone. Either make the repo"
+    say "  private (needs GitHub Pro) or set PUBLISH_FULL = False."
+    say "  Nothing was committed."
+    exit 1
+  fi
+fi
+
+# ---- safety 2: no manuscript prose in any page about to be committed ---------
+HITS=$(git grep -l -e 'class="manuscript"' -e 'class="mtitle"' -- 'projects/*' 2>/dev/null || true)
+if [ -n "$HITS" ]; then
+  say "${RED}✗ Manuscript markup found in a project page that is about to be committed:${OFF}"
+  printf '    %s\n' $HITS
+  say "  Check strip_paper in build_site.py. Nothing was committed."
+  exit 1
+fi
+
+# ---- safety 3: the sources folder must stay untracked ------------------------
+if git ls-files --error-unmatch _source >/dev/null 2>&1; then
+  say "${RED}✗ _source/ is tracked by git — the standalone hubs would be pushed.${OFF}"
+  say "  Run:  git rm -r --cached _source     then try again."
+  exit 1
+fi
+
+git add -A
+if git diff --cached --quiet; then
+  say "${YEL}▸ Nothing changed — no commit made.${OFF}"
+  exit 0
+fi
+
+say "${BLU}▸ Committing${OFF}  ${BOLD}${MSG}${OFF}"
+git -c commit.gpgsign=false commit -q -m "$MSG"
+git --no-pager log --oneline -1 | sed 's/^/    /'
+
+if [ "$NOPUSH" = "1" ]; then
+  say "${YEL}▸ --no-push: committed locally, not pushed.${OFF}"
+  exit 0
+fi
+
+say "${BLU}▸ Pushing${OFF}"
+git push -q
+say "${GRN}✓ Pushed. GitHub Pages redeploys in about a minute → https://henryblair.online${OFF}"
