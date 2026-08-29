@@ -1,0 +1,56 @@
+ls *:
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+404.html		favicon.ico		README.md
+a.txt			index.html		site.webmanifest
+build_site.py		projects.py
+CNAME			publish
+
+__pycache__:
+build_site.cpython-310.pyc	projects.cpython-310.pyc
+
+_downloadable:
+2018-estrogen-novelty-paper.pdf		2023-honors-thesis.pdf
+2018-estrogen-novelty-poster.pdf	2024-maude-msre-poster.pdf
+2019-tbi-stress-pte-poster.pdf		Henry_Blair_CV_2026_Aug.pdf
+
+_secrets:
+passwords.txt
+
+_source:
+headshot-original.jpeg		pca_project_hub_standalone.html
+manuscripts
+
+about:
+index.html
+
+assets:
+apple-touch-icon.png	favicon-512.png		headshot.jpg
+favicon-16.png		favicon-64.png		icons
+favicon-192.png		favicon-96.png		og-image.png
+favicon-32.png		headshot-512.png	project.css
+favicon-48.png		headshot-badge.png	site.css
+
+contact:
+index.html
+
+downloads:
+2018-estrogen-novelty-paper.pdf		2023-honors-thesis.pdf
+2018-estrogen-novelty-poster.pdf	2024-maude-msre-poster
+2019-tbi-stress-pte-poster.pdf		henry-blair-cv
+
+earlier:
+thumbs
+
+projects:
+adt-initiation			oab-adi
+aua-core-videos			oab-pvr
+dr-hank-med-ed-ai		retzius-retention
+estrogen-dentate-gyrus		tbi-stress-pte
+focal-therapy-continence	urogyn-perceptions
+insula-autism-thesis		varvel-5xfad-inflammation
+ketamine-cystitis		varvel-ep2-status-epilepticus
+maude-sealing-devices		varvel-monocyte-engraftment
+nocturia-goals			ve-boxed-warning
+
+resume:
+index.html
