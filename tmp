@@ -1,0 +1,28 @@
+func() {
+  read "pre?Enter prefix: "
+
+  for f in ${pre}*.mp4(N); do
+    if [[ ! -f "${f%.mp4}.avif" ]]; then
+      avif "$f"
+    fi
+    if [[ ! -f "${f%.mp4}.gif" ]]; then
+      gif "$f"
+    fi
+  done
+
+  for f in ${pre}*.(avif|gif)(N); do mv $f "$pre" && gci -f ${pre}/${f}; done
+}
+func
+
+func() {
+  read "pre?Enter prefix: "
+
+  for dir in ${pre}*(/); do
+    if [[ ! -f "${dir}.avif" ]]; then avif "$dir"; fi
+    if [[ ! -f "${dir%.mp4}.gif" ]]; then gif "$dir" fi
+  done
+
+  for f in ${pre}*.(avif|gif)(N); do mv $f "$pre" && gci -f ${pre}/${f}; done
+}
+func
+func940e7c-0199b795-8228-7c29-a5f3-5c925bafd53a_
