@@ -318,11 +318,11 @@ A project with nothing written yet still gets a tab and a page — set
 
 | Tab | Kind | Page content lives in | External source it pulls from |
 |---|---|---|---|
-| ADT Initiation | generated | `_source/pca_project_hub_standalone.html` | `Maimo_Work/PCa/` (`build_hub.py`), manuscript V7 |
-| Vaginal Estrogen | static | `projects/ve-boxed-warning/index.html` | `Maimo_Work/VE/` manuscript V3 |
-| PVR Self-Estimation | auto | `projects.py` | `Maimo_Work/old_OAB Proj/PVR/` manuscript V7 |
+| ADT Initiation | generated | `_source/pca_project_hub_standalone.html` | `Maimo_Work/5_PCa_x_ADT/` (hub export + manuscript V7) |
+| Vaginal Estrogen | static | `projects/ve-boxed-warning/index.html` | `Maimo_Work/3_VE/` manuscript V3 |
+| PVR Self-Estimation | auto | `projects.py` | `Maimo_Work/1_PVR_Self-Estimation/old_PVR/` manuscript V7 |
 | Deprivation & Access | auto | `projects.py` | `_source/manuscripts/ADI-and-Travel-Time-V3.pdf` |
-| Nocturia Goals | auto | `projects.py` | `Maimo_Work/Oliver Menken/` manuscript V3 |
+| Nocturia Goals | auto | `projects.py` | `Maimo_Work/7_Nocturia/` manuscript V3 |
 | Retzius-Sparing RARP | auto | `projects.py` | — (no manuscript yet) |
 | Focal Therapy | auto | `projects.py` | — |
 | Ketamine Cystitis | auto | `projects.py` | — |
@@ -371,7 +371,7 @@ Say `Henry Edits V7 …pdf` became `Henry Edits V8 …pdf`.
 1. Open `projects.py`, find the project, update the path:
 
    ```python
-   "paper": {"pdf": "Maimo_Work/old_OAB Proj/PVR/Henry Edits V8 PVR Manuscript.pdf",
+   "paper": {"pdf": "Maimo_Work/1_PVR_Self-Estimation/Henry Edits V8 PVR Manuscript.pdf",
              "label": "Manuscript V8", "note": "Submitted to Family Practice."},
    ```
 
@@ -381,7 +381,7 @@ The build re-encrypts it because the file changed. The passphrase is unchanged,
 so anyone you already gave it to keeps access — they just get the new version.
 
 **Paths are relative to `SOURCE_ROOTS`** at the top of `projects.py`
-(`~/Documents`, then `~/mnt`). So write `Maimo_Work/PVR/file.pdf`, not the full
+(`~/Documents`, then `~/mnt`). So write `Maimo_Work/1_PVR_Self-Estimation/file.pdf`, not the full
 `/Users/henryblair/Documents/…` path. The first root that has the file wins,
 which is why the same config works on the Mac and in a sandbox.
 
@@ -390,7 +390,7 @@ which is why the same config works on the Mac and in a sandbox.
 This is the most common way to break the site, and it fails loudly:
 
 ```
-!! oab-pvr: manuscript not found: …/Maimo_Work/OAB Proj/PVR/…
+!! oab-pvr: manuscript not found: …/Maimo_Work/1_PVR_Self-Estimation/…
    fix the path in projects.py and re-run
 ```
 
@@ -419,11 +419,11 @@ than left serving a stale copy. The manuscript is never accidentally exposed.
 ### Case D — the ADT project (the `generated` one)
 
 Its page is not written in `projects.py` — it's a full standalone HTML export
-produced by `build_hub.py` in the PCa folder. After changing the data or the
+produced by the hub script in `Maimo_Work/5_PCa_x_ADT/`. After changing the data or the
 hub upstream:
 
 ```bash
-cd ~/Documents/Maimo_Work/PCa
+cd ~/Documents/Maimo_Work/5_PCa_x_ADT
 python3 build_hub.py                     # re-export the standalone hub
 cp <the standalone html> ~/Documents/henryblair.online/_source/pca_project_hub_standalone.html
 cd ~/Documents/henryblair.online

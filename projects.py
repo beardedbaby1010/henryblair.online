@@ -105,7 +105,7 @@ PROJECTS = [
                   ("35,851","men on ADT")],
         "tags": ["Prostate cancer", "ADT", "Bone health", "Treatment intensification", "TriNetX"],
         "page": {"kind": "generated", "source": "_source/pca_project_hub_standalone.html", "strip_paper": True},
-        "paper": {"pdf": "Maimo_Work/PCa/Henry - PCa Manuscript V7.pdf",
+        "paper": {"pdf": "Maimo_Work/5_PCa_x_ADT/Henry - PCa Manuscript V7.pdf",
                   "label": "Manuscript V7", "note": "In preparation."},
     },
 
@@ -124,7 +124,7 @@ PROJECTS = [
                   ("192,157","women on vaginal estrogen")],
         "tags": ["Menopause", "GSM", "FDA labeling", "Pharmacoepidemiology", "Breast cancer", "TriNetX"],
         "page": {"kind": "static"},
-        "paper": {"pdf": "Maimo_Work/VE/Henry - VE Manuscript V3.pdf",
+        "paper": {"pdf": "Maimo_Work/3_VE/Henry - VE Manuscript V3.pdf",
                   "label": "Manuscript V3", "note": "Co-authored with Dr. Arshia Sandozi."},
     },
 
@@ -140,7 +140,7 @@ PROJECTS = [
                   ("95%", "had a normal residual"), ("0", "met retention criteria")],
         "tags": ["Overactive bladder", "Telemedicine", "Guidelines", "Access to care", "Primary care"],
         "page": {"kind": "auto"},
-        "paper": {"pdf": "Maimo_Work/old_OAB Proj/PVR/Henry Edits V7 PVR Manuscript Family Practice.pdf",
+        "paper": {"pdf": "Maimo_Work/1_PVR_Self-Estimation/old_PVR/Henry Edits V7 PVR Manuscript Family Practice.pdf",
                   "label": "Manuscript V7", "note": "Submitted to Family Practice (OUP)."},
         "hub": {
             "people": ["Colby Rondeau, MD", "Henry M. Blair", "Sumyia Razzak",
@@ -505,7 +505,7 @@ PROJECTS = [
                    "treatment goals and how much nighttime urination patients are willing to tolerate — "
                    "outcomes beyond the number.",
         "tags": ["Nocturia", "Patient-reported outcomes", "Trial design"],
-        "paper": {"pdf": "Maimo_Work/Oliver Menken/Henry - V3 - What Do Patients with Nocturia Want Treated_ Patient-Defined Goals and Tolerance Beyond Void Count.pdf",
+        "paper": {"pdf": "Maimo_Work/7_Nocturia/Henry - V3 - What Do Patients with Nocturia Want Treated_ Patient-Defined Goals and Tolerance Beyond Void Count.pdf",
                   "label": "Manuscript V3", "note": "With Oliver Menken."},
         "page": {"kind": "auto"},
         "hub": {

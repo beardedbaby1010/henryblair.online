@@ -221,7 +221,16 @@ def load_secrets():
     project slugs (for manuscripts) and file names (for gated downloads)."""
     out = {}
     if os.path.exists(SECRETS_TXT):
-        for n, line in enumerate(open(SECRETS_TXT, encoding="utf-8"), 1):
+        try:
+            lines = open(SECRETS_TXT, encoding="utf-8").readlines()
+        except OSError as e:
+            # Errno 35 here means the file is in iCloud and not on this disk. Say so
+            # plainly instead of dying with a traceback about deadlocks.
+            warn("cannot read _secrets/passwords.txt (%s)" % e)
+            warn("   if it lives in iCloud, right-click the folder in Finder and choose")
+            warn("   \"Keep Downloaded\", then re-run. Nothing gated was published.")
+            return out
+        for n, line in enumerate(lines, 1):
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
