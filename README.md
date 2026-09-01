@@ -20,6 +20,9 @@ then jump to the tab you want to change.
 - [Adding a brand-new project](#adding-a-brand-new-project)
 - [Passphrase gates](#passphrase-gates)
 - [Downloads](#downloads)
+- [Passphrase-gated videos and embeds](#passphrase-gated-videos-and-embeds)
+- [Analytics](#analytics)
+- [House style, enforced by the build](#house-style-enforced-by-the-build)
 - [Figures](#figures)
 - [The chrome every page shares](#the-chrome-every-page-shares)
 - [Troubleshooting](#troubleshooting)
@@ -551,6 +554,62 @@ The newest match wins, so a link already emailed or printed keeps working and
 quietly starts serving the new file.
 
 ---
+
+## Passphrase-gated videos and embeds
+
+A video file too large for the repository (GitHub caps files at 100 MB, and
+encrypting one makes it a third larger again) is gated by **its address** rather
+than its bytes. `EMBED_GATES` in `projects.py`:
+
+```python
+EMBED_GATES = {
+    "aua-snm-video": {
+        "url": "https://share.descript.com/embed/…",
+        "title": "…", "subtitle": "…",
+        "back_url": "/projects/aua-core-videos/", "back_label": "back to the project",
+    },
+}
+```
+
+That publishes a gate at `/watch/aua-snm-video/`. The URL is encrypted like any
+other gated item, so it is **not in the page source** until someone enters a
+passphrase; then the video plays in place. Link to it from a project's
+`materials` list.
+
+Be clear-eyed about what this protects: it controls who **finds** the link, not
+who can watch it once they have it. Anyone the link reaches can open it directly.
+If the video itself must be restricted, set that on the host (Descript, Vimeo,
+YouTube-unlisted) — the gate cannot do it for you.
+
+Each key needs a passphrase in `_secrets/passwords.txt`, or it publishes under
+the masterkey alone, which is the default.
+
+## Analytics
+
+Off by default. GoDaddy only holds your DNS, and GitHub's traffic graphs count
+repository visits, not site visits — so neither can tell you anything.
+
+To turn on Cloudflare Web Analytics (free, no cookies, no consent banner): create
+the site in the Cloudflare dashboard, then paste the token into `build_site.py`:
+
+```python
+ANALYTICS_TOKEN = "your-token-here"
+```
+
+`./publish` adds the beacon to every page. Emptying the string removes it from
+every page just as cleanly.
+
+## House style, enforced by the build
+
+Two passes run over every finished page, so a hand-written slip or a re-exported
+hub cannot reintroduce either problem:
+
+- **Dates** are rewritten as `Month Dayth, Year` — "Aug 19, 2026" and
+  "19 August 2026" both become "August 19th, 2026". Text only; never inside a
+  tag, a script or a stylesheet.
+- **Toolchain names are stripped.** No published page mentions a `.py` file or
+  reads as machine output. If you add prose that names a script, add a rule to
+  `SCRUB` in `build_site.py` rather than editing the generated page.
 
 ## Figures
 

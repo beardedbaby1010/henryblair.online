@@ -17,7 +17,8 @@ Nothing here is a source of truth. Copy lives in projects.py; passphrases live i
 _secrets/passwords.json; manuscripts live wherever projects.py points. All three
 are outside the commit except projects.py.
 """
-import os, re, sys, json, base64, hashlib, hmac, subprocess
+import os
+import re, sys, json, base64, hashlib, hmac, subprocess
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
@@ -365,9 +366,9 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
 <div class="reader" id="reader">
   <div class="readerbar">
     <h1>%(title)s</h1>
-    <div class="r"><a id="dl" download="%(filename)s">Download</a> · <a href="%(back_url)s">%(back_label)s</a></div>
+    <div class="r"><span id="dlwrap"><a id="dl" download="%(filename)s">Download</a> · </span><a href="%(back_url)s">%(back_label)s</a></div>
   </div>
-  <iframe id="frame" title="%(title)s"></iframe>
+  <iframe id="frame" title="%(title)s" allowfullscreen></iframe>
 </div>
 
 <script id="payload" type="application/json">%(payload)s</script>
@@ -431,9 +432,17 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
           .then(function(k){ return crypto.subtle.decrypt({name:'AES-CBC', iv:iv}, k, ct); });
       })
       .then(function(pt){
-        var url = URL.createObjectURL(new Blob([pt], {type:'application/pdf'}));
-        document.getElementById('frame').src = url;
-        document.getElementById('dl').href = url;
+        // The plaintext is either a document or the address of one. A URL means the
+        // address itself was the secret: nothing to download, just somewhere to look.
+        var head = String.fromCharCode.apply(null, new Uint8Array(pt.slice(0, 4)));
+        if(head === 'http'){
+          document.getElementById('frame').src = new TextDecoder().decode(pt).trim();
+          document.getElementById('dlwrap').style.display = 'none';
+        } else {
+          var url = URL.createObjectURL(new Blob([pt], {type:'application/pdf'}));
+          document.getElementById('frame').src = url;
+          document.getElementById('dl').href = url;
+        }
         document.getElementById('gate').style.display = 'none';
         document.getElementById('reader').className = 'reader on';
       })
@@ -543,6 +552,37 @@ def build_download_gates(published):
             blurb=esc(meta.get("note", "")),
             back_url=meta.get("back_url", "/"), back_label=meta.get("back_label", "back to the portfolio"),
             filename=name, data=data, passwords=keys, cache_key="download:" + name)
+    return ok
+
+
+def build_embed_gates():
+    """Anything hosted elsewhere — a video, a slide deck — gated by its address.
+
+    The file itself is too large to live in the repository, so what gets encrypted
+    is the embed URL. Until someone enters a passphrase the address is not in the
+    page source, and afterwards it plays in place. Worth being clear-eyed: this
+    protects who *finds* the link, not who can watch it once they have it — the
+    host's own sharing settings decide that."""
+    gates = getattr(CFG, "EMBED_GATES", {})
+    if not gates:
+        return True
+    secrets = load_secrets()
+    ok = True
+    for key, meta in gates.items():
+        keys = passphrases_for(key, secrets)
+        if not keys:
+            warn("no passphrase for %s in _secrets/passwords.txt — NOT published" % key)
+            ok = False
+            continue
+        ok &= write_gate(
+            out=os.path.join(ROOT, "watch", key, "index.html"),
+            title=esc(meta.get("title", key)),
+            subtitle=esc(meta.get("subtitle", "")),
+            blurb=esc(meta.get("note", "")),
+            back_url=meta.get("back_url", "/"),
+            back_label=meta.get("back_label", "back to the project"),
+            filename="", data=meta["url"].encode("utf-8"),
+            passwords=keys, cache_key="embed:" + key)
     return ok
 
 
@@ -851,7 +891,7 @@ def build_auto_hub(p):
         "desc": esc(p["summary"][:180]), "head": HEAD_TAGS, "nav": nav_html(p["slug"]),
         "sidenav": sidenav, "sidefoot": h.get("sidefoot", "Henry M. Blair"),
         "sections": sections,
-        "footnote": h.get("footnote", "This page is generated from projects.py — it grows as the work does."),
+        "footnote": h.get("footnote", "This page grows as the work does."),
     }
     out = os.path.join(ROOT, "projects", p["slug"], "index.html")
     os.makedirs(os.path.dirname(out), exist_ok=True)
@@ -931,7 +971,8 @@ def prune_gates():
     at all. Without this, the previously built page would linger and keep opening
     with the old passphrase, which is the opposite of what removing a line means."""
     import shutil
-    roots = [os.path.join(ROOT, "projects"), os.path.join(ROOT, "downloads")]
+    roots = [os.path.join(ROOT, "projects"), os.path.join(ROOT, "downloads"),
+             os.path.join(ROOT, "watch")]
     for root in roots:
         if not os.path.isdir(root):
             continue
@@ -952,6 +993,107 @@ def prune_gates():
                 os.makedirs(q, exist_ok=True)
                 os.rename(dirpath, os.path.join(q, os.path.basename(dirpath) + "-" + str(int(os.path.getmtime(dirpath)))))
                 warn("retired %s (moved to .trash/retired-gates/)" % os.path.relpath(dirpath, ROOT))
+
+
+# -------------------------------------------------------------------- polish
+# The published pages should read as finished work, not as the output of a
+# toolchain. These run over every page the build writes, so a re-exported hub
+# cannot quietly reintroduce a filename.
+
+# Cloudflare Web Analytics. Paste the site token from the Cloudflare dashboard
+# between the quotes and re-publish. Empty means no analytics script is emitted
+# anywhere — nothing is loaded, nothing is tracked.
+ANALYTICS_TOKEN = ""
+
+BEACON = ('<script defer src="https://static.cloudflareinsights.com/beacon.min.js" '
+          'data-cf-beacon=\'{"token": "%s"}\'></script>')
+BEACON_RE = re.compile(r'\s*<script[^>]*cloudflareinsights[^>]*></script>')
+
+def set_analytics(html):
+    """One beacon per page, or none. Removing the token removes the script."""
+    html = BEACON_RE.sub("", html)
+    if ANALYTICS_TOKEN and "</body>" in html:
+        html = html.replace("</body>", "\n" + (BEACON % ANALYTICS_TOKEN) + "\n</body>", 1)
+    return html
+
+
+SCRUB = [
+    # ADT hub — provenance written for the author, not the reader
+    ('<b>One snapshot, sourced from this folder.</b> Every number is read from\n'
+     '   <em>Henry - PCa Data Master.xlsx</em> and every figure from <em>pca_figures/</em> '
+     '(produced by <em>pca_figures.py</em>);\n   the page regenerates with <em>build_hub.py</em>. '
+     'All counts are the Aug 19, 2026 extraction',
+     '<b>One snapshot.</b> Every number and every figure on this page comes from a single '
+     'extraction — the Aug 19, 2026 pull'),
+    ('<h2>Figures <span class="snap">pca_figures.py</span></h2>', '<h2>Figures</h2>'),
+    ('The manuscript figures, produced by <em>pca_figures.py</em> from the same workbook '
+     'and referenced live — re-run it to update them here.',
+     'The manuscript figures, drawn from the same workbook as every number above.'),
+    ('<p><b>Self-sourcing.</b> This page is generated by <em>build_hub.py</em> from '
+     '<em>Henry - PCa Data Master.xlsx</em> (numbers) and <em>pca_figures/</em> '
+     '(figures, from <em>pca_figures.py</em>). Change the spreadsheet or re-run the figures, '
+     're-run build_hub.py, and the page updates.</p>\n     ', ''),
+    ('<footer class="pgfoot">Generated by build_hub.py from Henry - PCa Data Master.xlsx '
+     'and pca_figures/ · snapshot Aug 19, 2026 · counts as-queried, never rescaled.</footer>',
+     '<footer class="pgfoot">Snapshot Aug 19, 2026 · counts as queried, never rescaled.</footer>'),
+]
+
+MONTHS = {"jan": "January", "feb": "February", "mar": "March", "apr": "April",
+          "may": "May", "jun": "June", "jul": "July", "aug": "August",
+          "sep": "September", "sept": "September", "oct": "October",
+          "nov": "November", "dec": "December"}
+
+def _ordinal(n):
+    n = int(n)
+    if 11 <= n % 100 <= 13:
+        return "%dth" % n
+    return "%d%s" % (n, {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th"))
+
+_MDY = re.compile(r"\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec)[a-z]*\.?\s+"
+                  r"(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\b")
+_DMY = re.compile(r"\b(\d{1,2})(?:st|nd|rd|th)?\s+"
+                  r"(January|February|March|April|May|June|July|August|September|October|"
+                  r"November|December)\s+(\d{4})\b")
+_SPLIT = re.compile(r"(<script.*?</script>|<style.*?</style>|<[^>]+>)", re.S)
+
+def _dates_in_text(t):
+    t = _MDY.sub(lambda m: "%s %s, %s" % (MONTHS[m.group(1).lower()],
+                                          _ordinal(m.group(2)), m.group(3)), t)
+    t = _DMY.sub(lambda m: "%s %s, %s" % (m.group(2), _ordinal(m.group(1)), m.group(3)), t)
+    return t
+
+def normalize_dates(html):
+    """Write every date as Month Dayth, Year — and only in visible text, never
+    inside a tag, a script or a stylesheet."""
+    return "".join(part if (i % 2) else _dates_in_text(part)
+                   for i, part in enumerate(_SPLIT.split(html)))
+
+def polish_pages():
+    changed = 0
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        dirnames[:] = [d for d in dirnames
+                       if d not in (".git", ".locktrash", ".trash", "_source", "_secrets",
+                                    "_downloadable", "__pycache__", "_to_delete")]
+        for name in filenames:
+            if not name.endswith(".html"):
+                continue
+            f = os.path.join(dirpath, name)
+            try:
+                html = open(f, encoding="utf-8", errors="replace").read()
+            except OSError as e:
+                warn("could not polish %s (%s)" % (os.path.relpath(f, ROOT), e))
+                continue
+            out = html
+            for a, b in SCRUB:
+                out = out.replace(a, b)
+            out = normalize_dates(out)
+            out = set_analytics(out)
+            if out != html:
+                open(f, "w", encoding="utf-8").write(out)
+                changed += 1
+    note("polished %d page(s) — dates normalised, toolchain names removed%s"
+         % (changed, ", analytics beacon set" if ANALYTICS_TOKEN else ""))
+    return True
 
 
 # ------------------------------------------------------------------ cache-bust
@@ -1008,8 +1150,10 @@ if __name__ == "__main__":
     for pg in CFG.PAGES:
         set_nav(os.path.join(ROOT, pg["file"]), pg["key"])
     ok &= build_downloads()
+    ok &= build_embed_gates()
     prune_gates()
     ok &= build_home()
+    ok &= polish_pages()
     ok &= version_assets()
     print("Done." if ok else "Done, with problems (see above).")
     sys.exit(0 if ok else 1)

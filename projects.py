@@ -35,6 +35,28 @@ DOWNLOAD_ALIASES = {
 # passphrase page at /downloads/<name>/ — the raw file is never copied into the
 # site, so there is no unprotected URL. Give each one a passphrase in
 # _secrets/passwords.txt, keyed by the same file name.
+# ------------------------------------------------------- passphrase-gated embeds
+# Video and other media that is too large to live in this repository. What gets
+# encrypted is the embed address itself, so it is not in the page source until
+# someone enters a passphrase; then it plays in place at /watch/<key>/.
+# Give each key a passphrase in _secrets/passwords.txt (the masterkey always works).
+EMBED_GATES = {
+    "aua-snm-video": {
+        "url": "https://share.descript.com/embed/MudR8c10Jra",
+        "title": "Sacral Neuromodulation Placement",
+        "subtitle": "AUA Core Curriculum teaching video · 7:58 · submitted August 31st, 2026",
+        "note": "Under review by the AUA. ",
+        "back_url": "/projects/aua-core-videos/", "back_label": "back to the project",
+    },
+    "aua-pessary-video": {
+        "url": "https://share.descript.com/embed/t1mErexxxMb",
+        "title": "Vaginal Pessaries: Types and Fitting",
+        "subtitle": "AUA Core Curriculum teaching video · 7:09 · submitted August 31st, 2026",
+        "note": "Under review by the AUA. ",
+        "back_url": "/projects/aua-core-videos/", "back_label": "back to the project",
+    },
+}
+
 DOWNLOAD_GATES = {
     "2024-maude-msre-poster.pdf": {
         "title": "Analysis of adverse events, robotic urological surgeries",
@@ -635,41 +657,99 @@ PROJECTS = [
 
     {
         "slug": "aua-core-videos", "tab": "AUA Core Videos", "group": "current",
-        "title": "AUA Core Curriculum instructional videos",
-        "kicker": "American Urological Association · Core Curriculum",
-        "status": "Produced · sacral neuromodulation and pessary fitting",
-        "summary": "Instructional videos for the AUA's Core Curriculum: sacral neuromodulation device "
-                   "implantation, and pessary fitting — procedures taught mostly by watching, filmed so "
-                   "they can be watched.",
-        "tags": ["Medical education", "Surgical video", "Sacral neuromodulation", "Pessary", "AUA"],
+        "title": "AUA Core Curriculum teaching videos",
+        "kicker": "American Urological Association · Core Curriculum teaching video submission",
+        "status": "Submitted — AUA Core Curriculum, 31 August 2026",
+        "summary": "Two procedures residents mostly learn by standing next to someone doing them: "
+                   "sacral neuromodulation lead placement and vaginal pessary fitting. Both were "
+                   "scripted, filmed and cut as teaching videos and submitted to the AUA's Core "
+                   "Curriculum.",
+        "stats": [("2", "videos submitted"), ("15:07", "total runtime"),
+                  ("6", "pessary types covered"), ("1080p", "filmed and cut")],
+        "tags": ["Medical education", "Surgical video", "Sacral neuromodulation",
+                 "Pessary", "AUA Core Curriculum"],
         "page": {"kind": "auto"},
         "hub": {
             "people": ["Henry M. Blair", "Luke Jenusaitis, MD", "Allison Polland, MD"],
-            "lede": "Two procedures that residents learn by standing next to someone doing them. The AUA "
-                    "Core Curriculum is where that apprenticeship is written down for everyone; these are "
-                    "the two entries I filmed, scripted and cut.",
-            "question": "How do you teach a procedure whose difficulty is entirely in the hands — where to "
-                        "stand, what to feel for, what the wrong answer looks like — to someone who cannot "
-                        "be in the room?",
+            "lede": "The AUA Core Curriculum is where urology's apprenticeship gets written down for "
+                    "everyone. These are two entries built for it — a sacral neuromodulation lead "
+                    "placement and a pessary fitting — scripted, filmed, narrated and cut, and "
+                    "submitted on 31 August 2026.",
+            "status_detail": "Both videos were submitted to the AUA Core Curriculum on "
+                             "<b>31 August 2026</b>, each with its written abstract and a "
+                             "non-exclusive license to AUA Education &amp; Research. Runtimes are "
+                             "7:58 and 7:09 — both inside the AUA's hard eight-minute cap. Awaiting "
+                             "the AUA's decision; the cuts will be linked here once released.",
+            "question": "How do you teach a procedure whose difficulty is entirely in the hands — where "
+                        "to stand, what to feel for, what the wrong answer looks like — to someone who "
+                        "cannot be in the room?",
             "approach": [
-                "<b>Sacral neuromodulation device implantation</b> — lead placement and implantation, "
-                "filmed stepwise with the anatomy called out as it appears.",
-                "<b>Pessary fitting</b> — sizing and fitting, including the judgment that decides between "
-                "sizes rather than only the technique.",
-                "Scripted against the AUA's Core Curriculum format, filmed in theatre, and cut with "
-                "captions so a step can be found without watching the whole thing.",
+                "Each video is scripted section by section against the AUA's teaching-video format, "
+                "with every line of narration mapped to the specific footage, still or diagram it "
+                "plays over.",
+                "Anatomic and procedural diagrams were built from scratch rather than sourced, "
+                "because the AUA submission requires clear rights to every element on screen.",
+                "Filmed at 1080p and cut to sit under the AUA's eight-minute limit — long enough to "
+                "show the judgment, short enough that a trainee will actually watch it.",
+                "Each submission is a package: the video, a written abstract, and a signed "
+                "non-exclusive license.",
+            ],
+            "sections": [
+                {"id": "snm", "title": "Sacral neuromodulation placement", "nav": "SNM video",
+                 "intro": "Runtime 7:58 · submitted 31 August 2026",
+                 "blocks": [
+                     {"prose": "Percutaneous placement of a peripheral nerve evaluation (PNE) lead for "
+                               "sacral neuromodulation, using the Medtronic InterStim system in a "
+                               "patient with refractory overactive bladder."},
+                     {"h3": "What the video walks through"},
+                     {"bullets": [
+                         "Patient positioning",
+                         "Fluoroscopic localization of the S3 foramen",
+                         "Needle and lead placement guided by motor and sensory response",
+                         "Securing the lead and connecting an external trial stimulator",
+                     ]},
+                     {"callout": "Sacral neuromodulation is a reversible, office-based option for "
+                                 "patients who have failed conservative and pharmacologic therapy, and "
+                                 "a successful trial predicts response to permanent implantation. The "
+                                 "video is built around the anatomic landmarks and the troubleshooting "
+                                 "points a trainee actually needs."},
+                 ]},
+                {"id": "pessary", "title": "Vaginal pessaries: types and fitting", "nav": "Pessary video",
+                 "intro": "Runtime 7:09 · submitted 31 August 2026",
+                 "blocks": [
+                     {"prose": "Pessaries are a safe, effective, first-line, non-surgical option for "
+                               "pelvic organ prolapse and stress incontinence — and many trainees never "
+                               "see a fitting performed. That gap is the reason this video exists."},
+                     {"h3": "What the video walks through"},
+                     {"bullets": [
+                         "The three pessary families — support, space-filling, and incontinence — and "
+                         "the six most commonly used types",
+                         "A live fitting encounter: positioning, antiseptic prep, and trial of two "
+                         "device sizes",
+                         "Anatomic predictors of a harder fit: enlarged genital hiatus, "
+                         "posterior-predominant prolapse, short vaginal length, advanced-stage prolapse",
+                         "Follow-up, self-management, and complication management for safe long-term use",
+                     ]},
+                 ]},
             ],
             "videos": [
-                {"title": "Sacral neuromodulation device implantation",
-                 "caption": "Final cut is with the AUA. It will be posted here, or linked to the AUA's "
-                            "curriculum, once it is released."},
-                {"title": "Pessary fitting",
-                 "caption": "Final cut is with the AUA. It will be posted here, or linked to the AUA's "
-                            "curriculum, once it is released."},
+                {"title": "Sacral neuromodulation placement",
+                 "caption": "7:58 · submitted to the AUA Core Curriculum, 31 August 2026. The cut will "
+                            "be posted here or linked to the AUA's release once a decision is made."},
+                {"title": "Vaginal pessaries: types and fitting",
+                 "caption": "7:09 · submitted to the AUA Core Curriculum, 31 August 2026. The cut will "
+                            "be posted here or linked to the AUA's release once a decision is made."},
             ],
-            "status_detail": "Both videos produced. Final cuts sit with the AUA for the Core Curriculum; "
-                             "they will be embedded on this page or linked to the AUA's own release.",
-            "sidefoot": "Henry M. Blair · Luke Jenusaitis, MD · Allison Polland, MD<br>Department of Urology, Maimonides Medical Center",
+            "materials": [
+                {"label": "Watch: sacral neuromodulation placement (passphrase)",
+                 "url": "/watch/aua-snm-video/"},
+                {"label": "Watch: vaginal pessaries, types and fitting (passphrase)",
+                 "url": "/watch/aua-pessary-video/"},
+            ],
+            "next": "Awaiting the AUA's decision on both submissions. The license is non-exclusive, so "
+                    "the cuts can be linked here regardless of the outcome.",
+            "sidefoot": "Henry M. Blair · Luke Jenusaitis, MD · Allison Polland, MD<br>"
+                        "Department of Urology, Maimonides Medical Center<br>Submitted Aug 31, 2026",
         },
     },
 
@@ -858,9 +938,7 @@ PROJECTS = [
             "status_detail": "Work in Dr. Nicholas Varvel's laboratory at Emory. Published as Varvel NH, "
                              "Espinosa-Garcia C, Hunter-Chang S, et al., <i>Journal of Neuroscience</i> "
                              "2021;41(5):1105–1117.",
-            "about": ["<b>My contribution.</b> [Placeholder — describe your specific role on this project "
-                      "in your own words: which experiments, which techniques, over what period. I have "
-                      "deliberately not invented one. Edit this in projects.py.]",
+            "about": [
                       "I am not an author on the published paper; this page describes the laboratory "
                       "project I worked on, with the publication cited as its outcome."],
             "materials": [{"label": "Varvel et al., J Neurosci 2021 (DOI)",
@@ -896,8 +974,7 @@ PROJECTS = [
             "status_detail": "Work in Dr. Nicholas Varvel's laboratory at Emory. Methods published as "
                              "Varvel NH, Ransohoff RM, Neher JJ, <i>Methods in Molecular Biology</i> "
                              "2019;2034:293–301.",
-            "about": ["<b>My contribution.</b> [Placeholder — describe your specific role in your own "
-                      "words. Edit this in projects.py.]",
+            "about": [
                       "I am not an author on the published methods chapter; this page describes the "
                       "laboratory project I worked on."],
             "materials": [{"label": "Methods Mol Biol 2019 (DOI)",
@@ -932,8 +1009,7 @@ PROJECTS = [
             "status_detail": "Work in Dr. Nicholas Varvel's laboratory at Emory. Published as Manji Z, "
                              "Rojas A, Wang W, Dingledine R, Varvel NH, Ganesh T, <i>Journal of "
                              "Alzheimer's Disease</i> 2019;70(4):1259–1274.",
-            "about": ["<b>My contribution.</b> [Placeholder — describe your specific role in your own "
-                      "words. Edit this in projects.py.]",
+            "about": [
                       "I am not an author on the published paper; this page describes the laboratory "
                       "project I worked on."],
             "materials": [{"label": "J Alzheimers Dis 2019 (DOI)", "url": "https://doi.org/10.3233/JAD-180678"}],
