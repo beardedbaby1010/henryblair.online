@@ -656,19 +656,33 @@ def build_downloads():
     os.makedirs(out, exist_ok=True)
     gates = getattr(CFG, "DOWNLOAD_GATES", {})
 
+    import fnmatch
+    names = [n for n in sorted(os.listdir(src))
+             if not n.startswith(".") and os.path.isfile(os.path.join(src, n))]
+
+    # A versioned family (Henry_Blair_CV_*.pdf) shares one public URL, so it has to
+    # share one access decision. If any member is gated, every member is: otherwise
+    # moving the gate to a new version silently starts serving the old one in the
+    # clear, right beside the passphrase page. This is how the August CV came back.
+    blocked = set(gates)
+    for pattern in getattr(CFG, "DOWNLOAD_ALIASES", {}):
+        family = [n for n in names if fnmatch.fnmatch(n, pattern)]
+        if any(n in gates for n in family):
+            for n in family:
+                if n not in gates:
+                    note("%s — gated with the rest of %s" % (n, pattern))
+            blocked |= set(family)
+
     published = {}
-    for name in sorted(os.listdir(src)):
-        if name.startswith(".") or not os.path.isfile(os.path.join(src, name)):
-            continue
+    for name in names:
         s_path = os.path.join(src, name)
         published[name] = s_path
-        if name in gates:
+        if name in blocked:
             continue                       # gated: never published in the clear
         d_path = os.path.join(out, name)
         if not os.path.exists(d_path) or os.path.getsize(d_path) != os.path.getsize(s_path):
             open(d_path, "wb").write(open(s_path, "rb").read())
 
-    import fnmatch
     for pattern, alias in getattr(CFG, "DOWNLOAD_ALIASES", {}).items():
         matches = [n for n in published if fnmatch.fnmatch(n, pattern)]
         if not matches:
@@ -677,7 +691,7 @@ def build_downloads():
         newest = max(matches, key=lambda n: os.path.getmtime(published[n]))
         if len(matches) > 1:
             note("%s → %d matches, serving the newest: %s" % (pattern, len(matches), newest))
-        if newest in gates:
+        if newest in blocked:
             # gated: the stable URL is the passphrase page, not a file
             ALIAS_URLS[alias] = "/downloads/%s/" % slugify(os.path.splitext(alias)[0])
             GATED_ALIASES[newest] = os.path.splitext(alias)[0]
@@ -687,9 +701,9 @@ def build_downloads():
             ALIAS_URLS[alias] = "/downloads/%s" % alias
             note("%s  →  /downloads/%s" % (newest, alias))
 
-    note("published %d file(s) to downloads/" % len([n for n in published if n not in gates]))
+    note("published %d file(s) to downloads/" % len([n for n in published if n not in blocked]))
     ok = build_download_gates(published)
-    prune_downloads(published, gates)
+    prune_downloads(published, blocked)
     fix_cv_link()
     return ok
 

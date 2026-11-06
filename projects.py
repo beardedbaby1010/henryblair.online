@@ -153,14 +153,30 @@ DOWNLOAD_GATES = {
         "title": "Rise in vaginal estrogen use after the FDA announcement widened the absolute racial treatment gap",
         "subtitle": "Abstract · 2027 AUA Annual Meeting · Improving Access and Outcomes Across All Populations",
         "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-sufu-ve-fda-announcement.pdf": {
+        "title": "Vaginal estrogen prescribing before and after the FDA announcement on removing boxed warnings",
+        "subtitle": "Abstract \u00b7 2027 SUFU Winter Meeting",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-sufu-ve-breast-cancer-burden.pdf": {
+        "title": "Breast cancer: overburdened and undertreated \u2014 highest genitourinary symptom burden and lowest vaginal estrogen use",
+        "subtitle": "Abstract \u00b7 2027 SUFU Winter Meeting",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-sufu-ve-receptor-status.pdf": {
+        "title": "Vaginal estrogen underuse after breast cancer is independent of receptor status",
+        "subtitle": "Abstract \u00b7 2027 SUFU Winter Meeting",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-sufu-ve-formulation.pdf": {
+        "title": "Announcement, not label: vaginal estrogen prescribing after recent FDA actions is not formulation-specific",
+        "subtitle": "Abstract \u00b7 2027 SUFU Winter Meeting",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
     "2024-maude-msre-poster.pdf": {
         "title": "Analysis of adverse events, robotic urological surgeries",
         "subtitle": "Conference poster · Society of Urologic Robotic Surgeons Focal Therapy, 2024",
         "back_url": "/projects/maude-sealing-devices/", "back_label": "back to the project",
     },
-    "Henry_Blair_CV_2026_Aug.pdf": {
+    "Henry_Blair_CV_2026_Nov.pdf": {
         "title": "Curriculum vitae — Henry M. Blair",
-        "subtitle": "Updated August 2026",
+        "subtitle": "Updated November 2026",
         "back_url": "/resume/", "back_label": "back to the resume",
     },
 }
