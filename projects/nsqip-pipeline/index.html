@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A pipeline that turns the NSQIP files into a finished analysis — project</title>
+<meta name="description" content="The ACS NSQIP public files are twelve years of fixed-width text whose columns appear, vanish and change name between years. This is the toolchain I wrote to go from no research que">
+<link rel="stylesheet" href="/assets/site.css?v=0257cbdbd6">
+<link rel="stylesheet" href="/assets/project.css?v=a98797abd7">
+
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta property="og:site_name" content="Henry M. Blair">
+<meta property="og:image" content="https://henryblair.online/assets/og-image.png?v=fd726d5657">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+</head>
+<body>
+
+<!--SITENAV--><a class="sb-badge" href="/" aria-label="Henry M. Blair — home"><img src="/assets/headshot-badge.png?v=3bcc1f9524" alt="" width="320" height="320"></a>
+<div class="sitebar">
+  <a class="sb-brand" href="/">Henry M. Blair</a>
+  <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/">Contact Me</a><a href="/resume/">Resume</a><a href="/">Research Portfolio</a><a href="/abstracts/">Abstracts</a><a href="/earlier/">Earlier Work</a><a href="/in-preparation/">In Preparation</a><a href="/projects/adt-initiation/">ADT Initiation</a><a href="/projects/ve-boxed-warning/">Vaginal Estrogen</a><a href="/projects/oab-pvr/">PVR Self-Estimation</a><a href="/projects/oab-adi/">Deprivation & Access</a><a href="/projects/nocturia-goals/">Nocturia Goals</a><a href="/projects/urogyn-perceptions/">Urogyn Survey</a><a href="/projects/aua-core-videos/">AUA Core Videos</a><a href="/projects/maude-sealing-devices/">MAUDE Device Safety</a><a href="/projects/nsqip-pipeline/" aria-current="page">NSQIP Pipeline</a><a href="/projects/nsqip-opioids/">Opioids at Discharge</a><a href="/projects/nsqip-bph-bleeding/">BPH Bleeding</a><a href="/projects/nsqip-same-day-discharge/">Same-Day Discharge</a><a href="/projects/nsqip-rasp-vs-osp/">RASP vs OSP</a><a href="/projects/nsqip-rasp-elderly/">RASP in the Elderly</a><a href="/projects/nsqip-colpopexy/">Sacrocolpopexy vs SSLF</a></nav>
+</div>
+<span class="sb-fade" aria-hidden="true"></span>
+<script>(function(){function c(){var b=document.querySelector('.sitebar');if(!b)return;var a=b.querySelector('[aria-current=\'page\']');if(!a)return;var x=a.offsetLeft-(b.clientWidth-a.offsetWidth)/2;b.scrollLeft=Math.max(0,Math.min(x,b.scrollWidth-b.clientWidth));}c();if(document.readyState!=='complete'){window.addEventListener('load',c);}window.addEventListener('resize',c);})();</script><!--/SITENAV-->
+
+<header class="hubbar">
+  <div class="ht">A pipeline that turns the NSQIP files into a finished analysis <span>· Research tooling · ACS NSQIP Participant Use Files</span></div>
+</header>
+
+<nav class="hubside">
+  <a href="#overview">Overview</a>
+  <a href="#parts">The parts</a>
+  <a href="#stats">The statistics</a>
+  <a href="#data">Data handling</a>
+  <a href="#question">The question</a>
+  <a href="#approach">How it is done</a>
+  <a href="#next">What comes next</a>
+  <div class="sidefoot">Henry M. Blair<br>Department of Urology, Maimonides Medical Center</div>
+</nav>
+
+<main class="hub">
+<section id="overview" class="sec">
+  <div class="masthead2">
+    <div class="tag">Research tooling · ACS NSQIP Participant Use Files</div>
+    <h1>A pipeline that turns the NSQIP files into a finished analysis</h1>
+    <p class="authors">Henry M. Blair</p>
+    <p class="lede">Most of the work in a database study is not the analysis. It is turning a vague idea into an answerable question, finding out whether the data can answer it, and then rebuilding the whole thing when a variable turns out to be missing in 2014. This is the machinery I built so that stops being the work.</p>
+  </div>
+  <div class="statrow"><div class="stat"><div class="statv">6,085</div><div class="statl">lines of Python</div></div><div class="stat"><div class="statv">397</div><div class="statl">columns mapped across years</div></div><div class="stat"><div class="statv">12</div><div class="statl">PUF years, 2012–2023</div></div><div class="stat"><div class="statv">14</div><div class="statl">statistics as live formulas</div></div></div>
+  <div class="callout"><b>Status.</b> In active use. Every NSQIP analysis on this site — bleeding after TURP, PVP and HoLEP; open versus robotic simple prostatectomy; prostatectomy in the elderly and frail; same-day discharge after robotic prostatectomy; opioids at discharge; sacrocolpopexy versus sacrospinous fixation — was produced by this pipeline.</div>
+</section>
+
+<section id="parts" class="sec">
+  <h2>What it is made of</h2>
+  <p class="secintro">Fifteen Python modules and a double-clickable launcher.</p>
+  <div class="tblwrap"><table><thead><tr><th>Component</th><th>Lines</th><th>What it does</th></tr></thead><tbody><tr><td>Question builder</td><td class="n">502</td><td class="n">From no idea to one specific, feasible question</td></tr><tr><td>Suggestion library</td><td class="n">353</td><td class="n">Procedure and diagnosis presets, variables, outcomes, analyses</td></tr><tr><td>Catalog</td><td class="n">105</td><td class="n">Counts of every primary CPT code in every year</td></tr><tr><td>Cohort extractor</td><td class="n">767</td><td class="n">Builds the cohort from the raw fixed-width files</td></tr><tr><td>Pipeline</td><td class="n">980</td><td class="n">The run itself, end to end</td></tr><tr><td>Workbook writers</td><td class="n">1,558</td><td class="n">The analysis workbook and its sheets</td></tr><tr><td>Statistics and figures</td><td class="n">560</td><td class="n">The statistics mirror and the figures</td></tr><tr><td>Guides</td><td class="n">443</td><td class="n">A written guide per project, plus one for older projects</td></tr><tr><td>Interfaces</td><td class="n">539</td><td class="n">The same questions, in a terminal or by clicking in Chrome</td></tr><tr><td>Maintenance</td><td class="n">278</td><td class="n">Rebuild everything; upgrade an existing sheet in place</td></tr></tbody></table></div>
+</section>
+
+<section id="stats" class="sec">
+  <h2>Statistics as spreadsheet formulas</h2>
+  <p class="secintro">A workbook of pasted results goes stale the moment the cohort changes. A workbook of formulas cannot.</p>
+  <ul class="pitfalls"><li>Wilson score intervals for every proportion, rather than the normal approximation that misbehaves at the small denominators subgroup analysis produces</li><li>Fisher’s exact test, with chi-squared where that is appropriate</li><li>Katz confidence intervals for risk ratios</li><li>Propensity-matched comparison flags carrying the hazard ratio, its interval and the proportional-hazards p</li><li>Formatting functions so counts, percentages, odds ratios and p-values read the same way in every table</li></ul>
+  <div class="callout">Fourteen functions in total, installed into each workbook automatically — so a collaborator opening the sheet gets working statistics rather than a screenshot of mine.</div>
+</section>
+
+<section id="data" class="sec">
+  <h2>Data handling</h2>
+  <p>The NSQIP Participant Use Files are governed by a data-use agreement. The raw files, the derived cohorts and the workbook sheet holding patient-level rows stay on approved machines and are never published, shared or committed. Nothing on this page, and no figure anywhere on this site, contains patient-level data.</p>
+</section>
+
+<section id="question" class="sec">
+  <h2>The question</h2>
+  <p>Can the distance between a half-formed research question and a defensible, reproducible analysis be made short enough that the question is the hard part again?</p>
+</section>
+
+<section id="approach" class="sec">
+  <h2>How it is being done</h2>
+  <ul class="pitfalls">
+    <li><b>Ask first, extract second.</b> A question builder walks from “no idea yet” to one specific, feasible question, checked against what the data actually contains, before a single patient row is read.</li>
+    <li><b>A catalog with no patients in it.</b> Every primary CPT code in every year is counted up front, so feasibility is judged from counts alone.</li>
+    <li><b>One map across twelve years.</b> 397 columns are tracked year by year, which is what makes a 2012–2023 cohort possible at all — the files do not agree with each other about what they contain.</li>
+    <li><b>Statistics that stay live.</b> Rather than pasting numbers, each workbook carries fourteen custom spreadsheet functions. Change the cohort and every result recalculates in place.</li>
+    <li><b>Figures and a guide, built with it.</b> Each project ends with 300 dpi greyscale figures and an HTML guide explaining how to read its own workbook.</li>
+    <li><b>Rebuild without fear.</b> One command brings every project up to the current pipeline, backing up first and restoring on failure.</li>
+  </ul>
+</section>
+
+<section id="next" class="sec">
+  <h2>What comes next</h2>
+  <p>Extending the same approach to the other national datasets these projects draw on, so a question asked of one can be asked of another without rebuilding the machinery.</p>
+</section>
+  <div class="pgfoot">This page grows as the work does.</div>
+</main>
+</body>
+</html>

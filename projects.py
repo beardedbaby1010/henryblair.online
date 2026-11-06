@@ -35,6 +35,21 @@ DOWNLOAD_ALIASES = {
 # passphrase page at /downloads/<name>/ — the raw file is never copied into the
 # site, so there is no unprotected URL. Give each one a passphrase in
 # _secrets/passwords.txt, keyed by the same file name.
+# ------------------------------------------------------- fully private pages
+# A page whose whole content is encrypted. The published file is ciphertext, so
+# the working notes below are not readable by anyone without a passphrase. The
+# source lives in _source/ and is never committed.
+PAGE_GATES = {
+    "in-preparation": {
+        "source": "_source/in-preparation.html",
+        "dir": "in-preparation",
+        "title": "In preparation",
+        "subtitle": "Working notes \u2014 what needs doing to reach submission",
+        "note": "These are my own notes rather than a public page. ",
+        "back_url": "/", "back_label": "back to the portfolio",
+    },
+}
+
 # ------------------------------------------------------- passphrase-gated embeds
 # Video and other media that is too large to live in this repository. What gets
 # encrypted is the embed address itself, so it is not in the page source until
@@ -58,6 +73,86 @@ EMBED_GATES = {
 }
 
 DOWNLOAD_GATES = {
+    "urps-exposure-manuscript.pdf": {
+        "title": "Exposure Isn\u2019t Everything: What Drives Urology Resident Interest in URPS?",
+        "subtitle": "Manuscript \u00b7 national survey of US urology residents",
+        "back_url": "/projects/urogyn-perceptions/", "back_label": "back to the project"},
+    "urps-who-owns-manuscript.pdf": {
+        "title": "Who Owns Urogynecology and Reconstructive Pelvic Surgery, and Can We All Get Along?",
+        "subtitle": "Manuscript \u00b7 national survey of US urology residents",
+        "back_url": "/projects/urogyn-perceptions/", "back_label": "back to the project"},
+    "urps-why-not-manuscript.pdf": {
+        "title": "Why Not URPS? Barriers and Facilitators to Fellowship Interest",
+        "subtitle": "Manuscript \u00b7 national survey of US urology residents",
+        "back_url": "/projects/urogyn-perceptions/", "back_label": "back to the project"},
+    "abstract-nocturia-patient-goals.pdf": {
+        "title": "What Do Patients with Nocturia Want Treated? Patient-Defined Goals and Tolerance Beyond Void Count",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Urodynamics/Lower Urinary Tract Dysfunction/Female Pelvic Medicine",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-adt-bone-density-screening.pdf": {
+        "title": "Bone-density screening is triggered by prior bone disease rather than androgen-deprivation therapy itself",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Health Services Research: Quality Improvement & Patient Safety",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-adt-intensification-trends.pdf": {
+        "title": "Trends in treatment intensification for metastatic castration-sensitive prostate cancer in men aged 70 or older, 2017-2023",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Prostate Cancer: Advanced (including drug therapy)",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-ketamine-cystitis.pdf": {
+        "title": "Tracing the Ketamine: Illicit Supply, Medical Access, and the Epidemiology of Ketamine Cystitis",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Infections/Inflammation/Cystic Disease of the Genitourinary Tract: Kidney & Bladder",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-nsqip-bph-bleeding.pdf": {
+        "title": "National Trends in Bleeding and Perioperative Outcomes After TURP, Photoselective Vaporization, and HoLEP: An ACS NSQIP Analysis, 2012–2024",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Benign Prostatic Hyperplasia: Surgical Therapy & New Technology",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-nsqip-colpopexy.pdf": {
+        "title": "Robotic Sacrocolpopexy Versus Transvaginal Sacrospinous Ligament Fixation, Comparison of Urinary Tract Infections and Perioperative Complications: An ACS NSQIP Analysis, 2022–2024",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Urodynamics/Lower Urinary Tract Dysfunction/Female Pelvic Medicine: Female Pelvic Organ Prolapse and Reconstructive Surgery (including non-trauma related fistula and urethral diverticulum)",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-nsqip-opioids-at-discharge.pdf": {
+        "title": "Half Leave With Opioids: Is Urologic Surgery Overprescribing Pain Medication? An ACS NSQIP Analysis of 2024 Data",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Health Services Research: Quality Improvement & Patient Safety",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-nsqip-rasp-elderly-frail.pdf": {
+        "title": "Too Old or Too Frail for Robot-Assisted Enucleation Prostatectomy? An ACS NSQIP Analysis, 2022–2024",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Health Services Research: Quality Improvement & Patient Safety",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-nsqip-rasp-vs-osp.pdf": {
+        "title": "The Rapid Rise of Robot-Assisted Simple Prostatectomy, Less Blood, Fewer Complications: National Utilization Trends and Perioperative Outcomes, 2022-2024",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Benign Prostatic Hyperplasia: Surgical Therapy & New Technology",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-nsqip-same-day-discharge.pdf": {
+        "title": "Home the Same Day, No Harm Done? The National Shift Toward Same-Day Discharge After Robotic Prostatectomy: An ACS NSQIP Analysis, 2012–2024",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Health Services Research: Quality Improvement & Patient Safety",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-pediatric-ebike-gu-trauma.pdf": {
+        "title": "National Trends in Pediatric Bicycle-Associated Genitourinary Trauma Amid the Rise of E-Bikes",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Pediatrics: Tumors, Trauma & Transplantation",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-urps-exposure.pdf": {
+        "title": "Exposure isn't everything: What drives urology resident interest in Urogynecology and Reconstructive Pelvic Surgery",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Education Research",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-urps-who-owns.pdf": {
+        "title": "Who owns Urogynecology and Reconstructive Pelvic Surgery, and can we all get along?",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Urodynamics/Lower Urinary Tract Dysfunction/Female Pelvic Medicine: Female Pelvic Organ Prolapse and Reconstructive Surgery (including non-trauma related fistula and urethral diverticulum)",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-urps-why-not.pdf": {
+        "title": "Why not Urogynecology and Reconstructive Pelvic Surgery? Barriers and facilitators to fellowship interest among current United States urology residents",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Expanding the Urology Workforce",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-ve-breast-cancer-undertreatment.pdf": {
+        "title": "Overburdened and undertreated: Breast cancer patients carry the highest genitourinary symptom burden but the lowest vaginal estrogen use.",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Sexual Function/Dysfunction: Medical, Hormonal & Non-surgical Therapy",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-ve-fda-announcement.pdf": {
+        "title": "Vaginal estrogen prescribing accelerated after the Food and Drug Administration boxed-warning announcement, independent of formulation labeling",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Health Policy Research",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
+    "abstract-ve-racial-treatment-gap.pdf": {
+        "title": "Rise in vaginal estrogen use after the FDA announcement widened the absolute racial treatment gap",
+        "subtitle": "Abstract · 2027 AUA Annual Meeting · Improving Access and Outcomes Across All Populations",
+        "back_url": "/abstracts/", "back_label": "back to the abstracts"},
     "2024-maude-msre-poster.pdf": {
         "title": "Analysis of adverse events, robotic urological surgeries",
         "subtitle": "Conference poster · Society of Urologic Robotic Surgeons Focal Therapy, 2024",
@@ -76,6 +171,10 @@ PAGES = [
     {"key": "contact", "tab": "Contact Me",         "href": "/contact/", "file": "contact/index.html"},
     {"key": "resume",  "tab": "Resume",             "href": "/resume/",  "file": "resume/index.html"},
     {"key": "home",    "tab": "Research Portfolio", "href": "/",         "file": "index.html"},
+    {"key": "abstracts", "tab": "Abstracts",     "href": "/abstracts/", "file": "abstracts/index.html"},
+    {"key": "earlier",   "tab": "Earlier Work",  "href": "/earlier/",   "file": "earlier/index.html"},
+    {"key": "in-preparation", "tab": "In Preparation", "href": "/in-preparation/",
+     "file": "in-preparation/index.html", "gate": True},
 ]
 
 # ---------------------------------------------------------------- projects
@@ -105,7 +204,7 @@ PROJECTS = [
                   ("35,851","men on ADT")],
         "tags": ["Prostate cancer", "ADT", "Bone health", "Treatment intensification", "TriNetX"],
         "page": {"kind": "generated", "source": "_source/pca_project_hub_standalone.html", "strip_paper": True},
-        "paper": {"pdf": "Maimo_Work/5_PCa_x_ADT/Henry - PCa Manuscript V7.pdf",
+        "paper": {"pdf": "Maimo_Work/5_PCa_x_ADT/Old/Henry - PCa Manuscript V7.pdf",
                   "label": "Manuscript V7", "note": "In preparation."},
     },
 
@@ -124,7 +223,7 @@ PROJECTS = [
                   ("192,157","women on vaginal estrogen")],
         "tags": ["Menopause", "GSM", "FDA labeling", "Pharmacoepidemiology", "Breast cancer", "TriNetX"],
         "page": {"kind": "static"},
-        "paper": {"pdf": "Maimo_Work/3_VE/Henry - VE Manuscript V3.pdf",
+        "paper": {"pdf": "Maimo_Work/3_VE/Old/Old_Manuscripts/Henry - VE Manuscript V3.pdf",
                   "label": "Manuscript V3", "note": "Co-authored with Dr. Arshia Sandozi."},
     },
 
@@ -532,7 +631,7 @@ PROJECTS = [
     },
 
     {
-        "slug": "retzius-retention", "tab": "Retzius-Sparing RARP", "group": "current",
+        "slug": "retzius-retention", "tab": None, "group": "current",
         "title": "Urinary retention after Retzius-sparing prostatectomy",
         "kicker": "Retrospective cohort · Maimonides Medical Center",
         "status": "Manuscript V1 · IRB protocol in place for a prospective follow-on",
@@ -571,7 +670,7 @@ PROJECTS = [
     },
 
     {
-        "slug": "focal-therapy-continence", "tab": "Focal Therapy", "group": "current",
+        "slug": "focal-therapy-continence", "tab": None, "group": "current",
         "title": "Continence outcomes after focal therapy for prostate cancer",
         "kicker": "Chart review · Maimonides Medical Center",
         "status": "Early stage",
@@ -596,7 +695,7 @@ PROJECTS = [
     },
 
     {
-        "slug": "ketamine-cystitis", "tab": "Ketamine Cystitis", "group": "current",
+        "slug": "ketamine-cystitis", "tab": None, "group": "current",
         "title": "Ketamine cystitis in the United States",
         "kicker": "National epidemiology",
         "status": "Early stage",
@@ -626,32 +725,682 @@ PROJECTS = [
     },
 
     {
-        "slug": "urogyn-perceptions", "tab": "Urogyn Survey", "group": "current",
-        "title": "How urology residents perceive urogynecology",
-        "kicker": "National survey · every U.S. urology residency",
-        "status": "Data collection underway",
-        "summary": "A survey distributed to every urology residency in the country, measuring residents' "
-                   "knowledge of urogynecology and what shapes their perception of it — the pipeline "
-                   "question behind a subspecialty shortage.",
-        "tags": ["Urogynecology", "Medical education", "Workforce", "Survey"],
-        "page": {"kind": "auto"},
+        "slug": "urogyn-perceptions",
+        "tab": "Urogyn Survey",
+        "group": "current",
+        "title": "How urology residents see urogynecology",
+        "kicker": "National survey \u00b7 US urology residency programs \u00b7 July\u2013August 2026",
+        "status": "Three manuscripts drafted \u00b7 three abstracts submitted to the 2027 AUA Annual Meeting",
+        "summary": "Urogynecology and reconstructive pelvic surgery takes fellows from both urology and gynaecology, but few come from urology. We surveyed 115 residents nationally about what they are exposed to, who mentors them, what they think the field is, and when they decide. Exposure and mentorship did not explain who was interested.",
+        "stats": [
+            ("115", "residents responded"),
+            ("46.1%", "any fellowship interest"),
+            ("28.7%", "have a URPS mentor"),
+            ("90.4%", "say URPS belongs in urology"),
+        ],
+        "tags": [
+            "Medical education",
+            "Workforce",
+            "Urogynecology",
+            "Survey research",
+            "Fellowship training",
+        ],
+        "page": {
+            "kind": "auto",
+        },
         "hub": {
-            "people": ["Luke Jenusaitis, MD", "Henry M. Blair", "Jubin Matloubieh, MD"],
-            "lede": "Subspecialty shortages are usually described in terms of positions and pay. Before "
-                    "either, there is what trainees think the field is — and residents choose from the "
-                    "picture they have, not the one that is accurate.",
-            "question": "What do U.S. urology residents know about urogynecology, how do they perceive the "
-                        "field, and what shapes that perception during training?",
-            "approach": [
-                "A survey instrument distributed to every urology residency program in the country.",
-                "Knowledge and perception measured separately, since a field can be well regarded and "
-                "poorly understood, or the reverse.",
-                "Exposure during training recorded alongside, so perception can be read against how much "
-                "of the field a resident has actually seen.",
+            "people": [
+                "Gina DeMeo",
+                "Henry M. Blair",
+                "Nina Robins",
+                "Luke Jenusaitis",
+                "Jubin Matloubieh",
             ],
-            "status_detail": "Data collection underway.",
-            "sidefoot": "Luke Jenusaitis, MD · Henry M. Blair · Jubin Matloubieh, MD<br>Department of Urology, Maimonides Medical Center",
-            "in_progress": True,
+            "lede": "Exposure and mentorship are the standard explanation for why residents do or do not choose a subspecialty. We asked 115 urology residents across the country, and neither one explained who was interested. What did was gender, structured teaching, what residents believed the operating was like \u2014 and, above all, whether they had already made up their minds.",
+            "status_detail": "Three manuscripts drafted from one survey; three abstracts submitted to the 2027 AUA Annual Meeting. Approved by the Maimonides Medical Center IRB (2026-02-08-MMC) and funded by the Maimonides Research and Development Foundation.",
+            "question": "Urogynecology and reconstructive pelvic surgery takes fellows from both urology and gynaecology, but few come from urology. Is that because residents never see the field, because they think it belongs to someone else, or because of something else entirely?",
+            "approach": [
+                "A 24-item REDCap survey emailed to program directors and coordinators at every ACGME-accredited US urology residency, July to August 2026, for forwarding to residents. Voluntary and anonymous; 116 returned, one blank, leaving 115.",
+                "It asked about training year, age and gender; program type; whether the program had fellowship-trained URPS faculty and an institutional fellowship; seven separate kinds of clinical exposure; the year of first meaningful exposure; mentorship and its influence.",
+                "Six perception statements on five-point Likert scales, eight predefined barriers, a free-text question on what would raise interest, and when the fellowship decision was made.",
+                "Proportions with Wilson score intervals; two-proportion z-tests with Woolf odds ratios; Mann\u2013Whitney for timing; Cochran\u2013Armitage for the trend across training years; Benjamini\u2013Hochberg correction across the seven exposure types; then multivariable logistic regression, ordinal and dichotomised.",
+            ],
+            "sections": [
+                {
+                    "id": "who",
+                    "title": "Who answered",
+                    "nav": "Who answered",
+                    "intro": "115 residents, every training year represented, mostly from academic programs.",
+                    "blocks": [
+                        {
+                            "stats": [
+                                ("115", "residents", "of 116 returned"),
+                                ("30.1", "mean age", "SD 2.8, range 26\u201342"),
+                                ("86.1%", "academic programs", "99 of 115"),
+                            ],
+                        },
+                        {
+                            "table": {
+                                "head": [
+                                    "Characteristic",
+                                    "n",
+                                    "%",
+                                ],
+                                "rows": [
+                                    [
+                                        "Women",
+                                        "48",
+                                        "41.7%",
+                                    ],
+                                    [
+                                        "Men",
+                                        "63",
+                                        "54.8%",
+                                    ],
+                                    [
+                                        "Non-binary",
+                                        "3",
+                                        "2.6%",
+                                    ],
+                                    [
+                                        "Preferred not to say",
+                                        "1",
+                                        "0.9%",
+                                    ],
+                                    [
+                                        "PGY-1",
+                                        "25",
+                                        "21.7%",
+                                    ],
+                                    [
+                                        "PGY-2",
+                                        "19",
+                                        "16.5%",
+                                    ],
+                                    [
+                                        "PGY-3",
+                                        "27",
+                                        "23.5%",
+                                    ],
+                                    [
+                                        "PGY-4",
+                                        "17",
+                                        "14.8%",
+                                    ],
+                                    [
+                                        "PGY-5",
+                                        "22",
+                                        "19.1%",
+                                    ],
+                                    [
+                                        "PGY-6",
+                                        "5",
+                                        "4.3%",
+                                    ],
+                                ],
+                            },
+                        },
+                    ],
+                },
+                {
+                    "id": "environment",
+                    "title": "What residents are actually trained in",
+                    "nav": "The environment",
+                    "intro": "Three quarters train alongside a fellowship-trained URPS urologist, and three quarters have meaningful exposure by PGY-3. On the face of it, the pipeline is not starved of exposure.",
+                    "blocks": [
+                        {
+                            "table": {
+                                "head": [
+                                    "URPS educational environment",
+                                    "n",
+                                    "%",
+                                ],
+                                "rows": [
+                                    [
+                                        "Fellowship-trained URPS faculty in the department",
+                                        "89",
+                                        "77.4%",
+                                    ],
+                                    [
+                                        "&nbsp;&nbsp;&nbsp;No such faculty",
+                                        "23",
+                                        "20.0%",
+                                    ],
+                                    [
+                                        "&nbsp;&nbsp;&nbsp;Unsure",
+                                        "3",
+                                        "2.6%",
+                                    ],
+                                    [
+                                        "Institutional URPS fellowship",
+                                        "43",
+                                        "37.4%",
+                                    ],
+                                    [
+                                        "Formal URPS didactics or curriculum",
+                                        "77",
+                                        "67.0%",
+                                    ],
+                                    [
+                                        "First meaningful exposure \u2014 PGY-1",
+                                        "26",
+                                        "22.6%",
+                                    ],
+                                    [
+                                        "&nbsp;&nbsp;&nbsp;PGY-2",
+                                        "30",
+                                        "26.1%",
+                                    ],
+                                    [
+                                        "&nbsp;&nbsp;&nbsp;PGY-3",
+                                        "28",
+                                        "24.3%",
+                                    ],
+                                    [
+                                        "&nbsp;&nbsp;&nbsp;PGY-4",
+                                        "11",
+                                        "9.6%",
+                                    ],
+                                    [
+                                        "&nbsp;&nbsp;&nbsp;Never",
+                                        "20",
+                                        "17.4%",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "callout": "<b>Faculty buy curriculum, not just contact.</b> Programs with a URPS-trained urologist were far likelier to run formal didactics \u2014 73.0% (65/89) versus 43.5% (10/23), p&nbsp;=&nbsp;0.007. That matters, because didactics is the only kind of exposure that tracked with interest.",
+                        },
+                    ],
+                },
+                {
+                    "id": "mentorship",
+                    "title": "The mentorship gap is not a supply problem",
+                    "nav": "Mentorship",
+                    "blocks": [
+                        {
+                            "table": {
+                                "head": [
+                                    "Mentorship",
+                                    "n / N",
+                                    "%",
+                                ],
+                                "rows": [
+                                    [
+                                        "Has a URPS mentor",
+                                        "33 / 115",
+                                        "28.7%",
+                                    ],
+                                    [
+                                        "Mentor moderately or significantly influential",
+                                        "21 / 32",
+                                        "65.6%",
+                                    ],
+                                    [
+                                        "Of those without one, said the program could easily provide one",
+                                        "60 / 81",
+                                        "74.1%",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "prose": "Fewer than a third had a mentor, and three quarters of those who did not believed one was available for the asking. Mentorship was also independent of exposure: it predicted neither whether meaningful exposure happened (12.1% vs 19.5% reporting none; OR 1.76, 95% CI 0.54\u20135.72; p&nbsp;=&nbsp;0.34) nor when it happened (81.8% vs 69.5% by PGY-3; p&nbsp;=&nbsp;0.18; median PGY-2 in both groups).",
+                        },
+                        {
+                            "callout": "The cheapest finding in the study: programs could pair residents with URPS faculty rather than waiting to be asked.",
+                        },
+                    ],
+                },
+                {
+                    "id": "perceptions",
+                    "title": "What residents think the field is",
+                    "nav": "Perceptions",
+                    "intro": "Agreement or strong agreement with each statement, among 115 residents.",
+                    "blocks": [
+                        {
+                            "table": {
+                                "head": [
+                                    "Statement",
+                                    "Agree",
+                                    "%",
+                                ],
+                                "rows": [
+                                    [
+                                        "URPS has a clearly defined role within urology",
+                                        "104",
+                                        "90.4%",
+                                    ],
+                                    [
+                                        "The surgical complexity of URPS is appealing",
+                                        "75",
+                                        "65.2%",
+                                    ],
+                                    [
+                                        "Work\u2013life balance appears favourable",
+                                        "73",
+                                        "63.5%",
+                                    ],
+                                    [
+                                        "My program encourages involvement in female pelvic medicine",
+                                        "68",
+                                        "59.1%",
+                                    ],
+                                    [
+                                        "A career in URPS would be satisfying for me",
+                                        "44",
+                                        "38.3%",
+                                    ],
+                                    [
+                                        "URPS should primarily be an OBGYN subspecialty",
+                                        "3",
+                                        "2.6%",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "prose": "The identity question the field argues about internally is, for residents, settled: 90.4% say URPS belongs in urology and the same proportion reject the idea that it is really a gynaecology subspecialty. The soft spot is further down the list \u2014 only 38.3% expect the career itself to satisfy them, and a third actively disagree.",
+                        },
+                    ],
+                },
+                {
+                    "id": "interest",
+                    "title": "Who is interested, and who is not",
+                    "nav": "Interest",
+                    "blocks": [
+                        {
+                            "stats": [
+                                ("46.1%", "any interest", "53 of 115; 95% CI 37.3\u201355.2%"),
+                                ("60.0% \u2192 27.3%", "PGY-1 to PGY-5", "p = 0.007 for trend"),
+                                ("31.7% vs 64.6%", "men vs women", "OR 0.26; p < 0.001"),
+                            ],
+                        },
+                        {
+                            "h3": "Interest falls across training",
+                        },
+                        {
+                            "prose": "Interest ran from 60.0% in PGY-1 to 27.3% in PGY-5, with none of the five PGY-6 residents interested (Cochran\u2013Armitage z&nbsp;=&nbsp;\u22122.72, p&nbsp;=&nbsp;0.007). Residents in PGY-4 or later reported interest less often than PGY-1 to 3 (31.8% vs 54.9%; OR 0.38; p&nbsp;=&nbsp;0.016). Cross-sectionally this could be attrition or a cohort difference \u2014 either way the window is early.",
+                        },
+                        {
+                            "h3": "Exposure and mentorship did not sort people",
+                        },
+                        {
+                            "table": {
+                                "head": [
+                                    "Bivariate association with any interest",
+                                    "With",
+                                    "Without",
+                                    "OR (95% CI)",
+                                    "p",
+                                ],
+                                "rows": [
+                                    [
+                                        "Moderate or extensive clinical exposure",
+                                        "46.6%",
+                                        "44.4%",
+                                        "1.09 (0.46\u20132.59)",
+                                        "0.85",
+                                    ],
+                                    [
+                                        "Didactics or formal curriculum",
+                                        "53.2%",
+                                        "31.6%",
+                                        "2.47 (1.09\u20135.59)",
+                                        "0.028*",
+                                    ],
+                                    [
+                                        "Has a URPS mentor",
+                                        "48.5%",
+                                        "45.1%",
+                                        "\u2014",
+                                        "0.74",
+                                    ],
+                                    [
+                                        "Male gender",
+                                        "31.7%",
+                                        "64.6%",
+                                        "0.26 (0.12\u20130.56)",
+                                        "&lt;0.001",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "tblnote": "*Did not survive Benjamini\u2013Hochberg correction across the seven exposure types (p = 0.100). Of those seven, didactics was the only one that differed at all.",
+                        },
+                        {
+                            "h3": "The gender gap is not an exposure gap",
+                        },
+                        {
+                            "prose": "Men and women reported similar didactic exposure (69.8% vs 62.5%; p&nbsp;=&nbsp;0.42), similar clinical exposure (73.0% vs 79.2%; p&nbsp;=&nbsp;0.45) and similar mentorship (25.4% vs 35.4%; p&nbsp;=&nbsp;0.25). But didactics worked differently for each: among women, interest was 80.0% with didactics versus 38.9% without (OR 6.29, 1.71\u201323.14; p&nbsp;=&nbsp;0.004); among men, 34.1% versus 26.3% (OR 1.45; p&nbsp;=&nbsp;0.54). The gap was widest precisely where teaching was present.",
+                        },
+                        {
+                            "h3": "Adjusted",
+                        },
+                        {
+                            "table": {
+                                "head": [
+                                    "Multivariable model",
+                                    "OR",
+                                    "p",
+                                ],
+                                "rows": [
+                                    [
+                                        "Clinical exposure, per level (ordinal interest)",
+                                        "1.96",
+                                        "0.018",
+                                    ],
+                                    [
+                                        "Male gender (ordinal)",
+                                        "0.21",
+                                        "&lt;0.001",
+                                    ],
+                                    [
+                                        "Training year, per year (ordinal)",
+                                        "0.62",
+                                        "0.003",
+                                    ],
+                                    [
+                                        "Strongly agrees surgery is complex and appealing (ordinal)",
+                                        "19.93",
+                                        "&lt;0.001",
+                                    ],
+                                    [
+                                        "Formal didactic exposure (any interest)",
+                                        "6.07",
+                                        "0.020",
+                                    ],
+                                    [
+                                        "Male gender (any interest)",
+                                        "0.16",
+                                        "0.018",
+                                    ],
+                                    [
+                                        "Surgical complexity appeal (any interest)",
+                                        "21.65",
+                                        "0.043",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "tblnote": "No mentorship measure was associated with interest in either model.",
+                        },
+                    ],
+                },
+                {
+                    "id": "timing",
+                    "title": "The decision window is the finding",
+                    "nav": "Decision timing",
+                    "blocks": [
+                        {
+                            "table": {
+                                "head": [
+                                    "When the fellowship decision was made",
+                                    "n",
+                                    "%",
+                                    "Any interest",
+                                ],
+                                "rows": [
+                                    [
+                                        "Early \u2014 PGY-1 to 2",
+                                        "46",
+                                        "40.0%",
+                                        "10.9%",
+                                    ],
+                                    [
+                                        "Mid-residency \u2014 PGY-3 to 4",
+                                        "32",
+                                        "27.8%",
+                                        "53.1%",
+                                    ],
+                                    [
+                                        "Late \u2014 PGY-5 or later",
+                                        "0",
+                                        "0%",
+                                        "\u2014",
+                                    ],
+                                    [
+                                        "Not yet decided",
+                                        "37",
+                                        "32.2%",
+                                        "83.8%",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "prose": "Adjusted, mid-residency deciders (OR 23.26) and the undecided (OR 57.45) were far likelier than early deciders to report interest, both p&nbsp;&lt;&nbsp;0.001. Residents who named career uncertainty as a barrier were <i>more</i> interested, not less \u2014 79.3% versus 34.9%, adjusted OR 5.92, p&nbsp;=&nbsp;0.035.",
+                        },
+                        {
+                            "callout": "Read carefully, those odds ratios are partly tautological: residents who have decided have mostly decided against. The honest version is descriptive \u2014 a third of residents are still undecided, and more than four in five of them are at least slightly interested. That is the group worth reaching.",
+                        },
+                    ],
+                },
+                {
+                    "id": "barriers",
+                    "title": "Why not, in residents\u2019 own words",
+                    "nav": "Barriers",
+                    "blocks": [
+                        {
+                            "table": {
+                                "head": [
+                                    "Barrier selected",
+                                    "n",
+                                    "%",
+                                ],
+                                "rows": [
+                                    [
+                                        "Preference for another subspecialty",
+                                        "75",
+                                        "65.2%",
+                                    ],
+                                    [
+                                        "Narrowed scope of practice",
+                                        "38",
+                                        "33.0%",
+                                    ],
+                                    [
+                                        "Limited exposure",
+                                        "34",
+                                        "29.6%",
+                                    ],
+                                    [
+                                        "Uncertainty about career plans",
+                                        "29",
+                                        "25.2%",
+                                    ],
+                                    [
+                                        "Scope overlaps with gynaecology",
+                                        "29",
+                                        "25.2%",
+                                    ],
+                                    [
+                                        "Lack of mentorship",
+                                        "16",
+                                        "13.9%",
+                                    ],
+                                    [
+                                        "Other",
+                                        "15",
+                                        "13.0%",
+                                    ],
+                                    [
+                                        "Work\u2013life balance",
+                                        "3",
+                                        "2.6%",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "tblnote": "Residents selected a median of 2 barriers; 39.1% chose one and 31.3% chose three or more.",
+                        },
+                        {
+                            "h3": "The reachable group is smaller than it looks",
+                        },
+                        {
+                            "table": {
+                                "head": [
+                                    "Among the 62 residents with no interest",
+                                    "n",
+                                    "%",
+                                ],
+                                "rows": [
+                                    [
+                                        "Cited only modifiable barriers",
+                                        "8",
+                                        "12.9%",
+                                    ],
+                                    [
+                                        "Cited only fixed barriers",
+                                        "23",
+                                        "37.1%",
+                                    ],
+                                    [
+                                        "Cited both",
+                                        "26",
+                                        "41.9%",
+                                    ],
+                                    [
+                                        "Cited neither",
+                                        "5",
+                                        "8.1%",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "prose": "So 49 of 62 uninterested residents (79.0%) named at least one barrier no program can change. Counting barrier frequencies alone would suggest a third of residents might be won over by fixing scope or exposure; counting each resident\u2019s whole set shows that most who name a modifiable barrier name a fixed one too.",
+                        },
+                        {
+                            "h3": "What would change their minds",
+                        },
+                        {
+                            "table": {
+                                "head": [
+                                    "Theme in 58 free-text answers",
+                                    "%",
+                                ],
+                                "rows": [
+                                    [
+                                        "More or earlier exposure",
+                                        "40%",
+                                    ],
+                                    [
+                                        "Fellowship structure or duration",
+                                        "21%",
+                                    ],
+                                    [
+                                        "Broader scope of practice",
+                                        "19%",
+                                    ],
+                                    [
+                                        "Fixed disinterest or external constraints",
+                                        "17%",
+                                    ],
+                                    [
+                                        "Patient population",
+                                        "7%",
+                                    ],
+                                    [
+                                        "Work\u2013life balance",
+                                        "2%",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "prose": "\u201cEarlier surgical exposure in residency and more lectures on those topics earlier as well.\u201d \u00b7 \u201cIf we had more exposure to a Uro trained [URPS] faculty then I would be more interested.\u201d \u00b7 \u201cThe main thing preventing me from pursuing is that it is not a 1 year fellowship.\u201d \u00b7 \u201cBroader training to develop a skill set that equally prepares me for male reconstructive procedures as well.\u201d \u00b7 And, plainly: \u201cI am mainly disinterested due to the patient population. Nothing can really change that.\u201d",
+                        },
+                        {
+                            "h3": "Having no URPS urologist changes what residents complain about",
+                        },
+                        {
+                            "table": {
+                                "head": [
+                                    "Among the 112 residents who knew",
+                                    "No URPS faculty (n=23)",
+                                    "Has faculty (n=89)",
+                                    "OR (95% CI)",
+                                    "p",
+                                ],
+                                "rows": [
+                                    [
+                                        "Cited limited exposure",
+                                        "52.2%",
+                                        "23.6%",
+                                        "3.53 (1.36\u20139.16)",
+                                        "0.011",
+                                    ],
+                                    [
+                                        "Cited lack of mentorship",
+                                        "34.8%",
+                                        "9.0%",
+                                        "5.40 (1.75\u201316.62)",
+                                        "0.004",
+                                    ],
+                                ],
+                            },
+                        },
+                        {
+                            "tblnote": "The other six barriers did not differ by faculty availability (all p \u2265 0.28).",
+                        },
+                    ],
+                },
+                {
+                    "id": "limits",
+                    "title": "What this cannot tell you",
+                    "nav": "Limitations",
+                    "blocks": [
+                        {
+                            "bullets": [
+                                "Cross-sectional, so the fall in interest across training years could be attrition or a cohort difference, and nothing here establishes cause.",
+                                "Distribution through program leadership means there is no exact response rate, and residents interested in URPS were likelier to answer \u2014 so 46.1% is probably an overestimate.",
+                                "Women were over-represented (41.7% of respondents versus roughly a third of US urology residents), and women reported more interest, which pushes the same way.",
+                                "Residents cluster within programs, and program identity was not collected, so that clustering could not be modelled.",
+                                "The multivariable models carry few events per covariate, which is why some intervals are very wide \u2014 the complexity-appeal odds ratios especially.",
+                                "Faculty and fellowship presence, exposure and interest were all self-reported; three residents were unsure about their own program.",
+                                "Free text was coded by one investigator without an inter-rater measure, and classifying a barrier as modifiable or fixed is a judgment others might make differently.",
+                            ],
+                        },
+                    ],
+                },
+            ],
+            "materials": [
+                {
+                    "label": "Manuscript \u2014 Exposure isn\u2019t everything (passphrase)",
+                    "url": "/downloads/urps-exposure-manuscript/",
+                },
+                {
+                    "label": "Manuscript \u2014 Who owns URPS? (passphrase)",
+                    "url": "/downloads/urps-who-owns-manuscript/",
+                },
+                {
+                    "label": "Manuscript \u2014 Why not URPS? (passphrase)",
+                    "url": "/downloads/urps-why-not-manuscript/",
+                },
+                {
+                    "label": "Abstract \u2014 Exposure isn\u2019t everything (passphrase)",
+                    "url": "/downloads/abstract-urps-exposure/",
+                },
+                {
+                    "label": "Abstract \u2014 Who owns URPS? (passphrase)",
+                    "url": "/downloads/abstract-urps-who-owns/",
+                },
+                {
+                    "label": "Abstract \u2014 Why not URPS? (passphrase)",
+                    "url": "/downloads/abstract-urps-why-not/",
+                },
+            ],
+            "next": "Three manuscripts are drafted and heading for submission. The implication we would most like to test is whether timetabled URPS teaching in the PGY-2 to PGY-3 window changes anything, because that is where the undecided still are \u2014 and whether framing the field around its full reconstructive scope, male and neurogenic included, moves the men who currently opt out.",
+            "about": [
+                "<b>My contribution.</b> Study design and the survey instrument, the analysis, and the writing of all three manuscripts.",
+                "Approved by the Maimonides Medical Center Institutional Review Board (2026-02-08-MMC). Responses were anonymous; no respondent-level data appears on this page or anywhere on this site.",
+            ],
+            "sidefoot": "Gina DeMeo \u00b7 Henry M. Blair \u00b7 Nina Robins \u00b7 Luke Jenusaitis \u00b7 Jubin Matloubieh<br>Department of Urology, Maimonides Medical Center<br>Survey fielded July\u2013August 2026",
         },
     },
 
@@ -816,7 +1565,238 @@ PROJECTS = [
     },
 
     {
-        "slug": "dr-hank-med-ed-ai", "tab": "Med-Ed AI", "group": "current",
+        "slug": "nsqip-pipeline", "tab": "NSQIP Pipeline", "group": "current",
+        "title": "A pipeline that turns the NSQIP files into a finished analysis",
+        "kicker": "Research tooling \u00b7 ACS NSQIP Participant Use Files",
+        "status": "In use \u2014 every NSQIP project on this site was built with it",
+        "summary": "The ACS NSQIP public files are twelve years of fixed-width text whose columns appear, "
+                   "vanish and change name between years. This is the toolchain I wrote to go from no "
+                   "research question at all to a cohort, a live workbook, publication figures and a "
+                   "written guide \u2014 about six thousand lines of Python, run by double-clicking one file.",
+        "stats": [("6,085", "lines of Python"), ("397", "columns mapped across years"),
+                  ("12", "PUF years, 2012\u20132023"), ("14", "statistics as live formulas")],
+        "tags": ["NSQIP", "Research tooling", "Reproducibility", "Python", "Health services research"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair"],
+            "lede": "Most of the work in a database study is not the analysis. It is turning a vague idea "
+                    "into an answerable question, finding out whether the data can answer it, and then "
+                    "rebuilding the whole thing when a variable turns out to be missing in 2014. This is "
+                    "the machinery I built so that stops being the work.",
+            "status_detail": "In active use. Every NSQIP analysis on this site \u2014 bleeding after TURP, "
+                             "PVP and HoLEP; open versus robotic simple prostatectomy; prostatectomy in "
+                             "the elderly and frail; same-day discharge after robotic prostatectomy; "
+                             "opioids at discharge; sacrocolpopexy versus sacrospinous fixation \u2014 was "
+                             "produced by this pipeline.",
+            "question": "Can the distance between a half-formed research question and a defensible, "
+                        "reproducible analysis be made short enough that the question is the hard part again?",
+            "approach": [
+                "<b>Ask first, extract second.</b> A question builder walks from \u201cno idea yet\u201d to one "
+                "specific, feasible question, checked against what the data actually contains, before a "
+                "single patient row is read.",
+                "<b>A catalog with no patients in it.</b> Every primary CPT code in every year is counted "
+                "up front, so feasibility is judged from counts alone.",
+                "<b>One map across twelve years.</b> 397 columns are tracked year by year, which is what "
+                "makes a 2012\u20132023 cohort possible at all \u2014 the files do not agree with each other "
+                "about what they contain.",
+                "<b>Statistics that stay live.</b> Rather than pasting numbers, each workbook carries "
+                "fourteen custom spreadsheet functions. Change the cohort and every result recalculates "
+                "in place.",
+                "<b>Figures and a guide, built with it.</b> Each project ends with 300 dpi greyscale "
+                "figures and an HTML guide explaining how to read its own workbook.",
+                "<b>Rebuild without fear.</b> One command brings every project up to the current pipeline, "
+                "backing up first and restoring on failure.",
+            ],
+            "sections": [
+                {"id": "parts", "title": "What it is made of", "nav": "The parts",
+                 "intro": "Fifteen Python modules and a double-clickable launcher.",
+                 "blocks": [
+                     {"table": {"head": ["Component", "Lines", "What it does"],
+                                "rows": [
+                        ["Question builder", "502", "From no idea to one specific, feasible question"],
+                        ["Suggestion library", "353", "Procedure and diagnosis presets, variables, outcomes, analyses"],
+                        ["Catalog", "105", "Counts of every primary CPT code in every year"],
+                        ["Cohort extractor", "767", "Builds the cohort from the raw fixed-width files"],
+                        ["Pipeline", "980", "The run itself, end to end"],
+                        ["Workbook writers", "1,558", "The analysis workbook and its sheets"],
+                        ["Statistics and figures", "560", "The statistics mirror and the figures"],
+                        ["Guides", "443", "A written guide per project, plus one for older projects"],
+                        ["Interfaces", "539", "The same questions, in a terminal or by clicking in Chrome"],
+                        ["Maintenance", "278", "Rebuild everything; upgrade an existing sheet in place"],
+                     ]}},
+                 ]},
+                {"id": "stats", "title": "Statistics as spreadsheet formulas", "nav": "The statistics",
+                 "intro": "A workbook of pasted results goes stale the moment the cohort changes. A "
+                          "workbook of formulas cannot.",
+                 "blocks": [
+                     {"bullets": [
+                        "Wilson score intervals for every proportion, rather than the normal "
+                        "approximation that misbehaves at the small denominators subgroup analysis produces",
+                        "Fisher\u2019s exact test, with chi-squared where that is appropriate",
+                        "Katz confidence intervals for risk ratios",
+                        "Propensity-matched comparison flags carrying the hazard ratio, its interval and "
+                        "the proportional-hazards p",
+                        "Formatting functions so counts, percentages, odds ratios and p-values read the "
+                        "same way in every table",
+                     ]},
+                     {"callout": "Fourteen functions in total, installed into each workbook automatically "
+                                 "\u2014 so a collaborator opening the sheet gets working statistics rather "
+                                 "than a screenshot of mine."},
+                 ]},
+                {"id": "data", "title": "Data handling", "nav": "Data handling",
+                 "blocks": [
+                     {"prose": "The NSQIP Participant Use Files are governed by a data-use agreement. The "
+                               "raw files, the derived cohorts and the workbook sheet holding "
+                               "patient-level rows stay on approved machines and are never published, "
+                               "shared or committed. Nothing on this page, and no figure anywhere on this "
+                               "site, contains patient-level data."},
+                 ]},
+            ],
+            "next": "Extending the same approach to the other national datasets these projects draw on, "
+                    "so a question asked of one can be asked of another without rebuilding the machinery.",
+            "sidefoot": "Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+        {
+        "slug": "nsqip-opioids", "tab": "Opioids at Discharge", "group": "current",
+        "title": "Half leave with opioids after urologic surgery",
+        "kicker": "ACS NSQIP Participant Use File · 2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Opioids prescribed at discharge are a modifiable source of persistent use and diversion. Using national data on discharge prescriptions, we described how often patients leave with an opioid after urologic surgery and how prescribing varies by procedure, surgical approach and patient characteristics.",
+        "stats": [("55.4%", "discharged with an opioid"), ("59,773", "patients"), ("26–79%", "range across procedures"), ("2024", "PUF year")],
+        "tags": ["Opioid prescribing", "NSQIP", "Quality improvement", "Urologic surgery"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Edward Wu", "Ariel Schulman"],
+            "lede": "Opioids prescribed at discharge are a modifiable source of persistent use and diversion. Using national data on discharge prescriptions, we described how often patients leave with an opioid after urologic surgery and how prescribing varies by procedure, surgical approach and patient characteristics.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "How often does a patient leave the hospital with an opioid after urologic surgery, and is that decided by the operation or by the patient?",
+            "approach": ["We identified urologic procedures in the 2024 American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "The primary outcome was any opioid prescription at discharge; the secondary outcome was a prescription above 200 oral morphine milligram equivalents.", "Rates were compared across procedures, approaches and patient groups with unadjusted two-proportion tests."],
+            "findings": ["Of 59,773 patients, 33,110 (55.4%) were discharged with an opioid.", "Prescribing ranged from 26.0% after bladder tumor resection to 79.1% after kidney surgery and varied by approach (endoscopic 26.9%, open 65.7%, minimally invasive 75.1%).", "Opioids were prescribed less to patients aged ≥ 70 (45.3% vs 62.2%), and more often to women (62.4% vs 53.8%) and inpatients (61.3% vs 51.5%; all p<0.001).", "Readmission rates were similar in those with vs without an opioid (overall 5.8% vs 6.2%) but also varied by procedure (TURBT 5.7% vs 5.6%; Radical prostatectomy 4.1% vs 5.2%)."],
+            "findings_note": "More than half of patients leave the hospital with an opioid after urologic surgery. Procedure type explains far more of the variation (26% to 79%) than any patient factor (45% to 62%). Low prescribing after endoscopic procedures suggests opioid-free discharge is feasible for many patients.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-opioids-at-discharge/"}],
+            "sidefoot": "Henry M. Blair · Edward Wu · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-bph-bleeding", "tab": "BPH Bleeding", "group": "current",
+        "title": "Bleeding after TURP, photoselective vaporization and HoLEP",
+        "kicker": "ACS NSQIP Participant Use File · 2012–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Laser procedures for benign prostatic hyperplasia are often chosen to limit bleeding, particularly in anticoagulated men. We compared 30-day bleeding after transurethral resection of the prostate (TURP), photoselective vaporization (PVP) and holmium laser enucleation (HoLEP), and described changes in procedure mix and transfusion over 13 years.",
+        "stats": [("123,020", "procedures"), ("0.28", "PVP vs TURP transfusion RR"), ("5.8→14.8%", "HoLEP share"), ("13", "years")],
+        "tags": ["BPH", "Surgical therapy", "Bleeding", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair", "Edward Wu", "Michael Lee", "Payam Hakimian"],
+            "lede": "Laser procedures for benign prostatic hyperplasia are often chosen to limit bleeding, particularly in anticoagulated men. We compared 30-day bleeding after transurethral resection of the prostate (TURP), photoselective vaporization (PVP) and holmium laser enucleation (HoLEP), and described changes in procedure mix and transfusion over 13 years.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Laser procedures are chosen to limit bleeding. Across thirteen years of national data, does that hold — and has bleeding fallen for every approach?",
+            "approach": ["We identified TURP, PVP and HoLEP cases in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Outcomes were transfusion within 72 hours, reoperation and readmission for bleeding, a composite of the three, complications and readmission.", "PVP and HoLEP were compared with TURP using unadjusted relative risks, and yearly transfusion was tested for linear trend."],
+            "findings": ["Of 123,020 procedures, 82,020 were TURP, 31,087 PVP and 9,913 HoLEP; HoLEP’s share rose from 5.8% to 14.8%.", "Compared with TURP, PVP had lower transfusion (0.25% vs 0.90%; relative risk 0.28, 95% confidence interval 0.22-0.35) and half the bleeding composite (1.4% vs 2.6%).", "HoLEP had similar bleeding (2.5% vs 2.6%) but fewer serious complications (1.4% vs 1.7%) and readmissions (4.1% vs 5.3%).", "Transfusion fell after all three: TURP 1.7% to 0.6%, PVP 0.5% to 0.0% (both p<0.001), HoLEP 2.5% to 0.5% (p=0.049)."],
+            "findings_note": "PVP carried the lowest bleeding risk, while HoLEP matched TURP on bleeding with fewer complications and readmissions. Transfusion after surgery for benign prostatic hyperplasia has become rare nationally, declining for every procedure. It is likely that improved techniques, technology, and experience have contributed to this trend. Comparisons are unadjusted and do not account for prostate size.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-bph-bleeding/"}],
+            "sidefoot": "Henry M. Blair · Edward Wu · Michael Lee<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-same-day-discharge", "tab": "Same-Day Discharge", "group": "current",
+        "title": "The national shift to same-day discharge after robotic prostatectomy",
+        "kicker": "ACS NSQIP Participant Use File · 2012–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge after robot-assisted radical prostatectomy (RARP) and asked whether its growth has been accompanied by more readmissions or complications.",
+        "stats": [("119,220", "patients"), ("&lt;1→15.6%", "same-day discharge"), ("0.78", "readmission risk ratio"), ("16×", "growth after 2018")],
+        "tags": ["Prostate cancer", "Same-day discharge", "Health policy", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Edward Wu", "Henry M. Blair", "Ariel Schulman"],
+            "lede": "Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge after robot-assisted radical prostatectomy (RARP) and asked whether its growth has been accompanied by more readmissions or complications.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Medicare opened the door to same-day discharge after prostatectomy in 2018. Did surgeons walk through it, and did readmissions rise when they did?",
+            "approach": ["We identified RARP cases (laparoscopic or robotic; 94% robotic where recorded) in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Yearly same-day discharge rates were tested for linear trend.", "Thirty-day outcomes were compared with overnight stay, and readmission between 2012-2018 and 2019-2024, using unadjusted relative risks."],
+            "findings": ["Of 119,220 patients, 7,088 (5.9%) went home the same day.", "The rate stayed below 1% through 2018, then rose to 1.9% in 2019 and 15.6% in 2024 (p<0.001 for trend), including patients aged 70 or older (0.6% to 8.2%).", "Compared with overnight stay, same-day discharge was associated with lower readmission (3.3% vs 4.2%; relative risk 0.78, 95% confidence interval 0.69-0.89), complications (5.0% vs 6.4%) and reoperation (0.5% vs 1.1%).", "Overall readmission did not change between eras (4.1% vs 4.2%; relative risk 1.02, 0.97-1.08)."],
+            "findings_note": "Same-day discharge after RARP grew sixteenfold after 2018 and now applies to about one in six patients, without a rise in national readmission rates. Lower complication rates after same-day discharge likely reflect selection of healthier patients, and comparisons are unadjusted.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-same-day-discharge/"}],
+            "sidefoot": "Edward Wu · Henry M. Blair · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-rasp-vs-osp", "tab": "RASP vs OSP", "group": "current",
+        "title": "The rapid rise of robot-assisted simple prostatectomy",
+        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Robot-assisted simple prostatectomy (RASP) is increasingly used for large-gland benign prostatic hyperplasia, but national data on its uptake and early safety compared with open simple prostatectomy (OSP) are limited. We described national adoption of RASP and compared 30-day outcomes between approaches, overall and across patient subgroups.",
+        "stats": [("3,033", "simple prostatectomies"), ("73→91%", "robotic share"), ("0.10", "transfusion risk ratio"), ("11.2% vs 28.0%", "any complication")],
+        "tags": ["BPH", "Simple prostatectomy", "Robotic surgery", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Edward Wu", "Henry M. Blair", "Marino Kokolis-Lattanzio", "Ariel Schulman"],
+            "lede": "Robot-assisted simple prostatectomy (RASP) is increasingly used for large-gland benign prostatic hyperplasia, but national data on its uptake and early safety compared with open simple prostatectomy (OSP) are limited. We described national adoption of RASP and compared 30-day outcomes between approaches, overall and across patient subgroups.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Robotic simple prostatectomy has all but replaced the open operation. What did that change in transfusion and complications?",
+            "approach": ["We identified simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) - either RASP (robot used) or OSP (open, no robot).", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Robotic share was tested for linear trend.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by anesthesia risk class, frailty, age ≥70 years, obesity and anemia."],
+            "findings": ["Of 3,033 simple prostatectomies, 2,580 (85.1%) were RASP, rising from 73.2% in 2022 to 91.2% in 2024 (p-trend<0.001).", "RASP had lower transfusion within 72 hours (1.8% vs 18.3%; relative risk 0.10, 95% confidence interval 0.07-0.14), any complication (11.2% vs 28.0%), readmission (5.5% vs 8.2%) and reoperation (1.6% vs 4.2%).", "Superficial wound infection (0.9% vs 2.6%) and kidney injury (0.7% vs 2.6%) were also less frequent; urinary infection, thromboembolism, pneumonia and sepsis did not differ.", "Lower transfusion held in every subgroup."],
+            "findings_note": "RASP now accounts for more than 90% of simple prostatectomies in NSQIP hospitals and is associated with a tenfold lower transfusion rate and less than half the complication rate of OSP, a benefit that persists in older, frail and anemic patients. Comparisons are unadjusted and OSP patients carried more comorbidity, so selection bias is likely.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-rasp-vs-osp/"}],
+            "sidefoot": "Edward Wu · Henry M. Blair · Marino Kokolis-Lattanzio<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-rasp-elderly", "tab": "RASP in the Elderly", "group": "current",
+        "title": "Is anyone too old or too frail for robot-assisted simple prostatectomy?",
+        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Robot-assisted simple prostatectomy (RASP) is an established surgical approach for the treatment of large-gland benign prostatic hyperplasia (BPH). However, perioperative outcomes following RASP among elderly and frail patients remain incompletely characterized. This study aimed to evaluate and compare 30-day postoperative complications following RASP across age and frailty subgroups.",
+        "stats": [("2,580", "men"), ("26.8%", "aged 75 or older"), ("20.5%", "frail (mFI ≥ 2)"), ("0.1%", "mortality")],
+        "tags": ["BPH", "Frailty", "Older adults", "Robotic surgery", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Edward Wu", "Henry M. Blair", "Ariel Schulman"],
+            "lede": "Robot-assisted simple prostatectomy (RASP) is an established surgical approach for the treatment of large-gland benign prostatic hyperplasia (BPH). However, perioperative outcomes following RASP among elderly and frail patients remain incompletely characterized. This study aimed to evaluate and compare 30-day postoperative complications following RASP across age and frailty subgroups.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Age and frailty are routinely used to steer older men away from robotic simple prostatectomy. Do the outcomes justify that?",
+            "approach": ["We identified robotic simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP).", "Serious complications were defined as wound dehiscence/infection, organ space infections, pneumonia, re-intubation, pulmonary embolism, renal failure, cerebrovascular accident, cardiac arrest, sepsis, and septic shock.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by frailty (Modified Frailty Index (mFI) ≥ 2) and elderly status (age ≥75 years)."],
+            "findings": ["Of 2,580 men, 691 (26.8%) were aged 75 or older, 519 (20.5%) were frail and 182 (7.2% were both).", "Older men had more complications overall (13.5% vs 10.3%; RR 1.3 95% confidence interval 1.03-1.64), transfusion (3.2% vs 1.3%), non-home discharge (2.0% vs 0.6%) and stays longer than one day (32.9% vs 25.8%), but similar serious complications (3.8% vs 3.4%) and readmission (5.6% vs 5.5%).", "Frail men had longer stays (36.0% vs 25.6%).", "Mortality was 0.1%."],
+            "findings_note": "In men aged 75 or older and frail men, RASP was associated with longer stays, more transfusion, and more non-home discharge. However, rates of serious complication, readmission, and mortality remained low and similar to younger, non-frail men. RASP has demonstrated safety in the frail and elderly population with comparable rates of serious complications, readmission, and mortality.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-rasp-elderly-frail/"}],
+            "sidefoot": "Edward Wu · Henry M. Blair · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-colpopexy", "tab": "Sacrocolpopexy vs SSLF", "group": "current",
+        "title": "Robotic sacrocolpopexy versus transvaginal sacrospinous ligament fixation",
+        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Apical pelvic organ prolapse can be repaired abdominally with robotic sacrocolpopexy (SCP) or vaginally with sacrospinous ligament fixation (SSLF), with or without a hysterectomy. While vaginal native tissue repairs are often considered a lower risk option, comparative data on postoperative complications between these remain limited. This study compared 30-day postoperative complications.",
+        "stats": [("12,623", "patients"), ("6.6% vs 8.8%", "overall complications"), ("0.70", "UTI risk ratio"), ("5.4% vs 14.0%", "stay beyond one day")],
+        "tags": ["Pelvic organ prolapse", "Reconstructive surgery", "Urinary tract infection", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Arsha Venkat", "Edward Wu", "Henry M. Blair", "Allison Polland"],
+            "lede": "Apical pelvic organ prolapse can be repaired abdominally with robotic sacrocolpopexy (SCP) or vaginally with sacrospinous ligament fixation (SSLF), with or without a hysterectomy. While vaginal native tissue repairs are often considered a lower risk option, comparative data on postoperative complications between these remain limited. This study compared 30-day postoperative complications.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Vaginal native-tissue repair is often presented as the lower-risk option for apical prolapse. Does the national record agree?",
+            "approach": ["We identified patients who underwent SCP (CPT 57425, designated robotic) or SSLF (CPT 57282) in 2022-2024 in the National Surgical Quality Improvement Program (NSQIP).", "Serious complications were defined as wound dehiscence/infection, organ space infections, pneumonia, re-intubation, pulmonary embolism, renal failure, cerebrovascular accident, cardiac arrest, sepsis, and septic shock.", "Other complications included superficial infections, UTI, deep venous thromboses, and blood transfusions.", "Outcomes were compared with unadjusted relative risks (RR) and two-proportion or Fisher’s exact tests."],
+            "findings": ["Of 12,623 patients, 7,589 underwent robotic SCP and 5,034 SSLF; 89% and 94% had concomitant procedures.", "Robotic SCP had fewer overall complications (6.6% vs 8.8%), reoperations (0.9% vs 1.5%) and stays >1 day (5.4% vs 14.0%).", "Serious complications (1.4% vs 1.3%) and readmission (1.9% each) were similar.", "UTI was less common after robotic SCP versus SSLF (3.6% vs 5.1%; RR 0.70, 95% CI 0.60-0.83).", "On subgroup analysis of patients without concomitant procedures, UTI risk remained elevated for the SSLF group (RR 0.56 [0.41-0.77])."],
+            "findings_note": "Because SCP addresses all vaginal compartments, fewer SCP patients required concomitant procedures, potentially affecting outcomes. UTI differences suggest that the vaginal approach may influence UTI risk. However, unadjusted comparisons and differences in patient selection and prolapse severity may impact findings. Nonetheless, these results may help counsel patients hesitant about SCP.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-colpopexy/"}],
+            "sidefoot": "Arsha Venkat · Edward Wu · Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "dr-hank-med-ed-ai", "tab": None, "group": "earlier",
         "title": "Dr. Hank: a cited-source study assistant for medical students",
         "kicker": "Medical education tooling · personal project",
         "status": "Working prototype",
@@ -855,7 +1835,7 @@ PROJECTS = [
     # ============================================================ earlier work
 
     {
-        "slug": "insula-autism-thesis", "tab": "Honors Thesis", "group": "earlier",
+        "slug": "insula-autism-thesis", "tab": None, "group": "earlier",
         "title": "Altered functional connectivity of the anterior insula in attention networks of autistic individuals",
         "kicker": "Honors thesis · Neuroscience and Behavioral Biology, Emory University · 2023",
         "status": "Defended April 2023 · Emory ETD",
@@ -911,7 +1891,7 @@ PROJECTS = [
     },
 
     {
-        "slug": "varvel-ep2-status-epilepticus", "tab": "EP2 & Status Epilepticus", "group": "earlier",
+        "slug": "varvel-ep2-status-epilepticus", "tab": None, "group": "earlier",
         "title": "Peripheral myeloid EP2 activation after status epilepticus",
         "kicker": "Varvel lab · Pharmacology and Chemical Biology, Emory University School of Medicine",
         "status": "Lab work · published as Varvel et al., J Neurosci 2021",
@@ -949,7 +1929,7 @@ PROJECTS = [
     },
 
     {
-        "slug": "varvel-monocyte-engraftment", "tab": "Monocyte Engraftment", "group": "earlier",
+        "slug": "varvel-monocyte-engraftment", "tab": None, "group": "earlier",
         "title": "Brain-engrafted monocytes after microglia ablation",
         "kicker": "Varvel lab · Pharmacology and Chemical Biology, Emory University School of Medicine",
         "status": "Lab work · methods published in Methods Mol Biol 2019",
@@ -985,7 +1965,7 @@ PROJECTS = [
     },
 
     {
-        "slug": "varvel-5xfad-inflammation", "tab": "5xFAD Inflammation", "group": "earlier",
+        "slug": "varvel-5xfad-inflammation", "tab": None, "group": "earlier",
         "title": "Sex-dependent inflammatory gene induction in prodromal Alzheimer's disease",
         "kicker": "Varvel lab · Pharmacology and Chemical Biology, Emory University School of Medicine",
         "status": "Lab work · published as Manji et al., J Alzheimers Dis 2019",
@@ -1019,7 +1999,7 @@ PROJECTS = [
     },
 
     {
-        "slug": "tbi-stress-pte", "tab": "TBI & Stress", "group": "earlier",
+        "slug": "tbi-stress-pte", "tab": None, "group": "earlier",
         "title": "Traumatic stress at the moment of brain injury and the risk of post-traumatic epilepsy",
         "kicker": "Velíšková lab · Cell Biology & Anatomy, New York Medical College · STAR program · 2019",
         "status": "Presented as a poster, 2019",
@@ -1061,7 +2041,7 @@ PROJECTS = [
     },
 
     {
-        "slug": "estrogen-dentate-gyrus", "tab": "Estrogen & Dentate Gyrus", "group": "earlier",
+        "slug": "estrogen-dentate-gyrus", "tab": None, "group": "earlier",
         "title": "Estrogen and the dentate gyrus: response to spatial and environmental novelty",
         "kicker": "Velíšková lab · New York Medical College · STAR program · 2018",
         "status": "Paper and poster · Junior Science and Humanities Symposium",

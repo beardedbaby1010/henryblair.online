@@ -33,7 +33,7 @@
 <a class="sb-badge" href="/" aria-label="Henry M. Blair — home"><img src="/assets/headshot-badge.png?v=3bcc1f9524" alt="" width="320" height="320"></a>
 <div class="sitebar">
   <a class="sb-brand" href="/">Henry M. Blair</a>
-  <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/">Contact Me</a><a href="/resume/">Resume</a><a href="/" aria-current="page">Research Portfolio</a><a href="/projects/adt-initiation/">ADT Initiation</a><a href="/projects/ve-boxed-warning/">Vaginal Estrogen</a><a href="/projects/oab-pvr/">PVR Self-Estimation</a><a href="/projects/oab-adi/">Deprivation & Access</a><a href="/projects/nocturia-goals/">Nocturia Goals</a><a href="/projects/retzius-retention/">Retzius-Sparing RARP</a><a href="/projects/focal-therapy-continence/">Focal Therapy</a><a href="/projects/ketamine-cystitis/">Ketamine Cystitis</a><a href="/projects/urogyn-perceptions/">Urogyn Survey</a><a href="/projects/aua-core-videos/">AUA Core Videos</a><a href="/projects/maude-sealing-devices/">MAUDE Device Safety</a><a href="/projects/dr-hank-med-ed-ai/">Med-Ed AI</a><a href="/projects/insula-autism-thesis/">Honors Thesis</a><a href="/projects/varvel-ep2-status-epilepticus/">EP2 & Status Epilepticus</a><a href="/projects/varvel-monocyte-engraftment/">Monocyte Engraftment</a><a href="/projects/varvel-5xfad-inflammation/">5xFAD Inflammation</a><a href="/projects/tbi-stress-pte/">TBI & Stress</a><a href="/projects/estrogen-dentate-gyrus/">Estrogen & Dentate Gyrus</a></nav>
+  <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/">Contact Me</a><a href="/resume/">Resume</a><a href="/" aria-current="page">Research Portfolio</a><a href="/abstracts/">Abstracts</a><a href="/earlier/">Earlier Work</a><a href="/in-preparation/">In Preparation</a><a href="/projects/adt-initiation/">ADT Initiation</a><a href="/projects/ve-boxed-warning/">Vaginal Estrogen</a><a href="/projects/oab-pvr/">PVR Self-Estimation</a><a href="/projects/oab-adi/">Deprivation & Access</a><a href="/projects/nocturia-goals/">Nocturia Goals</a><a href="/projects/urogyn-perceptions/">Urogyn Survey</a><a href="/projects/aua-core-videos/">AUA Core Videos</a><a href="/projects/maude-sealing-devices/">MAUDE Device Safety</a><a href="/projects/nsqip-pipeline/">NSQIP Pipeline</a><a href="/projects/nsqip-opioids/">Opioids at Discharge</a><a href="/projects/nsqip-bph-bleeding/">BPH Bleeding</a><a href="/projects/nsqip-same-day-discharge/">Same-Day Discharge</a><a href="/projects/nsqip-rasp-vs-osp/">RASP vs OSP</a><a href="/projects/nsqip-rasp-elderly/">RASP in the Elderly</a><a href="/projects/nsqip-colpopexy/">Sacrocolpopexy vs SSLF</a></nav>
 </div>
 <span class="sb-fade" aria-hidden="true"></span>
 <script>(function(){function c(){var b=document.querySelector('.sitebar');if(!b)return;var a=b.querySelector('[aria-current=\'page\']');if(!a)return;var x=a.offsetLeft-(b.clientWidth-a.offsetWidth)/2;b.scrollLeft=Math.max(0,Math.min(x,b.scrollWidth-b.clientWidth));}c();if(document.readyState!=='complete'){window.addEventListener('load',c);}window.addEventListener('resize',c);})();</script>
@@ -120,10 +120,11 @@
 </a>
 
 <a class="proj" href="/projects/urogyn-perceptions/">
-  <div class="kicker">National survey · every U.S. urology residency</div>
-  <h3>How urology residents perceive urogynecology</h3>
-  <p>A survey distributed to every urology residency in the country, measuring residents' knowledge of urogynecology and what shapes their perception of it — the pipeline question behind a subspecialty shortage.</p>
-  <div class="tags"><span class="tag">Urogynecology</span><span class="tag">Medical education</span><span class="tag">Workforce</span><span class="tag">Survey</span></div>
+  <div class="kicker">National survey · US urology residency programs · July–August 2026</div>
+  <h3>How urology residents see urogynecology</h3>
+  <p>Urogynecology and reconstructive pelvic surgery takes fellows from both urology and gynaecology, but few come from urology. We surveyed 115 residents nationally about what they are exposed to, who mentors them, what they think the field is, and when they decide. Exposure and mentorship did not explain who was interested.</p>
+  <div class="stats"><div class="stat"><div class="v">115</div><div class="l">residents responded</div></div><div class="stat"><div class="v">46.1%</div><div class="l">any fellowship interest</div></div><div class="stat"><div class="v">28.7%</div><div class="l">have a URPS mentor</div></div><div class="stat"><div class="v">90.4%</div><div class="l">say URPS belongs in urology</div></div></div>
+  <div class="tags"><span class="tag">Medical education</span><span class="tag">Workforce</span><span class="tag">Urogynecology</span><span class="tag">Survey research</span><span class="tag">Fellowship training</span></div>
   <div class="open">Open the project hub &rarr;</div>
 </a>
 
@@ -145,6 +146,72 @@
   <div class="open">Open the project hub &rarr;</div>
 </a>
 
+<a class="proj" href="/projects/nsqip-pipeline/">
+  <div class="kicker">Research tooling · ACS NSQIP Participant Use Files</div>
+  <h3>A pipeline that turns the NSQIP files into a finished analysis</h3>
+  <p>The ACS NSQIP public files are twelve years of fixed-width text whose columns appear, vanish and change name between years. This is the toolchain I wrote to go from no research question at all to a cohort, a live workbook, publication figures and a written guide — about six thousand lines of Python, run by double-clicking one file.</p>
+  <div class="stats"><div class="stat"><div class="v">6,085</div><div class="l">lines of Python</div></div><div class="stat"><div class="v">397</div><div class="l">columns mapped across years</div></div><div class="stat"><div class="v">12</div><div class="l">PUF years, 2012–2023</div></div><div class="stat"><div class="v">14</div><div class="l">statistics as live formulas</div></div></div>
+  <div class="tags"><span class="tag">NSQIP</span><span class="tag">Research tooling</span><span class="tag">Reproducibility</span><span class="tag">Python</span><span class="tag">Health services research</span></div>
+  <div class="open">Open the project hub &rarr;</div>
+</a>
+
+<a class="proj" href="/projects/nsqip-opioids/">
+  <div class="kicker">ACS NSQIP Participant Use File · 2024</div>
+  <h3>Half leave with opioids after urologic surgery</h3>
+  <p>Opioids prescribed at discharge are a modifiable source of persistent use and diversion. Using national data on discharge prescriptions, we described how often patients leave with an opioid after urologic surgery and how prescribing varies by procedure, surgical approach and patient characteristics.</p>
+  <div class="stats"><div class="stat"><div class="v">55.4%</div><div class="l">discharged with an opioid</div></div><div class="stat"><div class="v">59,773</div><div class="l">patients</div></div><div class="stat"><div class="v">26–79%</div><div class="l">range across procedures</div></div><div class="stat"><div class="v">2024</div><div class="l">PUF year</div></div></div>
+  <div class="tags"><span class="tag">Opioid prescribing</span><span class="tag">NSQIP</span><span class="tag">Quality improvement</span><span class="tag">Urologic surgery</span></div>
+  <div class="open">Open the project hub &rarr;</div>
+</a>
+
+<a class="proj" href="/projects/nsqip-bph-bleeding/">
+  <div class="kicker">ACS NSQIP Participant Use File · 2012–2024</div>
+  <h3>Bleeding after TURP, photoselective vaporization and HoLEP</h3>
+  <p>Laser procedures for benign prostatic hyperplasia are often chosen to limit bleeding, particularly in anticoagulated men. We compared 30-day bleeding after transurethral resection of the prostate (TURP), photoselective vaporization (PVP) and holmium laser enucleation (HoLEP), and described changes in procedure mix and transfusion over 13 years.</p>
+  <div class="stats"><div class="stat"><div class="v">123,020</div><div class="l">procedures</div></div><div class="stat"><div class="v">0.28</div><div class="l">PVP vs TURP transfusion RR</div></div><div class="stat"><div class="v">5.8→14.8%</div><div class="l">HoLEP share</div></div><div class="stat"><div class="v">13</div><div class="l">years</div></div></div>
+  <div class="tags"><span class="tag">BPH</span><span class="tag">Surgical therapy</span><span class="tag">Bleeding</span><span class="tag">NSQIP</span></div>
+  <div class="open">Open the project hub &rarr;</div>
+</a>
+
+<a class="proj" href="/projects/nsqip-same-day-discharge/">
+  <div class="kicker">ACS NSQIP Participant Use File · 2012–2024</div>
+  <h3>The national shift to same-day discharge after robotic prostatectomy</h3>
+  <p>Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge after robot-assisted radical prostatectomy (RARP) and asked whether its growth has been accompanied by more readmissions or complications.</p>
+  <div class="stats"><div class="stat"><div class="v">119,220</div><div class="l">patients</div></div><div class="stat"><div class="v">&amp;lt;1→15.6%</div><div class="l">same-day discharge</div></div><div class="stat"><div class="v">0.78</div><div class="l">readmission risk ratio</div></div><div class="stat"><div class="v">16×</div><div class="l">growth after 2018</div></div></div>
+  <div class="tags"><span class="tag">Prostate cancer</span><span class="tag">Same-day discharge</span><span class="tag">Health policy</span><span class="tag">NSQIP</span></div>
+  <div class="open">Open the project hub &rarr;</div>
+</a>
+
+<a class="proj" href="/projects/nsqip-rasp-vs-osp/">
+  <div class="kicker">ACS NSQIP Participant Use File · 2022–2024</div>
+  <h3>The rapid rise of robot-assisted simple prostatectomy</h3>
+  <p>Robot-assisted simple prostatectomy (RASP) is increasingly used for large-gland benign prostatic hyperplasia, but national data on its uptake and early safety compared with open simple prostatectomy (OSP) are limited. We described national adoption of RASP and compared 30-day outcomes between approaches, overall and across patient subgroups.</p>
+  <div class="stats"><div class="stat"><div class="v">3,033</div><div class="l">simple prostatectomies</div></div><div class="stat"><div class="v">73→91%</div><div class="l">robotic share</div></div><div class="stat"><div class="v">0.10</div><div class="l">transfusion risk ratio</div></div><div class="stat"><div class="v">11.2% vs 28.0%</div><div class="l">any complication</div></div></div>
+  <div class="tags"><span class="tag">BPH</span><span class="tag">Simple prostatectomy</span><span class="tag">Robotic surgery</span><span class="tag">NSQIP</span></div>
+  <div class="open">Open the project hub &rarr;</div>
+</a>
+
+<a class="proj" href="/projects/nsqip-rasp-elderly/">
+  <div class="kicker">ACS NSQIP Participant Use File · 2022–2024</div>
+  <h3>Is anyone too old or too frail for robot-assisted simple prostatectomy?</h3>
+  <p>Robot-assisted simple prostatectomy (RASP) is an established surgical approach for the treatment of large-gland benign prostatic hyperplasia (BPH). However, perioperative outcomes following RASP among elderly and frail patients remain incompletely characterized. This study aimed to evaluate and compare 30-day postoperative complications following RASP across age and frailty subgroups.</p>
+  <div class="stats"><div class="stat"><div class="v">2,580</div><div class="l">men</div></div><div class="stat"><div class="v">26.8%</div><div class="l">aged 75 or older</div></div><div class="stat"><div class="v">20.5%</div><div class="l">frail (mFI ≥ 2)</div></div><div class="stat"><div class="v">0.1%</div><div class="l">mortality</div></div></div>
+  <div class="tags"><span class="tag">BPH</span><span class="tag">Frailty</span><span class="tag">Older adults</span><span class="tag">Robotic surgery</span><span class="tag">NSQIP</span></div>
+  <div class="open">Open the project hub &rarr;</div>
+</a>
+
+<a class="proj" href="/projects/nsqip-colpopexy/">
+  <div class="kicker">ACS NSQIP Participant Use File · 2022–2024</div>
+  <h3>Robotic sacrocolpopexy versus transvaginal sacrospinous ligament fixation</h3>
+  <p>Apical pelvic organ prolapse can be repaired abdominally with robotic sacrocolpopexy (SCP) or vaginally with sacrospinous ligament fixation (SSLF), with or without a hysterectomy. While vaginal native tissue repairs are often considered a lower risk option, comparative data on postoperative complications between these remain limited. This study compared 30-day postoperative complications.</p>
+  <div class="stats"><div class="stat"><div class="v">12,623</div><div class="l">patients</div></div><div class="stat"><div class="v">6.6% vs 8.8%</div><div class="l">overall complications</div></div><div class="stat"><div class="v">0.70</div><div class="l">UTI risk ratio</div></div><div class="stat"><div class="v">5.4% vs 14.0%</div><div class="l">stay beyond one day</div></div></div>
+  <div class="tags"><span class="tag">Pelvic organ prolapse</span><span class="tag">Reconstructive surgery</span><span class="tag">Urinary tract infection</span><span class="tag">NSQIP</span></div>
+  <div class="open">Open the project hub &rarr;</div>
+</a>
+
+<h2 class="sect">Earlier work</h2>
+<p class="sectnote">Where the method came from: imaging and bench work at Emory and New York Medical College, beginning in high school through the STAR program.</p>
+
 <a class="proj" href="/projects/dr-hank-med-ed-ai/">
   <div class="kicker">Medical education tooling · personal project</div>
   <h3>Dr. Hank: a cited-source study assistant for medical students</h3>
@@ -152,9 +219,6 @@
   <div class="tags"><span class="tag">Medical education</span><span class="tag">Language models</span><span class="tag">Study tools</span><span class="tag">Citations</span></div>
   <div class="open">Open the project hub &rarr;</div>
 </a>
-
-<h2 class="sect">Earlier work</h2>
-<p class="sectnote">Where the method came from: imaging and bench work at Emory and New York Medical College, beginning in high school through the STAR program.</p>
 
 <a class="proj" href="/projects/insula-autism-thesis/">
   <div class="kicker">Honors thesis · Neuroscience and Behavioral Biology, Emory University · 2023</div>

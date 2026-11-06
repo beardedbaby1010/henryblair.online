@@ -443,8 +443,12 @@ iframe{width:100%%;height:82vh;border:1px solid var(--line);background:#fff}
       .then(function(pt){
         // The plaintext is either a document or the address of one. A URL means the
         // address itself was the secret: nothing to download, just somewhere to look.
-        var head = String.fromCharCode.apply(null, new Uint8Array(pt.slice(0, 4)));
-        if(head === 'http'){
+        var head = String.fromCharCode.apply(null, new Uint8Array(pt.slice(0, 9))).toLowerCase();
+        if(head.indexOf('<!doctype') === 0 || head.indexOf('<html') === 0){
+          var h = URL.createObjectURL(new Blob([pt], {type:'text/html'}));
+          document.getElementById('frame').src = h;
+          document.getElementById('dlwrap').style.display = 'none';
+        } else if(head.indexOf('http') === 0){
           document.getElementById('frame').src = new TextDecoder().decode(pt).trim();
           document.getElementById('dlwrap').style.display = 'none';
         } else {
@@ -561,6 +565,39 @@ def build_download_gates(published):
             blurb=esc(meta.get("note", "")),
             back_url=meta.get("back_url", "/"), back_label=meta.get("back_label", "back to the portfolio"),
             filename=name, data=data, passwords=keys, cache_key="download:" + name)
+    return ok
+
+
+def build_page_gates():
+    """Pages that are private in full: the file published is ciphertext.
+
+    Used for working notes that belong to me rather than to a reader. The page
+    is written in _source/ (gitignored), encrypted at build time, and rendered
+    in place once a passphrase opens it."""
+    gates = getattr(CFG, "PAGE_GATES", {})
+    if not gates:
+        return True
+    secrets = load_secrets()
+    ok = True
+    for key, meta in gates.items():
+        keys = passphrases_for(key, secrets)
+        if not keys:
+            warn("no passphrase for %s in _secrets/passwords.txt — NOT published" % key)
+            ok = False
+            continue
+        src = expand(meta["source"])
+        data = read_file(src, "page")
+        if data is None:
+            ok = False
+            continue
+        ok &= write_gate(
+            out=os.path.join(ROOT, meta["dir"], "index.html"),
+            title=esc(meta.get("title", key)),
+            subtitle=esc(meta.get("subtitle", "")),
+            blurb=esc(meta.get("note", "")),
+            back_url=meta.get("back_url", "/"),
+            back_label=meta.get("back_label", "back to the portfolio"),
+            filename="", data=data, passwords=keys, cache_key="page:" + key)
     return ok
 
 
@@ -885,8 +922,8 @@ def auto_sections(p):
         sec("next", "What comes next", '  <h2>What comes next</h2>\n  <p>%s</p>\n' % h["next"])
 
     if h.get("about"):
-        sec("about", "About & provenance",
-            '  <h2>About &amp; provenance</h2>\n  <div class="keybox">%s</div>\n'
+        sec("about", "About the study",
+            '  <h2>About the study</h2>\n  <div class="keybox">%s</div>\n'
             % "".join('<p>%s</p>' % x for x in h["about"]))
 
     return "\n\n".join(out), "\n".join(nav)
@@ -981,7 +1018,8 @@ def prune_gates():
     with the old passphrase, which is the opposite of what removing a line means."""
     import shutil
     roots = [os.path.join(ROOT, "projects"), os.path.join(ROOT, "downloads"),
-             os.path.join(ROOT, "watch")]
+             os.path.join(ROOT, "watch"),
+             os.path.join(ROOT, "in-preparation")]
     for root in roots:
         if not os.path.isdir(root):
             continue
@@ -1027,7 +1065,12 @@ def set_analytics(html):
 
 
 SCRUB = [
-    # ADT hub — provenance written for the author, not the reader
+    # "provenance" is jargon; the section is simply about the study
+    ('<h2>About &amp; data provenance</h2>', '<h2>About the study</h2>'),
+    ('<h2>About &amp; provenance</h2>', '<h2>About the study</h2>'),
+    ('data-sec="about">About &amp; provenance</a>', 'data-sec="about">About the study</a>'),
+
+    # ADT hub — source notes written for the author, not the reader
     ('<b>One snapshot, sourced from this folder.</b> Every number is read from\n'
      '   <em>Henry - PCa Data Master.xlsx</em> and every figure from <em>pca_figures/</em> '
      '(produced by <em>pca_figures.py</em>);\n   the page regenerates with <em>build_hub.py</em>. '
@@ -1157,9 +1200,12 @@ if __name__ == "__main__":
         ok &= build_project_page(p)
         ok &= build_gate(p)
     for pg in CFG.PAGES:
+        if pg.get("gate"):      # a gate page is written whole, bar included
+            continue
         set_nav(os.path.join(ROOT, pg["file"]), pg["key"])
     ok &= build_downloads()
     ok &= build_embed_gates()
+    ok &= build_page_gates()
     prune_gates()
     ok &= build_home()
     ok &= polish_pages()
