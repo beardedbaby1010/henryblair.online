@@ -1205,6 +1205,41 @@ def version_assets():
     return True
 
 
+# ------------------------------------------------- byte-exact static payloads
+# Files that are served verbatim and whose bytes are part of a contract with
+# something outside this site. install.sh is piped straight into zsh by anyone
+# running the one-liner, so a stray edit here is executed on their machine: a
+# CRLF, a BOM, or a well-meant "polish" pass would break it in confusing ways,
+# or worse, run. The hash is checked after every build so a change is loud and
+# deliberate rather than silent. Update the hash only when the script itself
+# is meant to change.
+VERBATIM = {
+    "nsqip/install.sh":
+        "9f2f12458e4955a8937b2f57104ed21e9730c50f89d40fa0460aab033bac25cd",
+}
+
+def check_verbatim():
+    ok = True
+    for rel, want in VERBATIM.items():
+        f = os.path.join(ROOT, rel)
+        if not os.path.exists(f):
+            warn("%s is missing — the one-liner that pipes it into zsh will 404" % rel)
+            ok = False; continue
+        raw = open(f, "rb").read()
+        got = hashlib.sha256(raw).hexdigest()
+        if got != want:
+            warn("%s changed: expected sha256 %s, found %s" % (rel, want[:12], got[:12]))
+            warn("   if that was deliberate, update VERBATIM in this file")
+            ok = False; continue
+        if b"\r\n" in raw:
+            warn("%s has CRLF line endings; it must be LF only" % rel); ok = False
+        elif raw.startswith(b"\xef\xbb\xbf"):
+            warn("%s starts with a byte-order mark; it must not" % rel); ok = False
+        else:
+            note("%s verbatim, sha256 %s" % (rel, got[:12]))
+    return ok
+
+
 if __name__ == "__main__":
     print("Building %s" % ROOT)
     ok = True
@@ -1224,5 +1259,6 @@ if __name__ == "__main__":
     ok &= build_home()
     ok &= polish_pages()
     ok &= version_assets()
+    ok &= check_verbatim()
     print("Done." if ok else "Done, with problems (see above).")
     sys.exit(0 if ok else 1)
