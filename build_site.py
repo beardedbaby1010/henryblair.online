@@ -1218,6 +1218,35 @@ VERBATIM = {
         "9f2f12458e4955a8937b2f57104ed21e9730c50f89d40fa0460aab033bac25cd",
 }
 
+KIT_ZIP = "nsqip/NSQIP_ZIP.zip"
+
+def check_kit_zip():
+    """The kit is replaced from time to time, so its bytes are not pinned — but
+    its shape is. install.sh refuses anything that does not unpack to
+    NSQIP_ZIP/run_this_first.zsh, so a zip built one folder too deep would be
+    downloaded by everyone and then rejected on their machine. Check it here
+    instead, where it is cheap to notice."""
+    import zipfile
+    f = os.path.join(ROOT, KIT_ZIP)
+    if not os.path.exists(f):
+        warn("%s is missing — the one-liner will download nothing" % KIT_ZIP)
+        return False
+    try:
+        z = zipfile.ZipFile(f)
+        if z.testzip() is not None:
+            warn("%s is a corrupt zip" % KIT_ZIP); return False
+        names = z.namelist()
+    except Exception as e:
+        warn("%s is not a readable zip (%s)" % (KIT_ZIP, e)); return False
+    if "NSQIP_ZIP/run_this_first.zsh" not in names:
+        tops = sorted({n.split("/")[0] for n in names})
+        warn("%s does not contain NSQIP_ZIP/run_this_first.zsh — install.sh will"
+             " refuse it (top-level: %s)" % (KIT_ZIP, ", ".join(tops) or "none"))
+        return False
+    note("%s ok, %d entries, %.0f KB" % (KIT_ZIP, len(names), os.path.getsize(f) / 1024.0))
+    return True
+
+
 def check_verbatim():
     ok = True
     for rel, want in VERBATIM.items():
@@ -1260,5 +1289,6 @@ if __name__ == "__main__":
     ok &= polish_pages()
     ok &= version_assets()
     ok &= check_verbatim()
+    ok &= check_kit_zip()
     print("Done." if ok else "Done, with problems (see above).")
     sys.exit(0 if ok else 1)
