@@ -140,8 +140,13 @@ MENU_JS = ("(function(){var m=document.querySelector('.sb-menu');if(!m)return;"
            "p.addEventListener('click',function(e){if(e.target.tagName==='A')shut();});"
            "})();")
 
-TAB_SCROLL = ("(function(){function c(){var b=document.querySelector('.sitebar');"
-              "if(!b)return;var a=b.querySelector('[aria-current=\\'page\\']');if(!a)return;"
+TAB_SCROLL = ("(function(){function c(){"
+              "var b=document.querySelector('.sitebar');if(!b)return;"
+              "var f=document.querySelector('.sb-fade');"
+              "var over=b.scrollWidth>b.clientWidth+1;"
+              "if(f)f.style.display=over?'':'none';"
+              "var a=b.querySelector('[aria-current=\\'page\\']');"
+              "if(!a||!over)return;"
               "var x=a.offsetLeft-(b.clientWidth-a.offsetWidth)/2;"
               "b.scrollLeft=Math.max(0,Math.min(x,b.scrollWidth-b.clientWidth));}"
               "c();if(document.readyState!=='complete'){window.addEventListener('load',c);}"
@@ -172,20 +177,27 @@ def projects_menu(active=None):
             % (' aria-current="page"' if here else '', "".join(items)))
 
 def nav_html(active=None):
-    tabs = []
+    """Two groups: the reading tabs at the left, Projects and In Preparation
+    pushed to the right edge. An entry opts into the right group with
+    "right": True in PAGES; order within each group follows PAGES."""
+    left, right = [], []
     for pg in CFG.PAGES:
         if pg["key"] == PROJECTS_KEY:
-            tabs.append(projects_menu(active))
-            continue
-        cur = ' aria-current="page"' if pg["key"] == active else ''
-        tabs.append('<a href="%s"%s>%s</a>' % (pg["href"], cur, pg["tab"]))
+            markup = projects_menu(active)
+        else:
+            cur = ' aria-current="page"' if pg["key"] == active else ''
+            markup = '<a href="%s"%s>%s</a>' % (pg["href"], cur, pg["tab"])
+        (right if pg.get("right") else left).append(markup)
     if not any(pg["key"] == PROJECTS_KEY for pg in CFG.PAGES):
-        tabs.append(projects_menu(active))      # never lose the projects entirely
+        right.append(projects_menu(active))     # never lose the projects entirely
+    navs = '  <nav class="sb-tabs">' + "".join(left) + '</nav>\n'
+    if right:
+        navs += '  <nav class="sb-tabs sb-right">' + "".join(right) + '</nav>\n'
     return ('<a class="sb-badge" href="/" aria-label="Henry M. Blair — home">'
             '<img src="/assets/headshot-badge.png" alt="" width="320" height="320"></a>\n'
             '<div class="sitebar">\n'
             '  <a class="sb-brand" href="/">Henry M. Blair</a>\n'
-            '  <nav class="sb-tabs">' + "".join(tabs) + '</nav>\n'
+            + navs +
             '</div>\n<span class="sb-fade" aria-hidden="true"></span>\n'
             '<script>' + TAB_SCROLL + '</script>\n'
             '<script>' + MENU_JS + '</script>')

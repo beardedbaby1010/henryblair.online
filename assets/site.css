@@ -27,6 +27,10 @@ body{margin:0;padding-top:var(--sitebar);background:var(--bg);color:var(--ink);
   letter-spacing:.12em;text-transform:uppercase;color:#fff;text-decoration:none;
   border:0;white-space:nowrap;border-right:1px solid #333}
 .sitebar .sb-tabs{display:flex;align-items:stretch}
+/* Projects and In Preparation sit at the right edge; when the bar is narrow
+   enough to scroll, margin-left:auto has no effect and they flow normally. */
+.sitebar .sb-tabs.sb-right{margin-left:auto}
+.sitebar .sb-tabs.sb-right > :first-child{border-left:1px solid #333}
 .sitebar .sb-tabs a{display:flex;align-items:center;padding:0 14px;color:#b9bcbf;
   text-decoration:none;border:0;border-right:1px solid #333;white-space:nowrap;font-weight:600}
 .sitebar .sb-tabs a:hover{color:#fff;background:#1c1c1c}
