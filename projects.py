@@ -188,7 +188,7 @@ DOWNLOAD_GATES = {
 # https://<code>.goatcounter.com -- and every published page gets the counter on
 # the next build. Leave it empty and no page carries any tracking at all.
 ANALYTICS = {
-    "goatcounter": "",
+    "goatcounter": "henryblair",
     # Gate landing pages are passphrase prompts for named manuscripts and
     # abstracts. Counting them would hand a third party the path of every gated
     # item a visitor opened, so they stay out unless you say otherwise.

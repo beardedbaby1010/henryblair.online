@@ -305,4 +305,5 @@ secs.forEach(s=>spy.observe(s));
 const q=document.getElementById('q');const tg=[...document.querySelectorAll('.qbcard,.fig,.navcard,.gapbox,.pitfalls li,.reftbl tbody tr,.prov p,.rules li')];
 let t;q.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>{const s=q.value.trim().toLowerCase();
  tg.forEach(el=>el.classList.toggle('hidden',!!s&&!el.textContent.toLowerCase().includes(s)));},120);});
-</script></body></html>
+</script><!--ANALYTICS--><script data-goatcounter="https://henryblair.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><!--/ANALYTICS-->
+</body></html>
