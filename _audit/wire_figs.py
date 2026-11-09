@@ -22,18 +22,15 @@ FIGS = {
    "patient subgroup — the secondary outcome.", None),
  ],
  "nsqip-bph-bleeding": [
-  ("Figure_1.png", "Transfusion within 72 hours after BPH surgery, by year and procedure.", None),
-  ("Figure_1b.png", "The same series, 2019–2024.", "layout variant"),
-  ("Figure_2.png", "Share of BPH procedures by year and procedure type — how the "
-   "mix moved over thirteen years.", None),
-  ("Figure_3.png", "Thirty-day outcomes after HoLEP and PVP compared with TURP. "
-   "<b>A</b> HoLEP vs TURP, <b>B</b> PVP vs TURP.", None),
-  ("Figure_3_before_footnote.png", "The same forest plot carrying each arm's rates "
-   "beside the risk ratio.", "layout variant"),
-  ("Figure_3b.png", "Thirty-day complications after HoLEP and PVP compared with TURP, "
-   "complication by complication.", None),
-  ("Figure_4.png", "Transfusion within 72 hours, 2019–2024 against 2012–2018, "
-   "by procedure — the era comparison behind the trend.", None),
+  ("Figure_1.png", "Transfusion within 72 hours after BPH surgery, by year and procedure, "
+   "with 2019\u20132024 shaded \u2014 the era the trend test compares. Transfusion fell "
+   "after all three operations.", None),
+  ("Figure_2.png", "Share of BPH procedures by year and procedure type \u2014 how the mix "
+   "moved across thirteen years, with HoLEP going from 5.8% to 14.8%.", None),
+  ("Figure_3.png", "Thirty-day outcomes after HoLEP and PVP compared with TURP, each arm's "
+   "rates printed beside its risk ratio. <b>A</b> HoLEP vs TURP, <b>B</b> PVP vs TURP.", None),
+  ("Figure_4.png", "Transfusion within 72 hours, 2019\u20132024 against 2012\u20132018, by "
+   "procedure \u2014 the era comparison behind the trend.", None),
  ],
  "nsqip-same-day-discharge": [
   ("Figure_1_forest.png", "Thirty-day outcomes, same-day discharge against overnight "
