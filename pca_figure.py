@@ -250,31 +250,53 @@ SPINE_SOURCES = {
 }
 SOURCES.update(SPINE_SOURCES)
 
-WIN = ["2015–23", "2016–23", "2018–23", "2018–24", "2019–25"]
+# The index windows each 2x query was re-run against. The main analysis is
+# 2017-2023; it sits in the row with the others so the chosen window is read
+# against its neighbours rather than taken on trust.
+WIN6 = [("2015\u201323", 0), ("2016\u201323", 1), ("2017\u201323", 2),
+        ("2018\u201323", 3), ("2018\u201324", 4), ("2019\u201325", 5)]
+
+def _win(keys):
+    return [(lab, keys[i]) for lab, i in WIN6]
 
 SPINE = [
     {"key": None,      "label": "TriNetX US Collaborative Network", "network": True},
     {"key": "pca",     "label": "Prostate cancer",
      "alt": ("Age-at-diagnosis definition", [("v1", "dx70v1"), ("v2", "dx70v2"),
                                              ("v3", "dx70v3"), ("v4", "dx70v4")])},
-    {"key": "adt1",    "label": "+ ADT"},
-    {"key": "adt1wo",  "label": "+ washout"},
+    # The 2x criterion is applied last. These two rows are the same cohort with
+    # 2x applied at this step instead, which is why they hang beside the spine
+    # rather than on it: they are a check on where the criterion goes, not a
+    # stage the analytic cohort passes through.
+    {"key": "adt1",    "label": "+ ADT",
+     "alt": ("ADT 2\u00d7 applied here \u00b7 index window",
+             _win(["a2_1523", "a2_1623", "adt2", "a2_1823", "a2_1824", "a2_1925"]))},
+    {"key": "adt1wo",  "label": "+ washout",
+     "alt": ("ADT 2\u00d7 applied here \u00b7 index window",
+             _win(["aw_1523", "aw_1623", "adt2wo", "aw_1823", "aw_1824", "aw_1925"]))},
     {"key": "adt1awo", "label": "+ ADT washout"},
     {"key": "iadt",    "label": "+ ADT 2\u00d7 \u2014 incident-ADT cohort", "anchor": True,
-     "alt": ("Index window", list(zip(WIN, ["ia_1523","ia_1623","ia_1823","ia_1824","ia_1925"])))},
+     "alt": ("Index window",
+             _win(["ia_1523", "ia_1623", "iadt", "ia_1823", "ia_1824", "ia_1925"]))},
 ]
 
 SP_W, SP_H, SP_GAP = 300, 58, 26
 CHIP_H, CHIP_GAP = 21, 6
 
-def chip(x, y, label, value, key):
-    """A sensitivity reading: the variant's name and its count, refreshable."""
+def chip(x, y, label, value, key, primary=False):
+    """A sensitivity reading: the variant's name and its count, refreshable.
+
+    The window the analysis actually uses is drawn solid, so the figure shows
+    which one was chosen rather than leaving six equal-looking options."""
     w = max(96.0, 30 + len(label) * 5.6 + len(value) * 6.2)
+    bg, bd = ("#dfe8f1", P["navy"]) if primary else ("#f1f4f7", "#dde3e9")
+    lc = P["ink"] if primary else P["mut"]
     parts = [
         '<g><rect x="{x:.1f}" y="{y}" width="{w:.1f}" height="{h}" rx="5" '
-        'fill="#f1f4f7" stroke="#dde3e9" stroke-width="1"/>'.format(x=x, y=y, w=w, h=CHIP_H),
-        '<text x="{x:.1f}" y="{y:.1f}" font-size="10.5" fill="{c}">{t}</text>'.format(
-            x=x + 9, y=y + 14.5, c=P["mut"], t=esc(label)),
+        'fill="{bg}" stroke="{bd}" stroke-width="{sw}"/>'.format(
+            x=x, y=y, w=w, h=CHIP_H, bg=bg, bd=bd, sw="1.3" if primary else "1"),
+        '<text x="{x:.1f}" y="{y:.1f}" font-size="10.5" fill="{c}"{b}>{t}</text>'.format(
+            x=x + 9, y=y + 14.5, c=lc, b=' font-weight="700"' if primary else '', t=esc(label)),
         '<text x="{x:.1f}" y="{y:.1f}" font-size="10.5" font-weight="700" fill="{c}" '
         'text-anchor="end" data-q="{k}">{t}</text></g>'.format(
             x=x + w - 9, y=y + 14.5, c=P["ink"], k=esc(key), t=esc(value)),
@@ -315,7 +337,8 @@ def spine_svg(vals, cx, top, network=None):
                        % (ax, ay2 + 6, P["mut"], esc(title.upper())))
             cxx = ax
             for lab, k in pairs:
-                g, w = chip(cxx, ay2 + 14, lab, fmt(vals.get(k)), k)
+                g, w = chip(cxx, ay2 + 14, lab, fmt(vals.get(k)), k,
+                            primary=(lab == "2017\u201323"))
                 out.append(g)
                 cxx += w + CHIP_GAP
         if i < len(SPINE) - 1:
