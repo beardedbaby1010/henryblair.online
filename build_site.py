@@ -1056,7 +1056,10 @@ def render_blocks(items, slug):
                        % (f["src"], esc(f.get("alt", f.get("caption", "")))[:120], f.get("caption", "")))
         if "table" in b:
             t = b["table"]
-            head = "".join('<th>%s</th>' % h for h in t["head"])
+            # the header carries the same class as the cells beneath it, so a
+            # numeric column is aligned once rather than in two places
+            head = "".join('<th%s>%s</th>' % (' class="n"' if i else "", h)
+                           for i, h in enumerate(t["head"]))
             rows = ""
             for r in t["rows"]:
                 cls = ""

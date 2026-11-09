@@ -1976,11 +1976,6 @@ PROJECTS = [
                     "url": "/downloads/abstract-urps-why-not/",
                 },
             ],
-            "next": "Three manuscripts are drafted and heading for submission. The implication we would most like to test is whether timetabled URPS teaching in the PGY-2 to PGY-3 window changes anything, because that is where the undecided still are \u2014 and whether framing the field around its full reconstructive scope, male and neurogenic included, moves the men who currently opt out.",
-            "about": [
-                "<b>My contribution.</b> Study design and the survey instrument, the analysis, and the writing of all three manuscripts.",
-                "Approved by the Maimonides Medical Center Institutional Review Board (2026-02-08-MMC). Responses were anonymous; no respondent-level data appears on this page or anywhere on this site.",
-            ],
             "sidefoot": "Gina DeMeo \u00b7 Henry M. Blair \u00b7 Nina Robins \u00b7 Luke Jenusaitis \u00b7 Jubin Matloubieh<br>Department of Urology, Maimonides Medical Center<br>Survey fielded July\u2013August 2026",
         },
     },
@@ -1995,7 +1990,7 @@ PROJECTS = [
                    "scripted, filmed and cut as teaching videos and submitted to the AUA's Core "
                    "Curriculum.",
         "stats": [("2", "videos submitted"), ("15:07", "total runtime"),
-                  ("6", "pessary types covered"), ("1080p", "filmed and cut")],
+                  ("6", "pessary types covered"), ],
         "tags": ["Medical education", "Surgical video", "Sacral neuromodulation",
                  "Pessary", "AUA Core Curriculum"],
         "page": {"kind": "auto"},
