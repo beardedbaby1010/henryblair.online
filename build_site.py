@@ -175,7 +175,7 @@ SITEBAR_CSS = """
 .sb-menubtn:hover{color:#fff;background:#1c1c1c}
 .sb-menu.on .sb-menubtn{color:#fff;background:#1c1c1c}
 .sb-caret{width:0;height:0;border-left:3.5px solid transparent;
-  border-right:3.5px solid transparent;border-top:4px solid currentColor;
+  border-right:3.5px solid transparent;border-top:4px solid #f4f4f2;
   transition:transform .12s ease}
 .sb-menu.on .sb-caret{transform:rotate(180deg)}
 .sitebar .sb-menupanel{position:fixed;z-index:60;margin-top:0;
@@ -363,7 +363,9 @@ def strip_paper(html, slug, gated):
 
 def wrap(html, slug):
     html = re.sub(r'<style id="site-nav-css">.*?</style>', '', html, flags=re.S)
-    html = html.replace("</head>", HEAD_TAGS + SITEBAR_CSS + FIGURE_ZOOM + "</head>", 1)
+    html = html.replace("</head>", HEAD_TAGS + SITEBAR_CSS + "</head>", 1)
+    # figure zoom now comes from assets/figzoom.js for every page shell,
+    # so the standalone copy that used to be injected here is gone.
     m = re.search(r"<body[^>]*>", html)
     i = m.end()
     return html[:i] + "\n" + nav_html(slug) + "\n" + html[i:]
@@ -1187,8 +1189,9 @@ def card(p):
         inner += '  <div class="stats">%s</div>\n' % stats
     if tags:
         inner += '  <div class="tags">%s</div>\n' % tags
-    inner += ('  <div class="open">Open the project hub &rarr;</div>\n' if linked
-              else '  <div class="statusline">%s</div>\n' % esc(p["status"]))
+    # No "open the hub" line: the whole tile is the <a>, and .proj:hover says so.
+    if not linked:
+        inner += '  <div class="statusline">%s</div>\n' % esc(p["status"])
     if linked:
         return '<a class="proj" href="/projects/%s/">\n%s</a>' % (p["slug"], inner)
     return '<div class="proj flat">\n%s</div>' % inner
@@ -1381,7 +1384,37 @@ def polish_pages():
 
 
 # ------------------------------------------------------------------ cache-bust
-VERSIONED = ["assets/site.css", "assets/project.css", "assets/headshot-badge.png",
+
+FIGZOOM_TAG = '<script src="/assets/figzoom.js" defer></script>'
+
+
+def build_figzoom():
+    """Every figure on every project page becomes click-to-expand.
+
+    The script is self-contained and idempotent, so it only has to reach the
+    page once; pages are built by three different shells, which is why this
+    walks the output rather than editing a template."""
+    added = 0
+    for dirpath, dirnames, filenames in os.walk(os.path.join(ROOT, "projects")):
+        dirnames[:] = [d for d in dirnames if d not in ("figures", "__pycache__")]
+        for name in filenames:
+            if name != "index.html":
+                continue
+            f = os.path.join(dirpath, name)
+            html = open(f, encoding="utf-8", errors="replace").read()
+            if "figzoom.js" in html:
+                continue
+            if "</body>" not in html:
+                continue
+            open(f, "w", encoding="utf-8").write(
+                html.replace("</body>", "  " + FIGZOOM_TAG + "\n</body>", 1))
+            added += 1
+    note("figure zoom on %d project page(s)" % added)
+    return True
+
+
+VERSIONED = ["assets/site.css", "assets/project.css", "assets/figzoom.js",
+              "assets/headshot-badge.png",
               "assets/og-image.png"]
 
 AN_A, AN_B = "<!--ANALYTICS-->", "<!--/ANALYTICS-->"
@@ -1723,6 +1756,7 @@ if __name__ == "__main__":
     ok &= build_page_gates()
     prune_gates()
     ok &= build_home()
+    ok &= build_figzoom()
     ok &= polish_pages()
     ok &= version_assets()
     ok &= stamp_analytics()

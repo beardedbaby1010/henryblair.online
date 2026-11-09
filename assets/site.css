@@ -79,6 +79,8 @@ footer a{color:var(--ink)}
   padding:26px 26px 22px;margin:0 0 18px;color:inherit;text-decoration:none;
   transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}
 .proj:hover{border-left-color:var(--accent);box-shadow:0 2px 14px rgba(0,0,0,.07);transform:translateY(-1px)}
+.proj:hover h3{color:var(--accent)}
+.proj.flat:hover h3{color:inherit}
 .proj .kicker{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-weight:700}
 .proj h3{font-family:var(--serif);font-size:clamp(21px,3.2vw,28px);line-height:1.15;margin:8px 0 10px}
 .proj p{margin:0;font-size:15px;color:var(--ink2);max-width:70ch}
@@ -87,7 +89,6 @@ footer a{color:var(--ink)}
 .stat .l{font-size:12px;color:var(--mut);margin-top:4px;max-width:22ch}
 .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:7px}
 .tag{font-size:11.5px;border:1px solid var(--line);padding:3px 9px;color:var(--mut);background:#fafafa}
-.open{margin-top:16px;font-size:13.5px;font-weight:700;color:var(--accent)}
 .soon{border:1px dashed var(--line);padding:22px 26px;color:var(--mut);font-size:14px}
 .proj.flat{border-left-color:#c9ccce;cursor:default}
 .proj.flat:hover{box-shadow:none;transform:none;border-left-color:#c9ccce}
@@ -183,7 +184,7 @@ footer a{color:var(--ink)}
 .sb-menubtn:hover{color:#fff;background:#1c1c1c}
 .sb-menu.on .sb-menubtn{color:#fff;background:#1c1c1c}
 .sb-caret{width:0;height:0;border-left:3.5px solid transparent;
-  border-right:3.5px solid transparent;border-top:4px solid currentColor;
+  border-right:3.5px solid transparent;border-top:4px solid #f4f4f2;
   transition:transform .12s ease}
 .sb-menu.on .sb-caret{transform:rotate(180deg)}
 /* The panel is the tab bar continuing downward: same black, same hairlines,

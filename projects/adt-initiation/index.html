@@ -146,7 +146,7 @@ tr.refsec td{background:#e9e9e6;font-weight:700;text-transform:uppercase;font-si
 .sb-menubtn:hover{color:#fff;background:#1c1c1c}
 .sb-menu.on .sb-menubtn{color:#fff;background:#1c1c1c}
 .sb-caret{width:0;height:0;border-left:3.5px solid transparent;
-  border-right:3.5px solid transparent;border-top:4px solid currentColor;
+  border-right:3.5px solid transparent;border-top:4px solid #f4f4f2;
   transition:transform .12s ease}
 .sb-menu.on .sb-caret{transform:rotate(180deg)}
 .sitebar .sb-menupanel{position:fixed;z-index:60;margin-top:0;
@@ -173,68 +173,6 @@ main{padding-top:calc(var(--top) + 34px + 22px)}
 }
 @media print{.sitebar{display:none}.topbar{top:0}main{padding-top:0}}
 </style>
-
-<style id="fig-zoom-css">
-img[src^="figures/"],svg.pcafig{cursor:zoom-in}
-#figzoom{position:fixed;inset:0;z-index:300;display:none;align-items:center;
-  justify-content:center;background:rgba(14,18,22,.92);padding:28px}
-#figzoom.on{display:flex}
-#figzoom img,#figzoom .svgwrap{max-width:100%;max-height:100%;width:auto;height:auto;
-  background:#fff;box-shadow:0 18px 50px rgba(0,0,0,.5);cursor:zoom-out}
-#figzoom .svgwrap{display:none;padding:14px;overflow:auto;width:min(96vw,1700px);max-width:96vw}
-#figzoom .svgwrap svg{width:100%;height:auto;max-height:82vh;display:block}
-#figzoom button{position:absolute;top:14px;right:18px;width:34px;height:34px;
-  border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.35);color:#fff;
-  font-size:19px;line-height:1;border-radius:3px;cursor:pointer}
-#figzoom button:hover{background:rgba(255,255,255,.14)}
-#figzoom .cap{position:absolute;left:0;right:0;bottom:10px;text-align:center;
-  color:rgba(255,255,255,.8);font-size:12.5px;padding:0 28px}
-@media print{#figzoom{display:none!important}}
-</style>
-<script id="fig-zoom-js">
-(function(){
-  function ready(fn){ if(document.readyState!=='loading'){fn();}
-    else{document.addEventListener('DOMContentLoaded',fn);} }
-  ready(function(){
-    var figs=[].slice.call(document.querySelectorAll('img[src^="figures/"]'));
-    if(!figs.length) return;
-    var box=document.createElement('div'); box.id='figzoom';
-    box.innerHTML='<button type="button" aria-label="Close">&times;</button>'
-                + '<img alt=""><div class="svgwrap"></div><div class="cap"></div>';
-    document.body.appendChild(box);
-    var img=box.querySelector('img'), wrap=box.querySelector('.svgwrap'),
-        cap=box.querySelector('.cap'), last=null;
-    function shut(){ box.classList.remove('on'); img.removeAttribute('src');
-      img.style.display=''; wrap.style.display=''; wrap.innerHTML='';
-      if(last){ last.focus(); last=null; } }
-    function open(src,alt,from){ last=from; wrap.innerHTML=''; wrap.style.display='none';
-      img.style.display=''; img.src=src; img.alt=alt||'';
-      cap.textContent=alt||''; box.classList.add('on');
-      box.querySelector('button').focus(); }
-    function openSvg(node,from){ last=from; img.removeAttribute('src');
-      img.style.display='none'; wrap.innerHTML=''; wrap.appendChild(node.cloneNode(true));
-      wrap.style.display='block'; cap.textContent='Cohort derivation';
-      box.classList.add('on'); box.querySelector('button').focus(); }
-    figs.forEach(function(f){
-      f.setAttribute('tabindex','0');
-      f.setAttribute('role','button');
-      if(!f.getAttribute('alt')) f.setAttribute('alt','');
-      f.addEventListener('click',function(){ open(f.currentSrc||f.src,f.alt,f); });
-      f.addEventListener('keydown',function(e){
-        if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(f.currentSrc||f.src,f.alt,f); } });
-    });
-    [].slice.call(document.querySelectorAll('svg.pcafig')).forEach(function(g){
-      g.setAttribute('tabindex','0'); g.setAttribute('role','button');
-      g.addEventListener('click',function(){ openSvg(g,g); });
-      g.addEventListener('keydown',function(e){
-        if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openSvg(g,g); } });
-    });
-    box.addEventListener('click',shut);
-    document.addEventListener('keydown',function(e){
-      if(e.key==='Escape'&&box.classList.contains('on')) shut(); });
-  });
-})();
-</script>
 </head><body>
 <a class="sb-badge" href="/" aria-label="Henry M. Blair — home"><img src="/assets/headshot-badge.png?v=3bcc1f9524" alt="" width="320" height="320"></a>
 <div class="sitebar">
@@ -400,5 +338,6 @@ secs.forEach(s=>spy.observe(s));
 const q=document.getElementById('q');const tg=[...document.querySelectorAll('.qbcard,.fig,.navcard,.gapbox,.pitfalls li,.reftbl tbody tr,.prov p,.rules li')];
 let t;q.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>{const s=q.value.trim().toLowerCase();
  tg.forEach(el=>el.classList.toggle('hidden',!!s&&!el.textContent.toLowerCase().includes(s)));},120);});
-</script><!--ANALYTICS--><script data-goatcounter="https://henryblair.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><!--/ANALYTICS-->
+</script>  <script src="/assets/figzoom.js?v=f4feae2066" defer></script>
+<!--ANALYTICS--><script data-goatcounter="https://henryblair.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><!--/ANALYTICS-->
 </body></html>
