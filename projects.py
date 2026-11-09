@@ -565,11 +565,39 @@ PROJECTS = [
                                   "radiation — found no significant association with estimation accuracy "
                                   "(all p &gt; <span data-q=\"mwu_min\">0.123</span>). There is no subgroup in whom "
                                   "self-estimation can be trusted more."},
+                        {"table": {
+                            "head": ["Symptom or comorbidity", "Denied", "Endorsed", "p"],
+                            "rows": [
+                                ["Urinary frequency (complaint)", "1.50 (0.83\u20133.33)", "1.46 (0.79\u20133.85)", "0.977"],
+                                ["Incomplete emptying", "1.52 (0.71\u20135.00)", "1.43 (1.00\u20132.50)", "0.822"],
+                                ["Urinary hesitancy", "1.49 (0.71\u20133.85)", "1.43 (0.83\u20132.63)", "0.786"],
+                                ["Urinary incontinence", "2.25 (0.91\u20135.00)", "1.38 (0.77\u20132.56)", "0.124"],
+                                ["Anxiety", "1.43 (0.77\u20133.85)", "1.55 (0.83\u20132.92)", "0.862"],
+                                ["Depression", "1.43 (0.78\u20133.59)", "1.55 (0.82\u20134.79)", "0.980"],
+                                ["Leaking with urgency", "1.43 (0.67\u20132.78)", "1.52 (0.88\u20135.00)", "0.418"],
+                                ["Leaking with Valsalva", "1.49 (0.77\u20132.56)", "1.39 (0.83\u20135.00)", "0.787"],
+                                ["Urgent rushing to the bathroom", "1.13 (0.63\u20132.94)", "1.55 (0.83\u20135.00)", "0.297"],
+                                ["Frequent urination (checklist)", "1.52 (0.86\u20133.59)", "1.43 (0.77\u20133.59)", "0.709"],
+                                ["Nighttime urination", "1.32 (0.69\u20132.75)", "1.73 (0.87\u20135.00)", "0.208"],
+                                ["Pelvic radiation", "1.52 (0.80\u20133.85)", "0.75 (0.50\u20131.00)", "0.279"],
+                                ["Diabetes", "1.46 (0.83\u20133.33)", "1.41 (0.67\u201310.00)", "0.757"],
+                                ["Use of a diuretic", "1.52 (0.80\u20133.85)", "0.83 (0.77\u20130.91)", "0.175"],
+                            ],
+                            "note": "<b>Table 4.</b> Ratio of estimated to measured residual, median "
+                                    "(IQR), among women who denied and who endorsed each item; "
+                                    "Mann\u2013Whitney U. Fourteen comparisons, none significant. A ratio "
+                                    "of 1 would be a perfect estimate, and every group sits above it \u2014 "
+                                    "the typical woman overestimated, whatever she reported."}},
                         {"figure": {"src": "fig3.jpg",
                                     "caption": "<b>Figure 3.</b> Self-estimated category against the measured category. "
                                                "The total bar is the <span data-q=\"correct_tot\">85.0%</span> that is almost "
                                                "entirely the normal row."}},
-                    ],
+                        {"callout": "Put it the other way round: of the 15 women who predicted any "
+                                    "elevation, 3 had one. A woman\u2019s own claim that she is not "
+                                    "emptying carries a positive predictive value near 20%, so the 85% "
+                                    "categorical hit rate is a property of the population, not a skill "
+                                    "of the patients."},
+                                            ],
                 },
                 {
                     "id": "argument", "title": "The argument the paper actually makes", "nav": "The argument",
@@ -593,9 +621,52 @@ PROJECTS = [
                     ],
                 },
                 {
+                    "id": "access", "title": "What it means where the scan is not",
+                    "nav": "In primary care",
+                    "blocks": [
+                        {"prose":
+                            "Overactive bladder is one of the commonest reasons a woman sees her primary "
+                            "care physician, and the AUA/SUFU guideline asks for a post-void residual "
+                            "before the diagnosis is settled. The 2024 update names telemedicine as a "
+                            "reasonable first consultation \u2014 then asks for an in-person visit "
+                            "afterwards for examination, urinalysis and residual measurement. What the "
+                            "first sentence offers in access, the second takes back."},
+                        {"prose":
+                            "Bladder ultrasound is seldom at hand in general practice. For a clinician "
+                            "without one the question is not whether a residual <em>can</em> be measured; "
+                            "it is whether it <em>must</em> be, before treatment can safely start. That "
+                            "is a question about the prior probability of retention, and this cohort "
+                            "answers it directly: 95% normal, 1% with incomplete emptying, none in "
+                            "retention."},
+                        {"h3": "A rule that works without a scanner"},
+                        {"bullets": [
+                            "<b>Measure</b> when the history raises a specific concern \u2014 prior "
+                            "retention or incomplete emptying, previous catheterization, neurologic "
+                            "disease, pelvic surgery.",
+                            "<b>Otherwise treat.</b> Behavioural measures and pharmacotherapy can begin "
+                            "on the symptom history alone, with the residual deferred rather than "
+                            "skipped.",
+                            "<b>Never substitute the patient\u2019s own estimate for the scan.</b> That "
+                            "is the one thing this study tested directly, and the one thing it rules out.",
+                        ]},
+                        {"callout":
+                            "The deferral argument rests on the low baseline risk, not on the estimate. "
+                            "Those are different claims, and only the first survives the data."},
+                        {"prose":
+                            "This is also why the paper is written for a rural-health readership. The "
+                            "practice itself is metropolitan \u2014 Kings County, New York, Rural-Urban "
+                            "Continuum Code 1 \u2014 so the cohort is not a rural sample and does not "
+                            "claim to be. What transfers is the shape of the problem: a guideline step "
+                            "that requires equipment, in settings where that equipment is the binding "
+                            "constraint on access. Whether the baseline risk holds in rural primary care "
+                            "is the open question, and the paper says so."},
+                    ],
+                },
+                {
                     "id": "limitations", "title": "Limitations", "nav": "Limitations",
                     "blocks": [
                         {"bullets": [
+                            "<b>Urban, single centre.</b> Enrolment was at one metropolitan practice (Rural-Urban Continuum Code 1) and participants\u2019 own residences were never classified, so nothing here measures rural care directly. Comorbidity burden and access to follow-up may differ; the argument needs confirming in rural primary care before it is acted on there.",
                             "<b>The excluded women are the ones at risk.</b> Excluding prior catheterization "
                             "or documented incomplete emptying enriched the cohort toward low residuals by "
                             "design. The 1% and 0% figures describe women presenting with OAB symptoms "
