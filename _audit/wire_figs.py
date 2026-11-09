@@ -119,7 +119,7 @@ def insert(src_text, slug):
     if '"id": "figures"' in src_text[i:(nxt if nxt > 0 else len(src_text))]:
         return src_text, "already"
     at = h + len('"hub": {')
-    body = "\n            \"sections\": [\n                %r,\n            ]," % (section(slug),)
+    body = "\n            \"sections_after\": [\n                %r,\n            ]," % (section(slug),)
     return src_text[:at] + body + src_text[at:], "inserted %d figure(s)" % len(FIGS[slug])
 
 
