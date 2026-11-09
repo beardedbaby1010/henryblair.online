@@ -176,6 +176,31 @@ def projects_menu(active=None):
             '<div class="sb-menupanel" role="menu" hidden>%s</div></div>'
             % (' aria-current="page"' if here else '', "".join(items)))
 
+# A hand-written count beside a hand-written grid goes stale the first time a
+# card is added. Recount from the cards themselves on every build.
+GRID_PAGES = {"abstracts/index.html": ("abs", "abstract"),
+              "earlier/index.html":   ("ew",  "project"),
+              "other/index.html":     ("ew",  "project")}
+
+def sync_counts():
+    for rel, (cls, noun) in GRID_PAGES.items():
+        path = os.path.join(ROOT, rel)
+        if not os.path.exists(path):
+            continue
+        raw = read_file(path, "grid page")
+        if raw is None:          # unreadable source: leave the count alone
+            continue
+        html = raw.decode("utf-8")
+        n = len(re.findall(r'<a class="%s"' % cls, html))
+        if not n:
+            continue
+        word = noun if n == 1 else noun + "s"
+        new = re.sub(r'(<p class="affil[^"]*">)\d+\s+\w+',
+                     lambda m: "%s%d %s" % (m.group(1), n, word), html)
+        if new != html:
+            open(path, "w", encoding="utf-8").write(new)
+            note("%s - count set to %d %s" % (rel, n, word))
+
 def nav_html(active=None):
     """Two groups: the reading tabs at the left, Projects and In Preparation
     pushed to the right edge. An entry opts into the right group with
@@ -611,6 +636,7 @@ def build_download_gates(published):
         return True
     secrets = load_secrets()
     ok = True
+    sync_counts()
     for name, meta in gates.items():
         src = published.get(name)
         if not src:
