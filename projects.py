@@ -1857,6 +1857,112 @@ PROJECTS = [
         },
     },
     {
+        "slug": "trinetx-query-console", "tab": None, "group": "other",
+        "title": "A command line for the TriNetX query browser",
+        "kicker": "Research tooling \u00b7 TriNetX US Collaborative Network",
+        "status": "In use \u2014 it maintains the workbooks behind the prostate cancer and "
+                  "vaginal estrogen studies",
+        "summary": "TriNetX is a browser. Every count is a card you click, every definition is a panel "
+                   "you expand, and a study with eighty queries becomes eighty sessions of clicking that "
+                   "nobody can reproduce. This drives that interface from the command line instead \u2014 "
+                   "refreshing counts, dumping each query\u2019s full definition to text, and renaming in "
+                   "bulk \u2014 so a cohort can be rebuilt by running a line rather than remembered.",
+        "stats": [("4,007", "lines of zsh"), ("16", "command-line actions"),
+                  ("2", "studies driven"), ("0", "counts typed by hand")],
+        "tags": ["TriNetX", "Research tooling", "Reproducibility", "Selenium", "zsh"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair"],
+            "lede": "A federated-network query tool gives you a browser and no API. The numbers it "
+                    "returns are real, but the path to them lives in whoever did the clicking. The point "
+                    "of this script is that the path becomes a file you can read, diff and run again.",
+            "question": "If the analysis has to be defensible, can the query layer underneath it be made "
+                        "reproducible when the vendor only offers a web interface?",
+            "approach": [
+                "<b>The study comes from the working directory.</b> Nothing is hardcoded \u2014 the script "
+                "resolves which study it is operating on from where it was run, so the same command "
+                "cannot quietly point at the wrong cohort.",
+                "<b>Definitions are dumped, not transcribed.</b> Each query\u2019s full logic \u2014 every "
+                "code, every date window, every include and exclude \u2014 is written to text, which is "
+                "what makes a methods section checkable after the fact.",
+                "<b>Already-dumped queries are skipped before the refresh,</b> so a second run costs "
+                "nothing and no count is recomputed for the sake of it.",
+                "<b>Bulk edits are a flag, not an afternoon.</b> Appending a suffix to every query name, "
+                "or find-and-replacing inside the group titles, happens across the whole study at once, "
+                "with a dry run that lists the changes before any of them are typed.",
+                "<b>It drives a Chrome you already have open</b> over the DevTools protocol rather than "
+                "launching its own, and deliberately does not steal focus \u2014 a long run leaves you "
+                "working in whatever else you were doing.",
+            ],
+            "sections": [
+                {"id": "why", "title": "Why the counts stopped being typed",
+                 "nav": "The workbook link",
+                 "intro": "The output of this tool is the input to everything downstream.",
+                 "blocks": [
+                     {"prose": "Each run writes a counts file and a folder of query definitions. Those "
+                               "counts are what the master workbook reads, and the workbook is what the "
+                               "cohort figure on this site reads \u2014 live, by query name. A number on "
+                               "the prostate cancer page is therefore traceable back through the sheet, "
+                               "through the dump, to the query definition that produced it, without any "
+                               "step in that chain being a person retyping a figure."},
+                 ]},
+            ],
+            "status_detail": "In active use on the prostate cancer and vaginal estrogen studies.",
+            "next": "The same treatment for the parts still done by hand \u2014 chiefly turning a dumped "
+                    "definition straight into the methods paragraph that describes it.",
+            "sidefoot": "Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "deutsch-meistern", "tab": None, "group": "other",
+        "title": "Deutsch Meistern: a German course that listens back",
+        "kicker": "Personal project \u00b7 language learning",
+        "status": "Working app \u2014 ten levels, runs offline in a browser",
+        "summary": "A ten-level German course, pre-A1 through C2, built as a single page that runs with no "
+                   "server and no account. It speaks each phrase, listens to you say it back, and keeps "
+                   "the streaks, XP and badges that make a person actually return the next day.",
+        "stats": [("10", "levels, pre-A1 to C2"), ("8", "exercise types"),
+                  ("2,801", "lines of JavaScript"), ("0", "servers")],
+        "tags": ["Language learning", "Speech recognition", "Spaced practice", "JavaScript"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "people": ["Henry M. Blair"],
+            "lede": "Language apps are good at vocabulary and bad at the mouth. The drills that matter "
+                    "most \u2014 hearing a sentence and producing it out loud \u2014 are the ones most "
+                    "apps skip, because grading speech is harder than grading a tap.",
+            "question": "Can the speaking half of language practice be built into something that runs "
+                        "entirely in a browser, with no account and nothing sent anywhere?",
+            "approach": [
+                "<b>Ten levels, roughly one per CEFR band,</b> from the alphabet to fluency, each unit "
+                "carrying its own vocabulary, phrases and grammar note.",
+                "<b>Eight exercise types generated from that one source</b> \u2014 flashcards, "
+                "multiple choice, listening, fill-in-the-blank, matching, word order, dialogue and "
+                "speaking \u2014 so adding a unit adds every drill at once.",
+                "<b>It speaks and it listens.</b> Prompts are spoken in German by the browser\u2019s own "
+                "speech synthesis; speaking exercises are graded by its speech recognition.",
+                "<b>Pictures where they help, never where they give the answer.</b> Vocabulary can carry "
+                "a small icon on flashcards and speaking cards, and it is deliberately withheld on graded "
+                "questions.",
+                "<b>Streaks, XP and badges,</b> because the hard problem in self-teaching is the "
+                "fourteenth day, not the first.",
+            ],
+            "sections": [
+                {"id": "privacy", "title": "No account, no server", "nav": "Where it runs",
+                 "blocks": [
+                     {"prose": "Profiles and progress are kept in the browser\u2019s own storage. There "
+                               "is no backend to sign in to and nothing leaves the machine, which also "
+                               "means progress is per-browser rather than per-person \u2014 the honest "
+                               "trade for not asking anyone to create an account."},
+                 ]},
+            ],
+            "status_detail": "Working app, used by its author to learn German.",
+            "next": "Spacing the review of words you have already missed, rather than treating every "
+                    "unit as equally due.",
+            "sidefoot": "Henry M. Blair",
+            "in_progress": True,
+        },
+    },
+    {
         "slug": "dr-hank-med-ed-ai", "tab": None, "group": "other",
         "title": "Created a study assistant for medical students",
         "kicker": "Dr. Hank · medical education tooling · personal project",

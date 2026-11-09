@@ -209,3 +209,25 @@ footer a{color:var(--ink)}
 .cardgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,363px));
   justify-content:center;gap:16px;margin:26px 0 0}
 @media(max-width:700px){.cardgrid{grid-template-columns:1fr}}
+
+/* ---------- collapsible CV sections ----------
+   The toggle is absolutely positioned in the left margin, so turning it on
+   moves no CV text: the headings and rules sit exactly where they did. */
+.cvsec h2{position:relative}
+.sectog{position:absolute;left:-27px;top:50%;transform:translateY(-50%);
+  width:19px;height:19px;padding:0;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);background:var(--surf);color:var(--mut);
+  border-radius:2px;cursor:pointer;line-height:0;transition:border-color .12s,color .12s}
+.sectog:hover{border-color:var(--accent);color:var(--accent)}
+.sectog:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sectog .chev{width:0;height:0;border-left:4px solid transparent;
+  border-right:4px solid transparent;border-top:5px solid currentColor;
+  transition:transform .15s ease}
+.cvsec.collapsed .chev{transform:rotate(-90deg)}
+.cvsec.collapsed .sec-body{display:none}
+.cvsec.collapsed h2 + .ruled{margin-bottom:0}
+@media(max-width:860px){
+  .cvsec h2{padding-left:27px}
+  .sectog{left:0}
+}
+@media print{.cvsec .sec-body{display:block !important}.sectog{display:none}}
