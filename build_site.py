@@ -76,12 +76,14 @@ HEAD_TAGS = """
 # share a stylesheet with the rest of the site.
 FIGURE_ZOOM = """
 <style id="fig-zoom-css">
-img[src^="figures/"]{cursor:zoom-in}
+img[src^="figures/"],svg.pcafig{cursor:zoom-in}
 #figzoom{position:fixed;inset:0;z-index:300;display:none;align-items:center;
   justify-content:center;background:rgba(14,18,22,.92);padding:28px}
 #figzoom.on{display:flex}
-#figzoom img{max-width:100%;max-height:100%;width:auto;height:auto;
+#figzoom img,#figzoom .svgwrap{max-width:100%;max-height:100%;width:auto;height:auto;
   background:#fff;box-shadow:0 18px 50px rgba(0,0,0,.5);cursor:zoom-out}
+#figzoom .svgwrap{display:none;padding:14px;overflow:auto;width:min(96vw,1700px);max-width:96vw}
+#figzoom .svgwrap svg{width:100%;height:auto;max-height:82vh;display:block}
 #figzoom button{position:absolute;top:14px;right:18px;width:34px;height:34px;
   border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.35);color:#fff;
   font-size:19px;line-height:1;border-radius:3px;cursor:pointer}
@@ -99,14 +101,21 @@ img[src^="figures/"]{cursor:zoom-in}
     if(!figs.length) return;
     var box=document.createElement('div'); box.id='figzoom';
     box.innerHTML='<button type="button" aria-label="Close">&times;</button>'
-                + '<img alt=""><div class="cap"></div>';
+                + '<img alt=""><div class="svgwrap"></div><div class="cap"></div>';
     document.body.appendChild(box);
-    var img=box.querySelector('img'), cap=box.querySelector('.cap'), last=null;
+    var img=box.querySelector('img'), wrap=box.querySelector('.svgwrap'),
+        cap=box.querySelector('.cap'), last=null;
     function shut(){ box.classList.remove('on'); img.removeAttribute('src');
+      img.style.display=''; wrap.style.display=''; wrap.innerHTML='';
       if(last){ last.focus(); last=null; } }
-    function open(src,alt,from){ last=from; img.src=src; img.alt=alt||'';
+    function open(src,alt,from){ last=from; wrap.innerHTML=''; wrap.style.display='none';
+      img.style.display=''; img.src=src; img.alt=alt||'';
       cap.textContent=alt||''; box.classList.add('on');
       box.querySelector('button').focus(); }
+    function openSvg(node,from){ last=from; img.removeAttribute('src');
+      img.style.display='none'; wrap.innerHTML=''; wrap.appendChild(node.cloneNode(true));
+      wrap.style.display='block'; cap.textContent='Cohort derivation';
+      box.classList.add('on'); box.querySelector('button').focus(); }
     figs.forEach(function(f){
       f.setAttribute('tabindex','0');
       f.setAttribute('role','button');
@@ -114,6 +123,12 @@ img[src^="figures/"]{cursor:zoom-in}
       f.addEventListener('click',function(){ open(f.currentSrc||f.src,f.alt,f); });
       f.addEventListener('keydown',function(e){
         if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(f.currentSrc||f.src,f.alt,f); } });
+    });
+    [].slice.call(document.querySelectorAll('svg.pcafig')).forEach(function(g){
+      g.setAttribute('tabindex','0'); g.setAttribute('role','button');
+      g.addEventListener('click',function(){ openSvg(g,g); });
+      g.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openSvg(g,g); } });
     });
     box.addEventListener('click',shut);
     document.addEventListener('keydown',function(e){

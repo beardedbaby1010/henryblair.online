@@ -75,10 +75,6 @@
         if (denom && vals[denom] != null) s2 += " of " + vals[denom].toLocaleString("en-US");
         if (s2 !== el.textContent) { el.textContent = s2; changed++; }
       });
-      if (changed) {
-        var note = document.getElementById("pcafig-note");
-        if (note) note.textContent = "Refreshed from the master workbook just now.";
-      }
     })
     .catch(function () { /* keep the baked numbers */ });
 })();
