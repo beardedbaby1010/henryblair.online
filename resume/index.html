@@ -314,5 +314,7 @@
 </div>
 <script>document.querySelectorAll('.yr').forEach(function(e){e.textContent=new Date().getFullYear()});</script>
 <script>(function(){document.querySelectorAll(".sectog").forEach(function(b){b.addEventListener("click",function(){var sec=b.closest(".cvsec");var open=!sec.classList.toggle("collapsed");b.setAttribute("aria-expanded",String(open));b.setAttribute("aria-label",(open?"Collapse ":"Expand ")+sec.querySelector("h2").textContent.trim());});});})();</script>
+
+
 </body>
 </html>

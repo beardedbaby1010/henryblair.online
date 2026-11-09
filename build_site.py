@@ -1278,6 +1278,62 @@ def polish_pages():
 VERSIONED = ["assets/site.css", "assets/project.css", "assets/headshot-badge.png",
               "assets/og-image.png"]
 
+AN_A, AN_B = "<!--ANALYTICS-->", "<!--/ANALYTICS-->"
+
+def analytics_tag():
+    """The counter snippet, or "" when no site code is configured."""
+    cfg = getattr(CFG, "ANALYTICS", None) or {}
+    code = (cfg.get("goatcounter") or "").strip()
+    if not code:
+        return ""
+    return ('%s<script data-goatcounter="https://%s.goatcounter.com/count" '
+            'async src="//gc.zgo.at/count.js"></script>%s'
+            % (AN_A, esc(code), AN_B))
+
+def stamp_analytics():
+    """Put the counter on every published page, or take it off every page.
+
+    Written as a stamp over the built output rather than into each template,
+    because the pages come from four different places -- hand-written files,
+    generated project hubs, gate pages and the home page -- and a counter that
+    is missing from a quarter of the site measures nothing useful. Clearing the
+    site code removes it again on the next build, so switching it off is one
+    edit and not a hunt."""
+    cfg = getattr(CFG, "ANALYTICS", None) or {}
+    skip = tuple(cfg.get("skip") or ())
+    tag = analytics_tag()
+    pat = re.compile(re.escape(AN_A) + r".*?" + re.escape(AN_B), re.S)
+    on = off = 0
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        dirnames[:] = [d for d in dirnames
+                       if d not in (".git", ".trash", ".locktrash", "_source", "_secrets",
+                                    "_downloadable", "__pycache__")]
+        for name in filenames:
+            if not name.endswith(".html"):
+                continue
+            f = os.path.join(dirpath, name)
+            rel = os.path.relpath(f, ROOT).replace(os.sep, "/")
+            want = "" if (not tag or rel.startswith(skip)) else tag
+            raw = read_file(f, "page")
+            if raw is None:
+                continue
+            html = raw.decode("utf-8", "replace")
+            new = pat.sub("", html)
+            if want:
+                if "</body>" not in new:
+                    continue
+                new = new.replace("</body>", want + "\n</body>", 1)
+            if new != html:
+                open(f, "w", encoding="utf-8").write(new)
+                on += 1 if want else 0
+                off += 0 if want else 1
+    if tag:
+        note("analytics: counter on %d page(s)%s"
+             % (on, (" - %s skipped" % ", ".join(skip)) if skip else ""))
+    elif off:
+        note("analytics: counter removed from %d page(s)" % off)
+    return True
+
 def version_assets():
     """Stamp ?v=<content hash> onto the shared assets in every published page.
 
@@ -1443,6 +1499,7 @@ if __name__ == "__main__":
     ok &= build_home()
     ok &= polish_pages()
     ok &= version_assets()
+    ok &= stamp_analytics()
     if UNREADABLE:
         warn("%d source file(s) could not be read; nothing was deleted and the "
              "published site may be incomplete" % len(UNREADABLE))

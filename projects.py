@@ -182,6 +182,19 @@ DOWNLOAD_GATES = {
 }
 
 # ---------------------------------------------------------------- hand-written pages
+# ---------------------------------------------------------------- analytics
+# GoatCounter is cookieless and stores no persistent personal data, so it needs
+# no consent banner. Put your site code here -- the "<code>" in
+# https://<code>.goatcounter.com -- and every published page gets the counter on
+# the next build. Leave it empty and no page carries any tracking at all.
+ANALYTICS = {
+    "goatcounter": "",
+    # Gate landing pages are passphrase prompts for named manuscripts and
+    # abstracts. Counting them would hand a third party the path of every gated
+    # item a visitor opened, so they stay out unless you say otherwise.
+    "skip": ("downloads/", "watch/", "in-preparation/"),
+}
+
 PAGES = [
     {"key": "about",   "tab": "About Me",           "href": "/about/",   "file": "about/index.html"},
     {"key": "contact", "tab": "Contact Me",         "href": "/contact/", "file": "contact/index.html"},
