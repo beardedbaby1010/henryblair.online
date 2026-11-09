@@ -114,12 +114,12 @@ def fmt(v):
 # the cross, so drawing numbers here would either invent them or imply that the
 # single pair that does exist applies to every branch. Structure only.
 
-BW, TG, RG = 196, 56, 13
+BW, TG, RG = 244, 66, 17
 
 class Bx(object):
     def __init__(s, label, tone, sub=None, solid=True):
         s.label, s.tone, s.sub, s.solid = label, tone, sub, solid
-        s.h = 52 if sub else 38
+        s.h = 70 if sub else 50
         s.x = s.y = 0.0
 
 def draw_bx(b, out):
@@ -130,12 +130,12 @@ def draw_bx(b, out):
     out.append('<rect x="%.1f" y="%.1f" width="%d" height="%.1f" rx="6" fill="%s"%s/>'
                % (b.x, b.y, BW, b.h, fill, bd))
     cx = b.x + BW / 2.0
-    out.append('<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="12.5" '
+    out.append('<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="15" '
                'font-weight="700" fill="%s">%s</text>'
-               % (cx, b.y + (21 if b.sub else 24), SERIF, tc, esc(b.label)))
+               % (cx, b.y + (26 if b.sub else 31), SERIF, tc, esc(b.label)))
     if b.sub:
-        out.append('<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="10" '
-                   'fill="%s">%s</text>' % (cx, b.y + 37, SANS, sc, esc(b.sub)))
+        out.append('<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="11.5" '
+                   'fill="%s">%s</text>' % (cx, b.y + 48, SANS, sc, esc(b.sub)))
 
 def bus(srcs, tgts, out):
     """One rail between two tiers: each source joins it, each target leaves it."""
@@ -163,7 +163,7 @@ def panels():
          Bx("Fragility fracture", "teal", "≤5 y · no prior fracture or bone mets", solid=False)],
     ]
     mets = [
-        [Bx("Metastatic", "black"), Bx("Not metastatic", "slate", "within 1 month")],
+        [Bx("Metastatic", "black"), Bx("Not metastatic", "slate")],
         [Bx("Visceral", "plum"), Bx("Not visceral", "plum")],
         [Bx("Intensified", "plum"), Bx("Not intensified", "slate")],
         [Bx("ARPI", "plum", "abiraterone · apalutamide", solid=False),
@@ -193,7 +193,7 @@ SPINE = [
      "sens": ("INDEX WINDOW", _win(["ia_1523", "ia_1925"]))},
     {"key": "siadt", "label": "Sustained ADT", "crit": "v1_SIADT", "anchor": True},
 ]
-SPW, SPH, SPG = 310, 70, 28
+SPW, SPH, SPG = 338, 78, 30
 CH, CG, CW, COL2 = 22, 7, 190, 91
 PAD = 44
 
@@ -211,7 +211,7 @@ def build(vals, network=None, hcos=None, snapshot=None):
     C1X = PAD
     C2X = C1X + CW + 28
     C3X = C2X + SPW + 70
-    HEAD, BANDH = 142, 30
+    HEAD, BANDH = 142, 36
 
     aTop = HEAD + BANDH + 18
     hA = _lay(bone, C3X, aTop)
@@ -249,9 +249,9 @@ def build(vals, network=None, hcos=None, snapshot=None):
                        (bTop, "Metastatic disease &amp; treatment intensification")):
         A('<rect x="%d" y="%d" width="%d" height="%d" rx="6" fill="%s" stroke="%s"/>'
           % (C3X, top, bw, BANDH, P["band"], P["bandbd"]))
-        A('<text x="%.1f" y="%d" text-anchor="middle" font-family="%s" font-size="13" '
+        A('<text x="%.1f" y="%d" text-anchor="middle" font-family="%s" font-size="15" '
           'font-weight="700" fill="%s">%s</text>'
-          % (C3X + bw / 2.0, top + 20, SERIF, P["ink"], title))
+          % (C3X + bw / 2.0, top + 23, SERIF, P["ink"], title))
 
     rows = []; y = spineTop
     for i, st in enumerate(SPINE):
@@ -263,16 +263,16 @@ def build(vals, network=None, hcos=None, snapshot=None):
         A('<rect x="%d" y="%.1f" width="%d" height="%d" rx="6" fill="%s"%s/>'
           % (C2X, y, SPW, SPH, fill, bd))
         cx = C2X + SPW / 2.0
-        A('<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="12.5" '
-          'font-weight="700" fill="%s">%s</text>' % (cx, y + 21, SERIF, tc, esc(st["label"])))
+        A('<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="14" '
+          'font-weight="700" fill="%s">%s</text>' % (cx, y + 24, SERIF, tc, esc(st["label"])))
         if st.get("crit"):
             cc = "rgba(255,255,255,.66)" if solid else P["mut"]
-            A('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="9.5" fill="%s">%s</text>'
-              % (cx, y + 36, cc, esc(st["crit"])))
+            A('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="10.5" fill="%s">%s</text>'
+              % (cx, y + 41, cc, esc(st["crit"])))
         val = fmt(network) if st.get("network") else fmt(vals.get(st["key"]))
         qk = "_network" if st.get("network") else st["key"]
-        A('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="14.5" font-weight="800" '
-          'fill="%s" data-q="%s">n = %s</text>' % (cx, y + 57, sub, esc(qk), val))
+        A('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="16" font-weight="800" '
+          'fill="%s" data-q="%s">n = %s</text>' % (cx, y + 64, sub, esc(qk), val))
         if i < len(SPINE) - 1:
             A('<path d="M%.1f %.1f V%.1f" fill="none" stroke="%s" stroke-width="1.6" '
               'marker-end="url(#ah)"/>' % (cx, y + SPH, y + SPH + SPG - 2, P["arrow"]))
