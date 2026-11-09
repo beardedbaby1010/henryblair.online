@@ -418,8 +418,8 @@ PROJECTS = [
     {
         "slug": "oab-pvr", "tab": "PVR Self-Estimation", "group": "current",
         "title": "Can women self-estimate their post-void residual?",
-        "kicker": "Cross-sectional study · Department of Urogynecology, Maimonides Medical Center",
-        "status": "Submitted — Family Practice (Oxford University Press)",
+        "kicker": "Cross-sectional study · Urogynecology, Maimonides Medical Center · Brooklyn, 2024–2025",
+        "status": "Manuscript — Journal of Rural Health",
         "summary": "AUA guidelines require a post-void residual measurement to diagnose overactive bladder — "
                    "which needs an in-office ultrasound, at odds with the telemedicine pathway the same "
                    "guidelines endorse. One hundred women estimated their own residual before it was measured.",

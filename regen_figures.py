@@ -96,16 +96,14 @@ PROJECTS = {
         "env_xlsx": "URPS_XLSX", "env_figdir": "URPS_FIGDIR",
         "figdir": "urps_figures", "slug": "urogyn-perceptions",
     },
-    # pca_figures.py has not been mapped yet: its workbook and output
-    # contract still need reading before it can be driven from here, so it is
-    # listed and refused rather than guessed at.
     "pca": {
         "title": "ADT initiation (prostate cancer)",
         "sheet": "1r61VFTZoFx6jRbCFqB17m_67dbgG_cAGG5uO6r1OQIA",
         "script": "5_PCa_x_ADT/Scripts/pca_figures.py",
-        "env_xlsx": None, "env_figdir": None,
+        "env_xlsx": "PCA_XLSX", "env_figdir": "PCA_FIGDIR",
+        # the script defaults OUTPUT_DIR to a relative "Figures", which would
+        # land wherever it is run from; naming it absolutely avoids that
         "figdir": "../Figures", "slug": "adt-initiation",
-        "unmapped": "its workbook/outdir variables have not been read yet",
     },
 }
 
@@ -113,8 +111,15 @@ IMAGES = (".png", ".jpg", ".jpeg", ".svg", ".pdf", ".webp")
 
 
 def say(*a):
-    print(*a)
-    sys.stdout.flush()
+    try:
+        print(*a)
+        sys.stdout.flush()
+    except BrokenPipeError:      # piped into head, which is fine
+        try:
+            sys.stdout.close()
+        except Exception:
+            pass
+        raise SystemExit(0)
 
 
 def fetch(sheet, dest, timeout=180):
