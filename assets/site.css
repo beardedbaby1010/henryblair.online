@@ -45,12 +45,16 @@ body{margin:0;padding-top:var(--sitebar);background:var(--bg);color:var(--ink);
 .wrap{max-width:980px;margin:0 auto;padding:0 clamp(18px,5vw,40px)}
 .wrap.narrow{max-width:760px}
 /* card grids read better edge to edge than at the prose measure */
+.wrap.mid{max-width:1060px}
 .wrap.wide{max-width:1580px}
 /* Only the masthead sits level with the fixed corner badge; indenting it there
    keeps the full width for the grid below. Above ~1950px the centred box
    clears the badge on its own. */
 @media(min-width:860px) and (max-width:1947px){
   .wrap.wide > header.masthead{padding-left:calc(var(--badge) + 24px)}
+}
+@media(min-width:860px) and (max-width:1347px){
+  .wrap.mid > header.masthead{padding-left:calc(var(--badge) + 24px)}
 }
 header.masthead{padding:64px 0 30px;border-bottom:2px solid #111}
 header.masthead.tight{padding:56px 0 24px}
@@ -100,7 +104,7 @@ footer a{color:var(--ink)}
 @media(max-width:600px){.proj.earlier .pth{float:none;width:100%;margin:0 0 14px}}
 
 /* ---------- prose (about) ---------- */
-.prose p{font-size:16.5px;margin:0 0 18px}
+.prose p{font-size:16.5px;margin:0 0 18px;max-width:none}  /* the wrap sets the measure here, not the 68ch default */
 .pullquote{font-family:var(--serif);font-size:20px;line-height:1.4;border-left:3px solid #111;
   padding:4px 0 4px 20px;margin:28px 0;color:var(--ink2);max-width:56ch}
 .draft{border:1px dashed var(--accent);background:#f2f6fa;padding:18px 22px;margin:28px 0;font-size:14.5px;color:var(--ink2)}
