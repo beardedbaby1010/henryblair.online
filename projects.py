@@ -546,7 +546,7 @@ PROJECTS = [
                     "tag": "Table 1",
                     "blocks": [
                         {"prose": "Disadvantaged women endorsed <b>urinary urge frequency</b> as a presenting "
-                                  "complaint far more often — 91.5% versus 77.2% (p = 0.033). No other "
+                                  "complaint far more often — <span data-q=\"urge_dis\">91.5%</span> versus <span data-q=\"urge_adv\">77.2%</span> (p = <span data-q=\"urge_p\">0.033</span>). No other "
                                   "presenting complaint or comorbidity differed."},
                         {"table": {
                             "head": ["Measure", "Disadvantaged", "Advantaged", "p"],
@@ -597,7 +597,7 @@ PROJECTS = [
                                   "groups <i>did</i> differ in something clinically real, so the "
                                   "dichotomization was not pure noise — it simply did not track travel."},
                         {"h3": "Either way, telehealth looks acceptable"},
-                        {"prose": "Willingness to use video visits was high in both groups (71.4% and 67.3%), "
+                        {"prose": "Willingness to use video visits was high in both groups (<span data-q=\"video_adv\">71.4%</span> and <span data-q=\"video_dis\">67.3%</span>), "
                                   "which makes remote care a plausible way to reduce travel burden regardless "
                                   "of which explanation holds."},
                     ],
@@ -1036,7 +1036,7 @@ PROJECTS = [
                             },
                         },
                         {
-                            "prose": "The identity question the field argues about internally is, for residents, settled: 90.4% say URPS belongs in urology and the same proportion reject the idea that it is really a gynaecology subspecialty. The soft spot is further down the list \u2014 only 38.3% expect the career itself to satisfy them, and a third actively disagree.",
+                            "prose": "The identity question the field argues about internally is, for residents, settled: <span data-q=\"role_in_uro\">90.4%</span> say URPS belongs in urology and the same proportion reject the idea that it is really a gynaecology subspecialty. The soft spot is further down the list \u2014 only 38.3% expect the career itself to satisfy them, and a third actively disagree.",
                         },
                     ],
                 },

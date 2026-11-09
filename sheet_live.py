@@ -39,6 +39,48 @@ GVIZ = ("https://docs.google.com/spreadsheets/d/%s/gviz/tq"
 #   ratio0 the point estimate alone                         -> "0.15"
 #   raw    the cell, untouched
 SHEETS = {
+    "oab-adi": {
+        "id": "1nVRKNIr4aPuSjBQUDhQfK3-7XajJ-Ni0irVtXjmSG1U",
+        "tab": "1",
+        "fields": {
+            # the workbook writes both arms into one cell; adv_/dis_ pull one out
+            "time_adv":    ("Trip duration (min), median (IQR)", "Group Values", "adv_n"),
+            "time_dis":    ("Trip duration (min), median (IQR)", "Group Values", "dis_n"),
+            "time_p":      ("Trip duration (min), median (IQR)", "p-value", "p"),
+            "cost_adv":    ("Cost ($), median (IQR)", "Group Values", "adv_n"),
+            "cost_dis":    ("Cost ($), median (IQR)", "Group Values", "dis_n"),
+            "cost_p":      ("Cost ($), median (IQR)", "p-value", "p"),
+            "urge_adv":    ("Urinary urge frequency", "Group Values", "adv_pct"),
+            "urge_dis":    ("Urinary urge frequency", "Group Values", "dis_pct"),
+            "urge_p":      ("Urinary urge frequency", "p-value", "p"),
+            "transit_adv": ("Public transit", "Group Values", "adv_pct"),
+            "transit_dis": ("Public transit", "Group Values", "dis_pct"),
+            "transit_p":   ("Public transit", "p-value", "p"),
+            "accomp_adv":  ("Accompanied to visit", "Group Values", "adv_pct"),
+            "accomp_dis":  ("Accompanied to visit", "Group Values", "dis_pct"),
+            "accomp_p":    ("Accompanied to visit", "p-value", "p"),
+            "video_adv":   ("Willing to do a video visit", "Group Values", "adv_pct"),
+            "video_dis":   ("Willing to do a video visit", "Group Values", "dis_pct"),
+        },
+    },
+    "urogyn-perceptions": {
+        "id": "16xPztZ5epiIFnTUqqXLcgzYIFHapAgoi_4Qu9n-iddw",
+        "tab": "Tables",
+        "fields": {
+            "any_interest":   ("Any fellowship interest", "n (%) [Wilson CI]", "pct"),
+            "any_interest_ci":("Any fellowship interest", "n (%) [Wilson CI]", "ci"),
+            "has_mentor":     ("Has a URPS mentor", "n (%) [Wilson CI]", "pct"),
+            "role_in_uro":    ("URPS has a defined role in urology (agree)", "n (%) [Wilson CI]", "pct"),
+            "not_obgyn":      ("URPS should be primarily OBGYN (disagree)", "n (%) [Wilson CI]", "pct"),
+            "exposure_pgy3":  ("First meaningful exposure by PGY-3", "n (%) [Wilson CI]", "pct"),
+            "no_exposure":    ("No meaningful exposure (never)", "n (%) [Wilson CI]", "pct"),
+            "faculty_yes":    ("URPS fellowship-trained faculty: yes", "n (%) [Wilson CI]", "pct"),
+            "inst_fellowship":("Institutional URPS fellowship: yes", "n (%) [Wilson CI]", "pct"),
+            "barrier_other":  ("Barrier: prefers another subspecialty", "n (%) [Wilson CI]", "pct"),
+            "barrier_scope":  ("Barrier: narrowed scope of practice", "n (%) [Wilson CI]", "pct"),
+            "barrier_exposure":("Barrier: limited exposure", "n (%) [Wilson CI]", "pct"),
+        },
+    },
     "nsqip-same-day-discharge": {
         "id": "1ESAUzokZpr5G3zCwJRQcMYPvFmNTOQEqxPUvyahWqo8",
         "tab": "SDD_vs_Overnight",
@@ -158,6 +200,29 @@ def _bracket(s):
     m = re.search(r"\[([^\]]*)\]", str(s))
     return m.group(1) if m else None
 
+def _arm(s, which):
+    """The ADI tab writes both arms into one cell:
+         "Adv: 44/57 (77.2%)\nDis:  54/59 (91.5%)"
+    Return one arm's text, so a page can address 'the disadvantaged group'."""
+    for line in str(s).splitlines():
+        t = line.strip()
+        if t.lower().startswith(which):
+            return t.split(":", 1)[1].strip()
+    return None
+
+
+def pick(row, col):
+    """row[col], or the first header that starts with col. Some headers carry a
+    multi-line explanation ("Group Values\nAdvantaged group = ..."), and the
+    config should not have to repeat it."""
+    if col in row:
+        return row[col]
+    for k in row:
+        if k and k.startswith(col):
+            return row[k]
+    return None
+
+
 def render(cell, fmt, row=None, col=None):
     """One cell, in the form the page prints it. None when the cell is empty."""
     if cell is None or not str(cell).strip():
@@ -165,6 +230,22 @@ def render(cell, fmt, row=None, col=None):
     s = str(cell).strip()
     if fmt == "raw":
         return s
+    if fmt.startswith("adv") or fmt.startswith("dis"):
+        arm = _arm(s, "adv" if fmt.startswith("adv") else "dis")
+        if arm is None:
+            return None
+        rest = fmt[3:]
+        if rest == "_pct":
+            return _paren_pct(arm)
+        if rest == "_n":
+            return _first_num(arm)
+        return arm
+    if fmt == "p":
+        try:
+            v = float(re.sub(r"[^0-9.eE+-]", "", s))
+        except ValueError:
+            return s
+        return "&lt; 0.001" if v < 0.001 else ("%.3f" % v).rstrip("0").rstrip(".")
     if fmt in ("n", "N"):
         return _first_num(s)
     if fmt == "pct":
@@ -184,28 +265,43 @@ def render(cell, fmt, row=None, col=None):
     return s
 
 # --------------------------------------------------------------------- reading
-def parse(csv_text):
-    """A FLAGGING tab -> {Variable text: {column header: cell}}.
+# A tab announces a new table with one of these in column A. Everything after
+# it is that table's rows until the next such line.
+HEADERS = ("Key", "Comparison", "Proportion", "Variable", "Abstract")
 
-    Every 'Key' row restarts the header, because one tab holds several tables
-    with the same columns. First occurrence of a Variable wins, so an addressed
-    row cannot change meaning when a later table repeats the label."""
+def parse(csv_text, headers=HEADERS, label="Variable"):
+    """A tab -> {row label: {column header: cell}}.
+
+    Every header line restarts the columns, because one tab holds several
+    tables. The row is keyed by its 'label' column when the table has one and
+    by column A otherwise, and the first occurrence wins, so an addressed row
+    cannot change meaning when a later table repeats the label."""
     import csv, io as _io
     out, hdr = {}, None
     for row in csv.reader(_io.StringIO(csv_text)):
         if not row:
             continue
         first = (row[0] or "").strip()
-        if first == "Key":
+        if first in headers:
             hdr = [(c or "").strip() for c in row]
             continue
         if not hdr or not first:
             continue
         d = dict(zip(hdr, row))
-        var = (d.get("Variable") or "").strip()
-        if var and var not in out:
-            out[var] = d
+        key = (d.get(label) or "").strip() or first
+        if key not in out:
+            out[key] = d
     return out
+
+
+def _popts(cfg):
+    """parse() options a project overrides; most use the defaults."""
+    o = {}
+    if cfg.get("headers"):
+        o["headers"] = tuple(cfg["headers"])
+    if cfg.get("label"):
+        o["label"] = cfg["label"]
+    return o
 
 
 def fetch(sheet_id, tab, timeout=25):
@@ -233,7 +329,7 @@ def load(slug, cache_dir, do_fetch=True):
         try:
             got = {}
             for t in tabs_used(cfg):
-                got[t] = parse(fetch(cfg["id"], t))
+                got[t] = parse(fetch(cfg["id"], t), **_popts(cfg))
             if not any(got.values()):
                 rows = None
             else:
@@ -260,7 +356,7 @@ def load(slug, cache_dir, do_fetch=True):
         var, col, fmt = spec[0], spec[1], spec[2]
         tab = spec[3] if len(spec) > 3 else cfg["tab"]
         row = (rows.get(tab) or {}).get(var)
-        vals[key] = None if row is None else render(row.get(col), fmt, row, col)
+        vals[key] = None if row is None else render(pick(row, col), fmt, row, col)
     return vals, source
 
 
@@ -305,10 +401,30 @@ def live_js(slug):
   function firstNum(s) { var m = String(s).match(/^\\s*([\\d,]+(?:\\.\\d+)?)/); return m ? m[1] : null; }
   function parenPct(s) { var m = String(s).match(/\\(([^)]*?%%)\\)/); return m ? m[1] : null; }
   function bracket(s) { var m = String(s).match(/\\[([^\\]]*)\\]/); return m ? m[1] : null; }
+  function arm(s, which) {
+    var lines = String(s).split(/\\n/), i, t;
+    for (i = 0; i < lines.length; i++) {
+      t = lines[i].trim();
+      if (t.toLowerCase().indexOf(which) === 0) return t.split(":").slice(1).join(":").trim();
+    }
+    return null;
+  }
   function render(cell, fmt, row, col) {
     if (cell == null || !String(cell).trim()) return null;
-    var s = String(cell).trim(), p, b, n, N;
+    var s = String(cell).trim(), p, b, n, N, a;
     if (fmt === "raw") return s;
+    if (fmt.indexOf("adv") === 0 || fmt.indexOf("dis") === 0) {
+      a = arm(s, fmt.indexOf("adv") === 0 ? "adv" : "dis");
+      if (a === null) return null;
+      if (fmt.slice(3) === "_pct") return parenPct(a);
+      if (fmt.slice(3) === "_n") return firstNum(a);
+      return a;
+    }
+    if (fmt === "p") {
+      var v = parseFloat(s.replace(/[^0-9.eE+-]/g, ""));
+      if (!isFinite(v)) return s;
+      return v < 0.001 ? "< 0.001" : String(parseFloat(v.toFixed(3)));
+    }
     if (fmt === "n" || fmt === "N") return firstNum(s);
     if (fmt === "pct") return parenPct(s);
     if (fmt === "ci") { p = parenPct(s); b = bracket(s);
@@ -351,7 +467,11 @@ def live_js(slug):
         if (!rows) return;
         var row = rows[spec[0]];
         if (!row) return;
-        var out = render(row[spec[1]], spec[2], row, spec[1]);
+        var cell = row[spec[1]];
+        if (cell === undefined) {
+          for (var k in row) { if (k && k.indexOf(spec[1]) === 0) { cell = row[k]; break; } }
+        }
+        var out = render(cell, spec[2], row, spec[1]);
         if (out !== null && out !== el.textContent) el.textContent = out;
       });
   }).catch(function () { /* keep the baked numbers */ });

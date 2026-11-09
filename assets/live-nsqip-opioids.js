@@ -23,10 +23,30 @@
   function firstNum(s) { var m = String(s).match(/^\s*([\d,]+(?:\.\d+)?)/); return m ? m[1] : null; }
   function parenPct(s) { var m = String(s).match(/\(([^)]*?%)\)/); return m ? m[1] : null; }
   function bracket(s) { var m = String(s).match(/\[([^\]]*)\]/); return m ? m[1] : null; }
+  function arm(s, which) {
+    var lines = String(s).split(/\n/), i, t;
+    for (i = 0; i < lines.length; i++) {
+      t = lines[i].trim();
+      if (t.toLowerCase().indexOf(which) === 0) return t.split(":").slice(1).join(":").trim();
+    }
+    return null;
+  }
   function render(cell, fmt, row, col) {
     if (cell == null || !String(cell).trim()) return null;
-    var s = String(cell).trim(), p, b, n, N;
+    var s = String(cell).trim(), p, b, n, N, a;
     if (fmt === "raw") return s;
+    if (fmt.indexOf("adv") === 0 || fmt.indexOf("dis") === 0) {
+      a = arm(s, fmt.indexOf("adv") === 0 ? "adv" : "dis");
+      if (a === null) return null;
+      if (fmt.slice(3) === "_pct") return parenPct(a);
+      if (fmt.slice(3) === "_n") return firstNum(a);
+      return a;
+    }
+    if (fmt === "p") {
+      var v = parseFloat(s.replace(/[^0-9.eE+-]/g, ""));
+      if (!isFinite(v)) return s;
+      return v < 0.001 ? "< 0.001" : String(parseFloat(v.toFixed(3)));
+    }
     if (fmt === "n" || fmt === "N") return firstNum(s);
     if (fmt === "pct") return parenPct(s);
     if (fmt === "ci") { p = parenPct(s); b = bracket(s);
@@ -69,7 +89,11 @@
         if (!rows) return;
         var row = rows[spec[0]];
         if (!row) return;
-        var out = render(row[spec[1]], spec[2], row, spec[1]);
+        var cell = row[spec[1]];
+        if (cell === undefined) {
+          for (var k in row) { if (k && k.indexOf(spec[1]) === 0) { cell = row[k]; break; } }
+        }
+        var out = render(cell, spec[2], row, spec[1]);
         if (out !== null && out !== el.textContent) el.textContent = out;
       });
   }).catch(function () { /* keep the baked numbers */ });
