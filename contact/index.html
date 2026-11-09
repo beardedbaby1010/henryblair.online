@@ -112,30 +112,36 @@
 <script>
 // Addresses and the phone number are assembled here rather than written into the
 // HTML, so the page reads normally for people and gives scrapers nothing to lift.
+// Addresses are assembled from parts rather than written into the markup, so the
+// page reads normally for people and a scraper lifting the HTML gets nothing.
+// Every email link - the three addresses and the icon - opens one Outlook
+// compose window addressed to all three at once.
+var AT = String.fromCharCode(64);
+var ADDRS = ['henry.blair' + AT + 'downstate.edu',
+             'hblair' + AT + 'maimo.org',
+             'henrymblair' + AT + 'gmail.com'];
+var COMPOSE = 'https://outlook.office.com/mail/deeplink/compose?to='
+            + encodeURIComponent(ADDRS.join(','));
+var TEL = 'tel:+1' + '914' + '708' + '9909';
+
 document.querySelectorAll('.ob').forEach(function(el){
-  var a = el.dataset.u + String.fromCharCode(64) + el.dataset.d;
+  var a = el.dataset.u + AT + el.dataset.d;
   var link = document.createElement('a');
-  link.href = 'mailto:' + a; link.textContent = a; el.appendChild(link);
+  link.href = COMPOSE;                 // the address shown, the compose window shared
+  link.textContent = a;
+  link.target = '_blank'; link.rel = 'noopener';
+  el.appendChild(link);
 });
 document.querySelectorAll('.ob-tel').forEach(function(el){
   var d = el.dataset, n = '(' + d.a + ') ' + d.b + '-' + d.c;
   var link = document.createElement('a');
-  link.href = 'tel:+1' + d.a + d.b + d.c; link.textContent = n; el.appendChild(link);
+  link.href = TEL; link.textContent = n; el.appendChild(link);
 });
 document.querySelectorAll('.ob-link').forEach(function(el){
-  // The icon is Outlook's, and a mailto: cannot open in a tab — it hands off to
-  // whatever mail client is registered. So point it at Outlook on the web, which
-  // opens in a new tab like the other icons do.
-  // Opens the visitor's own mail client, addressed to the school account with
-  // the work account copied. Assembled here so neither address is in the markup.
-  var at = String.fromCharCode(64), d = el.dataset;
-  el.href = 'mailto:' + d.u + at + d.d
-          + (d.u2 && d.d2 ? '?cc=' + encodeURIComponent(d.u2 + at + d.d2) : '');
-  el.removeAttribute('target');
+  el.href = COMPOSE;                   // a web URL, so it can open in a tab
+  el.target = '_blank'; el.rel = 'noopener';
 });
-document.querySelectorAll('.tel-link').forEach(function(el){
-  var d = el.dataset; el.href = 'tel:+1' + d.a + d.b + d.c;
-});
+document.querySelectorAll('.tel-link').forEach(function(el){ el.href = TEL; });
 document.querySelectorAll('.yr').forEach(function(e){e.textContent=new Date().getFullYear()});
 </script>
 <noscript>
