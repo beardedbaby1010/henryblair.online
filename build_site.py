@@ -95,6 +95,31 @@ SITEBAR_CSS = """
 .sitebar .sb-tabs a[aria-current="page"]{color:#111;background:#f4f4f2}
 .sb-fade{position:fixed;top:0;right:0;width:46px;height:34px;z-index:101;pointer-events:none;
   background:linear-gradient(to right,rgba(17,17,17,0),#111 70%)}
+/* The generated hubs carry their own copy of the bar, so the menu and the
+   right-hand group have to be repeated here or they only work on the
+   hand-written pages. Keep in step with the same rules in site.css. */
+.sitebar .sb-tabs.sb-right{margin-left:auto}
+.sitebar .sb-tabs.sb-right > :first-child{border-left:1px solid #333}
+.sb-menu{position:relative;display:inline-flex;align-items:stretch;border-right:1px solid #333}
+.sb-menubtn{display:inline-flex;align-items:center;gap:5px;height:100%;
+  padding:0 14px;border:0;background:none;color:#b9bcbf;cursor:pointer;
+  font:inherit;letter-spacing:inherit;white-space:nowrap;font-weight:600}
+.sb-menubtn:hover{color:#fff;background:#1c1c1c}
+.sb-menu.on .sb-menubtn{color:#fff;background:#1c1c1c}
+.sb-caret{width:0;height:0;border-left:3.5px solid transparent;
+  border-right:3.5px solid transparent;border-top:4px solid currentColor;
+  transition:transform .12s ease}
+.sb-menu.on .sb-caret{transform:rotate(180deg)}
+.sitebar .sb-menupanel{position:fixed;z-index:60;margin-top:0;
+  min-width:216px;max-height:min(70vh,420px);overflow-y:auto;
+  background:#111;border:1px solid #333;border-top:0;border-radius:0;
+  box-shadow:0 12px 26px rgba(0,0,0,.45);padding:0}
+.sitebar .sb-menupanel a{display:block;height:34px;line-height:34px;
+  padding:0 14px;border-radius:0;border:0;border-bottom:1px solid #262626;
+  font-size:12px;font-weight:600;color:#fff;text-decoration:none;white-space:nowrap}
+.sitebar .sb-menupanel a:last-child{border-bottom:0}
+.sitebar .sb-menupanel a:hover{background:#1c1c1c;color:#fff}
+.sitebar .sb-menupanel a[aria-current="page"]{background:#f4f4f2;color:#111;font-weight:700}
 .topbar{top:34px;left:var(--badge)}
 .hubbar{left:var(--badge)}
 #side{top:max(calc(var(--top) + 34px),calc(var(--badge) + 14px))}
