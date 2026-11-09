@@ -13,3 +13,6 @@ claude_log.txt
 
 # Plaintext CV never belongs in a public repo - it ships gated via _downloadable/
 /Henry_Blair_CV_*.pdf
+
+# reference images dropped at the repo root are not site content
+/idea.jpg

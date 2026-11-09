@@ -191,6 +191,7 @@ PAGES = [
     {"key": "projects", "tab": "Projects", "href": "/", "file": None, "menu": True},
     {"key": "abstracts", "tab": "Abstracts",     "href": "/abstracts/", "file": "abstracts/index.html"},
     {"key": "earlier",   "tab": "Earlier Work",  "href": "/earlier/",   "file": "earlier/index.html"},
+    {"key": "other",     "tab": "Other",         "href": "/other/",     "file": "other/index.html"},
     {"key": "in-preparation", "tab": "In Preparation", "href": "/in-preparation/",
      "file": "in-preparation/index.html", "gate": True},
 ]
@@ -216,10 +217,8 @@ PROJECTS = [
                    "carries two guideline duties: monitor his bones, and—if the cancer is already "
                    "metastatic—intensify treatment. Examined together in one population, both duties fail "
                    "at the same moment.",
-        "stats": [("69.3%", "never receive a central bone scan"),
-                  ("41.1%", "intensified when metastatic"),
-                  ("3.6×",  "screening tracks prior bone disease"),
-                  ("35,851","men on ADT")],
+        "stats": [("28,524", "men starting ADT"), ("13.1%", "screened within a year"),
+                  ("72.2%", "never screened"), ("45.0%", "intensified when metastatic")],
         "tags": ["Prostate cancer", "ADT", "Bone health", "Treatment intensification", "TriNetX"],
         "page": {"kind": "generated", "source": "_source/pca_project_hub_standalone.html", "strip_paper": True},
         "paper": {"pdf": "Maimo_Work/5_PCa_x_ADT/Old/Henry - PCa Manuscript V7.pdf",
@@ -1583,16 +1582,16 @@ PROJECTS = [
     },
 
     {
-        "slug": "nsqip-pipeline", "tab": "NSQIP Pipeline", "group": "current",
+        "slug": "nsqip-pipeline", "group": "other",
         "title": "A pipeline that turns the NSQIP files into a finished analysis",
         "kicker": "Research tooling \u00b7 ACS NSQIP Participant Use Files",
-        "status": "In use \u2014 every NSQIP project on this site was built with it",
-        "summary": "The ACS NSQIP public files are twelve years of fixed-width text whose columns appear, "
+        "status": "In use \u2014 every NSQIP analysis on this site was built with it",
+        "summary": "The ACS NSQIP public files are thirteen years of fixed-width text whose columns appear, "
                    "vanish and change name between years. This is the toolchain I wrote to go from no "
                    "research question at all to a cohort, a live workbook, publication figures and a "
-                   "written guide \u2014 about six thousand lines of Python, run by double-clicking one file.",
-        "stats": [("6,085", "lines of Python"), ("397", "columns mapped across years"),
-                  ("12", "PUF years, 2012\u20132023"), ("14", "statistics as live formulas")],
+                   "written guide \u2014 about eight thousand lines of Python, run by double-clicking one file.",
+        "stats": [("8,430", "lines of Python"), ("396", "columns mapped across years"),
+                  ("13", "PUF years, 2012\u20132024"), ("14", "statistics as live formulas")],
         "tags": ["NSQIP", "Research tooling", "Reproducibility", "Python", "Health services research"],
         "page": {"kind": "auto"},
         "hub": {
@@ -1627,21 +1626,64 @@ PROJECTS = [
             ],
             "sections": [
                 {"id": "parts", "title": "What it is made of", "nav": "The parts",
-                 "intro": "Fifteen Python modules and a double-clickable launcher.",
+                 "intro": "Nineteen Python modules, plus 247 lines of zsh that install the kit and "
+                          "put a double-clickable launcher in the project folder.",
                  "blocks": [
                      {"table": {"head": ["Component", "Lines", "What it does"],
                                 "rows": [
-                        ["Question builder", "502", "From no idea to one specific, feasible question"],
-                        ["Suggestion library", "353", "Procedure and diagnosis presets, variables, outcomes, analyses"],
-                        ["Catalog", "105", "Counts of every primary CPT code in every year"],
-                        ["Cohort extractor", "767", "Builds the cohort from the raw fixed-width files"],
-                        ["Pipeline", "980", "The run itself, end to end"],
-                        ["Workbook writers", "1,558", "The analysis workbook and its sheets"],
-                        ["Statistics and figures", "560", "The statistics mirror and the figures"],
-                        ["Guides", "443", "A written guide per project, plus one for older projects"],
-                        ["Interfaces", "539", "The same questions, in a terminal or by clicking in Chrome"],
-                        ["Maintenance", "278", "Rebuild everything; upgrade an existing sheet in place"],
+                        ["Question builder", "555", "From no idea to one specific, feasible question"],
+                        ["Suggestion library", "622", "Procedure and diagnosis presets, variables, outcomes, "
+                                                     "analyses; CPT short descriptors spelled back out"],
+                        ["Catalog", "102", "Counts every primary CPT code in every year \u2014 no patient rows"],
+                        ["Cohort extractor", "805", "Builds every requested cohort from the raw fixed-width "
+                                                    "files, one pass per year"],
+                        ["Pipeline", "1,681", "The run itself, end to end"],
+                        ["Workbook writers", "1,741", "The analysis workbook, its sheets, and the named "
+                                                      "functions pre-installed into it"],
+                        ["Statistics and figures", "627", "The statistics mirror and the 300 dpi figures"],
+                        ["Study designs", "365", "Multi-arm comparisons and gradients; single-cohort studies "
+                                                 "where the outcome is the question"],
+                        ["Guides and slides", "932", "A written guide and a methods deck per project, plus "
+                                                     "guides for the pre-pipeline projects"],
+                        ["Interfaces", "725", "The same questions, in a terminal or by clicking in Chrome"],
+                        ["Maintenance", "275", "Rebuild everything; restyle an existing sheet in place"],
                      ]}},
+                 ]},
+                {"id": "run", "title": "How a project runs", "nav": "A run",
+                 "intro": "One command, and the questions do the rest. Nothing is read from the patient "
+                          "files until the question is settled.",
+                 "blocks": [
+                     {"bullets": [
+                        "<b>Ask.</b> The builder reads the catalog\u2019s case and event counts and narrows "
+                        "a vague idea to one question, with the numbers that say whether it is answerable.",
+                        "<b>Extract.</b> Each yearly file is read once in chunks and every requested project "
+                        "takes its rows from the same pass. The originals are never modified.",
+                        "<b>Build.</b> A workbook is written in which every cell outside the data sheet is a "
+                        "formula reading named ranges \u2014 so the Settings sheet, not a rerun, changes the "
+                        "cohort.",
+                        "<b>Draw.</b> Figures come out at 300 dpi, greyscale, one message each, with the "
+                        "numbers printed beside the marks.",
+                        "<b>Explain.</b> Each project ends with an HTML guide to its own workbook and a "
+                        "methods deck written for that project\u2019s codes, exclusions and analyses.",
+                     ]},
+                     {"callout": "The question stage runs either in a terminal or in the browser. The browser "
+                                 "front end is a server bound to 127.0.0.1 on that machine only; nothing "
+                                 "leaves the Mac."},
+                 ]},
+                {"id": "repro", "title": "Answers are the artefact", "nav": "Reproducibility",
+                 "intro": "Every answer given to the builder is written to the project as it is given, which "
+                          "makes the run repeatable without the person who ran it.",
+                 "blocks": [
+                     {"bullets": [
+                        "A saved answer file rebuilds the whole project with no questions asked.",
+                        "Re-asking the questions starts from the previous answers, so an amendment is an "
+                        "edit rather than a retype.",
+                        "A replay walks today\u2019s questions using an old project\u2019s answers into a "
+                        "<i>copy</i>, so a pipeline change can be inspected against the original before "
+                        "anything replaces it.",
+                        "One command rebuilds every project to the current pipeline, backing up first and "
+                        "restoring on failure; published Google Sheets are left alone unless asked.",
+                     ]},
                  ]},
                 {"id": "stats", "title": "Statistics as spreadsheet formulas", "nav": "The statistics",
                  "intro": "A workbook of pasted results goes stale the moment the cohort changes. A "
@@ -1769,7 +1811,7 @@ PROJECTS = [
     },
     {
         "slug": "nsqip-rasp-elderly", "tab": "RASP in the Elderly", "group": "current",
-        "title": "Is anyone too old or too frail for robot-assisted simple prostatectomy?",
+        "title": "Too old or too frail? An analysis on robot-assisted simple prostatectomy",
         "kicker": "ACS NSQIP Participant Use File · 2022–2024",
         "status": "Abstract submitted — 2027 AUA Annual Meeting",
         "summary": "Robot-assisted simple prostatectomy (RASP) is an established surgical approach for the treatment of large-gland benign prostatic hyperplasia (BPH). However, perioperative outcomes following RASP among elderly and frail patients remain incompletely characterized. This study aimed to evaluate and compare 30-day postoperative complications following RASP across age and frailty subgroups.",
@@ -1814,9 +1856,9 @@ PROJECTS = [
         },
     },
     {
-        "slug": "dr-hank-med-ed-ai", "tab": None, "group": "earlier",
-        "title": "Dr. Hank: a cited-source study assistant for medical students",
-        "kicker": "Medical education tooling · personal project",
+        "slug": "dr-hank-med-ed-ai", "tab": None, "group": "other",
+        "title": "Created a study assistant for medical students",
+        "kicker": "Dr. Hank · medical education tooling · personal project",
         "status": "Working prototype",
         "summary": "A study assistant built on a language model that answers Step 1 questions in a fixed "
                    "high-yield structure and — the part that matters — points to the actual page in First "
