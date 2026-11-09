@@ -114,6 +114,32 @@ main{padding-top:calc(var(--top) + 34px + 22px)}
 # With this many tabs the bar always overflows, so the open one can sit off-screen
 # when a page loads. Centre it on load, without smooth-scrolling (which would look
 # like the page moving under the reader).
+# The Projects menu. Keyboard and pointer both, closes on Escape, on a click
+# outside, and on scrolling the bar — a panel left hanging over the page while
+# the bar moves underneath it reads as a bug.
+MENU_JS = ("(function(){var m=document.querySelector('.sb-menu');if(!m)return;"
+           "var b=m.querySelector('.sb-menubtn'),p=m.querySelector('.sb-menupanel');"
+           "if(!b||!p)return;"
+           "function place(){var r=b.getBoundingClientRect();"
+           "p.style.top=(r.bottom+2)+'px';"
+           "var w=p.offsetWidth||220,l=Math.min(r.left,window.innerWidth-w-8);"
+           "p.style.left=Math.max(8,l)+'px';}"
+           "function open(){p.hidden=false;b.setAttribute('aria-expanded','true');"
+           "m.classList.add('on');place();"
+           "var a=p.querySelector('[aria-current=\\'page\\']');"
+           "if(a&&a.scrollIntoView)a.scrollIntoView({block:'nearest'});}"
+           "function shut(){p.hidden=true;b.setAttribute('aria-expanded','false');"
+           "m.classList.remove('on');}"
+           "b.addEventListener('click',function(e){e.stopPropagation();"
+           "p.hidden?open():shut();});"
+           "document.addEventListener('click',function(e){if(!m.contains(e.target))shut();});"
+           "document.addEventListener('keydown',function(e){if(e.key==='Escape')shut();});"
+           "var bar=document.querySelector('.sitebar');"
+           "if(bar)bar.addEventListener('scroll',shut,{passive:true});"
+           "window.addEventListener('resize',function(){if(!p.hidden)place();});"
+           "p.addEventListener('click',function(e){if(e.target.tagName==='A')shut();});"
+           "})();")
+
 TAB_SCROLL = ("(function(){function c(){var b=document.querySelector('.sitebar');"
               "if(!b)return;var a=b.querySelector('[aria-current=\\'page\\']');if(!a)return;"
               "var x=a.offsetLeft-(b.clientWidth-a.offsetWidth)/2;"
@@ -122,23 +148,47 @@ TAB_SCROLL = ("(function(){function c(){var b=document.querySelector('.sitebar')
               "window.addEventListener('resize',c);})();")
 
 
-def nav_html(active=None):
-    tabs = []
-    for pg in CFG.PAGES:
-        cur = ' aria-current="page"' if pg["key"] == active else ''
-        tabs.append('<a href="%s"%s>%s</a>' % (pg["href"], cur, pg["tab"]))
+# Every project used to get its own tab, which pushed the bar to twenty-two items
+# and made the thing it was meant to help — finding a project — worse. They now
+# live in one "Projects" menu, placed in the bar wherever PAGES puts the entry
+# whose key is "projects".
+PROJECTS_KEY = "projects"
+
+def projects_menu(active=None):
+    items, here = [], False
     for pr in CFG.PROJECTS:
         if not pr.get("tab"):
             continue
-        cur = ' aria-current="page"' if pr["slug"] == active else ''
-        tabs.append('<a href="/projects/%s/"%s>%s</a>' % (pr["slug"], cur, pr["tab"]))
+        cur = pr["slug"] == active
+        here = here or cur
+        items.append('<a role="menuitem" href="/projects/%s/"%s>%s</a>'
+                     % (pr["slug"], ' aria-current="page"' if cur else '', pr["tab"]))
+    if not items:
+        return ''
+    return ('<div class="sb-menu">'
+            '<button type="button" class="sb-menubtn" aria-expanded="false" '
+            'aria-haspopup="true"%s>Projects<span class="sb-caret" aria-hidden="true"></span></button>'
+            '<div class="sb-menupanel" role="menu" hidden>%s</div></div>'
+            % (' aria-current="page"' if here else '', "".join(items)))
+
+def nav_html(active=None):
+    tabs = []
+    for pg in CFG.PAGES:
+        if pg["key"] == PROJECTS_KEY:
+            tabs.append(projects_menu(active))
+            continue
+        cur = ' aria-current="page"' if pg["key"] == active else ''
+        tabs.append('<a href="%s"%s>%s</a>' % (pg["href"], cur, pg["tab"]))
+    if not any(pg["key"] == PROJECTS_KEY for pg in CFG.PAGES):
+        tabs.append(projects_menu(active))      # never lose the projects entirely
     return ('<a class="sb-badge" href="/" aria-label="Henry M. Blair — home">'
             '<img src="/assets/headshot-badge.png" alt="" width="320" height="320"></a>\n'
             '<div class="sitebar">\n'
             '  <a class="sb-brand" href="/">Henry M. Blair</a>\n'
             '  <nav class="sb-tabs">' + "".join(tabs) + '</nav>\n'
             '</div>\n<span class="sb-fade" aria-hidden="true"></span>\n'
-            '<script>' + TAB_SCROLL + '</script>')
+            '<script>' + TAB_SCROLL + '</script>\n'
+            '<script>' + MENU_JS + '</script>')
 
 def set_nav(path, active):
     if not os.path.exists(path):
@@ -1344,6 +1394,8 @@ if __name__ == "__main__":
         ok &= build_gate(p)
     for pg in CFG.PAGES:
         if pg.get("gate"):      # a gate page is written whole, bar included
+            continue
+        if pg.get("menu") or not pg.get("file"):   # a menu entry has no page of its own
             continue
         set_nav(os.path.join(ROOT, pg["file"]), pg["key"])
     ok &= build_downloads()

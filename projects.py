@@ -187,6 +187,8 @@ PAGES = [
     {"key": "contact", "tab": "Contact Me",         "href": "/contact/", "file": "contact/index.html"},
     {"key": "resume",  "tab": "Resume",             "href": "/resume/",  "file": "resume/index.html"},
     {"key": "home",    "tab": "Research Portfolio", "href": "/",         "file": "index.html"},
+    # A menu, not a page: nav_html() turns this entry into the Projects dropdown.
+    {"key": "projects", "tab": "Projects", "href": "/", "file": None, "menu": True},
     {"key": "abstracts", "tab": "Abstracts",     "href": "/abstracts/", "file": "abstracts/index.html"},
     {"key": "earlier",   "tab": "Earlier Work",  "href": "/earlier/",   "file": "earlier/index.html"},
     {"key": "in-preparation", "tab": "In Preparation", "href": "/in-preparation/",

@@ -57,21 +57,25 @@ def resolve(qm):
     return out
 
 # ------------------------------------------------------------------- palette
+# The top of the tree is the whole cohort, so it is neutral: black. Below it the
+# two questions the study asks get their own blue — light for bone health,
+# dark for treatment intensification — and the comparison arms stay grey so the
+# eye lands on the cohorts that carry a finding.
 P = {
     "ink":    "#16202b",
     "mut":    "#5e6b78",
     "line":   "#c3ccd4",
-    "navy":   "#13335a",   # the anchor cohort
-    "blue":   "#2a6f97",   # key cohort
-    "teal":   "#1b7f79",   # bone branch
-    "amber":  "#a85d00",   # metastatic branch
-    "plum":   "#7a4a8f",   # intensification
-    "slate":  "#64748b",   # comparison / "not" arms
-    "bandA":  "#eaf3f4",
-    "bandB":  "#fbf0e4",
+    "navy":   "#000000",   # the anchor cohort
+    "blue":   "#2a6f97",
+    "teal":   "#4a90c2",   # bone health — light blue
+    "amber":  "#4a90c2",   # bone-health band header
+    "plum":   "#12395e",   # intensification — dark blue
+    "slate":  "#6b7785",   # comparison / "not" arms
+    "bandA":  "#e8f1f8",
+    "bandB":  "#e4ecf4",
 }
-TINT = {"teal": "#e4f1f0", "amber": "#fbeada", "plum": "#f0e8f4",
-        "blue": "#e3eef5", "slate": "#eceff2"}
+TINT = {"teal": "#e9f3fa", "amber": "#e9f3fa", "plum": "#dde7f0",
+        "blue": "#e3eef5", "slate": "#eef0f3"}
 
 # --------------------------------------------------------------- tree layout
 class N:
@@ -131,12 +135,12 @@ def trees():
     ]
     mets = [
         N("notmets", "Not metastatic ≤1 mo", "slate"),
-        N("mets", "Metastatic", "amber", True, kids=[
-            N("visc", "Visceral", "amber", kids=[
+        N("mets", "Metastatic", "plum", True, kids=[
+            N("visc", "Visceral", "plum", kids=[
                 N("iv", "Intensified", "plum"),
                 N("nv", "Not intensified", "slate"),
             ]),
-            N("notvisc", "Not visceral", "amber", kids=[
+            N("notvisc", "Not visceral", "plum", kids=[
                 N("inv", "Intensified", "plum"),
                 N("nnv", "Not intensified", "slate"),
             ]),
@@ -278,7 +282,7 @@ def build(vals, network=None, hcos=None, snapshot=None):
 
     for roots, top, w, title, tone in (
             (bone, bandA_top, wA, "Bone-density screening &amp; bone health", "teal"),
-            (mets, bandB_top, wB, "Metastatic disease &amp; treatment intensification", "amber")):
+            (mets, bandB_top, wB, "Metastatic disease &amp; treatment intensification", "plum")):
         A('<rect x="%d" y="%d" width="%.1f" height="34" rx="6" fill="%s"/>'
           % (PAD - 10, top, width - 2 * PAD + 20, P["bandA"] if tone == "teal" else P["bandB"]))
         A('<text x="%.1f" y="%d" text-anchor="middle" font-size="13.5" font-weight="800" '
@@ -308,8 +312,8 @@ def build(vals, network=None, hcos=None, snapshot=None):
     A('<text x="%d" y="%d" font-size="12" font-weight="800" fill="%s" '
       'letter-spacing="1.4">KEY</text>' % (PAD, key_top, P["mut"]))
     kx = PAD + 46
-    for tone, lab in (("teal", "Bone-density branch"), ("amber", "Metastatic branch"),
-                      ("plum", "Intensification"), ("slate", "Comparison arm")):
+    for tone, lab in (("navy", "Whole cohort"), ("teal", "Bone health"),
+                      ("plum", "Treatment intensification"), ("slate", "Comparison arm")):
         A('<rect x="%d" y="%d" width="15" height="15" rx="3" fill="%s"/>'
           % (kx, key_top - 12, P[tone]))
         A('<text x="%d" y="%d" font-size="12" fill="%s">%s</text>'
