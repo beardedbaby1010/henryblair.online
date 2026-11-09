@@ -62,19 +62,8 @@ def resolve(qm):
 # ------------------------------------------------------------------- palette
 # One vibrant blue family: the cohort is the deepest, each abstract takes a tone,
 # and comparison arms recede. Matches assets/site.css and the figure PNGs.
-P = {
-    "ink":   "#1b2a3c",
-    "mut":   "#5c7083",
-    "line":  "#b9c5d0",
-    "arrow": "#8fa2b5",
-    "black": "#24374f",   # the cohort itself - deep navy
-    "teal":  "#3e5773",   # first family
-    "plum":  "#5a7694",   # second family
-    "slate": "#9bacbd",   # comparison arms
-    "band":  "#eef1f4",
-    "bandbd": "#cfd8e1",
-}
-TINT = {"teal": "#e8edf3", "plum": "#edf1f5", "slate": "#f3f5f8", "black": "#e9ecef"}
+SUBW = "rgba(255,255,255,.84)"
+from figpalette import P, TINT, on   # the one place the colours live
 SERIF = "Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif"
 SANS = "-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif"
 
@@ -103,8 +92,8 @@ class Bx(object):
 
 def draw_bx(b, out):
     fill = P[b.tone] if b.solid else TINT[b.tone]
-    tc = "#ffffff" if b.solid else P["ink"]
-    sc = "rgba(255,255,255,.80)" if b.solid else P["mut"]
+    tc = on(fill) if b.solid else P["ink"]
+    sc = (SUBW if tc == "#ffffff" else "rgba(19,39,66,0.88)") if b.solid else P["mut"]
     bd = "" if b.solid else ' stroke="%s" stroke-width="1.1"' % P[b.tone]
     out.append('<rect x="%.1f" y="%.1f" width="%d" height="%.1f" rx="6" fill="%s"%s/>'
                % (b.x, b.y, BW, b.h, fill, bd))
@@ -248,8 +237,8 @@ def build(vals, network=None, hcos=None, snapshot=None):
     for i, st in enumerate(SPINE):
         solid = st.get("anchor") or st.get("network")
         fill = P["black"] if solid else "#ffffff"
-        tc = "#ffffff" if solid else P["ink"]
-        sub = "rgba(255,255,255,.92)" if solid else P["ink"]
+        tc = on(fill) if solid else P["ink"]
+        sub = (SUBW if tc == "#ffffff" else "rgba(19,39,66,0.95)") if solid else P["ink"]
         bd = "" if solid else ' stroke="%s" stroke-width="1.3"' % P["ink"]
         A('<rect x="%d" y="%.1f" width="%d" height="%d" rx="6" fill="%s"%s/>'
           % (C2X, y, SPW, SPH, fill, bd))
@@ -257,7 +246,7 @@ def build(vals, network=None, hcos=None, snapshot=None):
         A('<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="14" '
           'font-weight="700" fill="%s">%s</text>' % (cx, y + 24, SERIF, tc, esc(st["label"])))
         if st.get("crit"):
-            cc = "rgba(255,255,255,.70)" if solid else P["mut"]
+            cc = (SUBW if tc == "#ffffff" else "rgba(19,39,66,0.78)") if solid else P["mut"]
             A('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="10.5" fill="%s">%s</text>'
               % (cx, y + 41, cc, esc(st["crit"])))
         val = fmt(network) if st.get("network") else fmt(vals.get(st["key"]))

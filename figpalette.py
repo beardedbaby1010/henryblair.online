@@ -63,3 +63,29 @@ def matplotlib(plt):
         "axes.spines.right": False,
         "font.size": 10,
     })
+
+
+def on(fill, light="#ffffff", dark=None):
+    """Readable text colour for a given fill.
+
+    The ramp runs from near-black navy to a very pale blue, so "solid box =
+    white text" stops being true halfway down it. This picks by relative
+    luminance instead, which is what the contrast guidelines measure.
+    """
+    dark = dark or P["ink"]
+    h = str(fill).lstrip("#")
+    if len(h) != 6:
+        return light
+    def lin(c):
+        c = int(h[c:c + 2], 16) / 255.0
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    L = 0.2126 * lin(0) + 0.7152 * lin(2) + 0.0722 * lin(4)
+    # contrast against white vs against the ink, whichever is better
+    cw = 1.05 / (L + 0.05)
+    hd = str(dark).lstrip("#")
+    def lin2(c):
+        c = int(hd[c:c + 2], 16) / 255.0
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    Ld = 0.2126 * lin2(0) + 0.7152 * lin2(2) + 0.0722 * lin2(4)
+    cd = (max(L, Ld) + 0.05) / (min(L, Ld) + 0.05)
+    return light if cw >= cd else dark
