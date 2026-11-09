@@ -1,0 +1,361 @@
+# -*- coding: utf-8 -*-
+"""One live link for every project whose workbook uses the FLAGGING layout.
+
+pca_figure.py and ve_figure.py each own a diagram as well as their numbers, so
+they stay separate. Everything else — the six NSQIP workbooks, the ADI and
+urogyn-survey workbooks — shares one table shape, so it shares one module:
+
+    Key | Variable | Level | N1 | n1 (%1) [Wilson] | N2 | n2 (%2) [Wilson]
+        | RR [Katz] | OR [Woolf] | RD [Wald], [Newcombe] | ...
+
+A row is addressed by its Variable text, which is unique within a tab and reads
+like English in the config below, so a page hook says what it means. A column is
+addressed by its header, never by position, so inserting a column in the
+spreadsheet cannot silently shift every number on the site.
+
+Nothing here computes a statistic. Every value is the spreadsheet's own; the
+only transformation is pulling one field out of a composite cell such as
+"1,243 (1.1%) [1.0%-1.2%]" and printing the brackets the way the page does.
+
+The build bakes current values into the HTML, and assets/live.js re-reads the
+same tabs in the browser, so a page is right before any JavaScript runs and
+right again a minute after the spreadsheet changes.
+"""
+import html, json, os, re, urllib.request
+
+GVIZ = ("https://docs.google.com/spreadsheets/d/%s/gviz/tq"
+        "?tqx=out:csv&headers=0&sheet=%s")
+
+# ---------------------------------------------------------------- the projects
+# slug -> sheet id, tab, and {page key: (Variable text, column, format)}
+#
+# formats
+#   n      the count            "1,243 (1.1%) [1.0%-1.2%]" -> "1,243"
+#   pct    the percentage                                  -> "1.1%"
+#   ci     percentage with its Wilson interval              -> "1.1% (1.0-1.2)"
+#   n_of_N count over its denominator                       -> "1,243 / 112,132"
+#   N      the denominator alone                            -> "112,132"
+#   ratio  a ratio cell         "0.15 [0.09-0.27]"          -> "0.15 (0.09-0.27)"
+#   ratio0 the point estimate alone                         -> "0.15"
+#   raw    the cell, untouched
+SHEETS = {
+    "nsqip-same-day-discharge": {
+        "id": "1ESAUzokZpr5G3zCwJRQcMYPvFmNTOQEqxPUvyahWqo8",
+        "tab": "SDD_vs_Overnight",
+        "fields": {
+            "n_overnight":    ("Transfusion \u226472 h", "N1", "N"),
+            "n_sdd":          ("Transfusion \u226472 h", "N2", "N"),
+            "readmit_on":     ("30-day readmission", "n1 (%1) [Wilson]", "pct"),
+            "readmit_sdd":    ("30-day readmission", "n2 (%2) [Wilson]", "pct"),
+            "readmit_rr":     ("30-day readmission", "RR [Katz]", "ratio"),
+            "readmit_rr0":    ("30-day readmission", "RR [Katz]", "ratio0"),
+            "unpl_rr":        ("Unplanned readmission", "RR [Katz]", "ratio"),
+            "serious_on":     ("Serious complication", "n1 (%1) [Wilson]", "pct"),
+            "serious_sdd":    ("Serious complication", "n2 (%2) [Wilson]", "pct"),
+            "serious_rr":     ("Serious complication", "RR [Katz]", "ratio"),
+            "anycomp_on":     ("Any complication", "n1 (%1) [Wilson]", "pct"),
+            "anycomp_sdd":    ("Any complication", "n2 (%2) [Wilson]", "pct"),
+            "anycomp_rr":     ("Any complication", "RR [Katz]", "ratio"),
+            "reop_on":        ("Reoperation", "n1 (%1) [Wilson]", "pct"),
+            "reop_sdd":       ("Reoperation", "n2 (%2) [Wilson]", "pct"),
+            "reop_rr":        ("Reoperation", "RR [Katz]", "ratio"),
+            "death_rr":       ("30-day mortality", "RR [Katz]", "ratio"),
+            "nonhome_rr":     ("Non-home discharge", "RR [Katz]", "ratio"),
+            "transfusion_rr": ("Transfusion \u226472 h", "RR [Katz]", "ratio"),
+        },
+    },
+    "nsqip-bph-bleeding": {
+        "id": "1RzIoYqAdbkHdEBsBve9sheStWZ5sB3joBsC49ArK3lU",
+        "tab": "PVP_vs_TURP",
+        "fields": {
+            "pvp_transf":     ("Transfusion \u226472 h", "n2 (%2) [Wilson]", "pct"),
+            "turp_transf":    ("Transfusion \u226472 h", "n1 (%1) [Wilson]", "pct"),
+            "pvp_transf_rr":  ("Transfusion \u226472 h", "RR [Katz]", "ratio"),
+            "pvp_transf_rr0": ("Transfusion \u226472 h", "RR [Katz]", "ratio0"),
+            "pvp_bleed":      ("Bleeding composite", "n2 (%2) [Wilson]", "pct"),
+            "turp_bleed":     ("Bleeding composite", "n1 (%1) [Wilson]", "pct"),
+            "holep_bleed":    ("Bleeding composite", "n2 (%2) [Wilson]", "pct", "HoLEP_vs_TURP"),
+            "holep_serious":  ("Serious complication", "n2 (%2) [Wilson]", "pct", "HoLEP_vs_TURP"),
+            "turp_serious":   ("Serious complication", "n1 (%1) [Wilson]", "pct", "HoLEP_vs_TURP"),
+            "holep_readmit":  ("30-day readmission", "n2 (%2) [Wilson]", "pct", "HoLEP_vs_TURP"),
+            "turp_readmit":   ("30-day readmission", "n1 (%1) [Wilson]", "pct", "HoLEP_vs_TURP"),
+        },
+    },
+    "nsqip-opioids": {
+        "id": "11U1zAc3idXhyFsKEhSYhCVYEVfrj3EkYGlaqC_1DrfA",
+        "tab": "Rx_vs_NoRx",
+        "fields": {
+            "readmit_rx":     ("30-day readmission", "n2 (%2) [Wilson]", "pct"),
+            "readmit_norx":   ("30-day readmission", "n1 (%1) [Wilson]", "pct"),
+            "readmit_rr":     ("30-day readmission", "RR [Katz]", "ratio"),
+        },
+    },
+    "nsqip-rasp-elderly": {
+        "id": "1Ky767miyoMNHrKN37X4s-ZuYM6zLomAwvLAr_ogQ6OQ",
+        "tab": "Age75_vs_younger",
+        "fields": {
+            "old_anycomp":    ("Any complication", "n2 (%2) [Wilson]", "pct"),
+            "young_anycomp":  ("Any complication", "n1 (%1) [Wilson]", "pct"),
+            "old_anycomp_rr": ("Any complication", "RR [Katz]", "ratio"),
+            "old_transf":     ("Transfusion \u226472 h", "n2 (%2) [Wilson]", "pct"),
+            "young_transf":   ("Transfusion \u226472 h", "n1 (%1) [Wilson]", "pct"),
+            "old_nonhome":    ("Non-home discharge", "n2 (%2) [Wilson]", "pct"),
+            "young_nonhome":  ("Non-home discharge", "n1 (%1) [Wilson]", "pct"),
+            "old_serious":    ("Serious complication", "n2 (%2) [Wilson]", "pct"),
+            "young_serious":  ("Serious complication", "n1 (%1) [Wilson]", "pct"),
+        },
+    },
+    "nsqip-rasp-vs-osp": {
+        "id": "1KdrNMDgCVsNVSlupcDrVzQEY-_1IARLjbSbE2roaLFw",
+        "tab": "RASP_vs_OSP",
+        "fields": {
+            "rasp_transf":    ("Transfusion \u226472 h", "n2 (%2) [Wilson]", "pct"),
+            "osp_transf":     ("Transfusion \u226472 h", "n1 (%1) [Wilson]", "pct"),
+            "transf_rr":      ("Transfusion \u226472 h", "RR [Katz]", "ratio"),
+            "transf_rr0":     ("Transfusion \u226472 h", "RR [Katz]", "ratio0"),
+            "rasp_anycomp":   ("Any complication", "n2 (%2) [Wilson]", "pct"),
+            "osp_anycomp":    ("Any complication", "n1 (%1) [Wilson]", "pct"),
+            "rasp_readmit":   ("30-day readmission", "n2 (%2) [Wilson]", "pct"),
+            "osp_readmit":    ("30-day readmission", "n1 (%1) [Wilson]", "pct"),
+            "rasp_reop":      ("Reoperation", "n2 (%2) [Wilson]", "pct"),
+            "osp_reop":       ("Reoperation", "n1 (%1) [Wilson]", "pct"),
+        },
+    },
+    "nsqip-colpopexy": {
+        "id": "1Re7gvVzqrXyWpZoKJgVTM_uNLtR5ZTXY9_ajyErSQaM",
+        "tab": "Robotic_SCP_vs_SSLF",
+        "fields": {
+            "scp_uti":        ("30-day UTI (primary outcome)", "n2 (%2) [Wilson]", "pct"),
+            "sslf_uti":       ("30-day UTI (primary outcome)", "n1 (%1) [Wilson]", "pct"),
+            "uti_rr":         ("30-day UTI (primary outcome)", "RR [Katz]", "ratio"),
+            "uti_rr0":        ("30-day UTI (primary outcome)", "RR [Katz]", "ratio0"),
+            "scp_anycomp":    ("Any complication", "n2 (%2) [Wilson]", "pct"),
+            "sslf_anycomp":   ("Any complication", "n1 (%1) [Wilson]", "pct"),
+            "scp_reop":       ("Reoperation", "n2 (%2) [Wilson]", "pct"),
+            "sslf_reop":      ("Reoperation", "n1 (%1) [Wilson]", "pct"),
+            "scp_serious":    ("Serious complication", "n2 (%2) [Wilson]", "pct"),
+            "sslf_serious":   ("Serious complication", "n1 (%1) [Wilson]", "pct"),
+            "scp_los":        ("LOS >1 day", "n2 (%2) [Wilson]", "pct"),
+            "sslf_los":       ("LOS >1 day", "n1 (%1) [Wilson]", "pct"),
+        },
+    },
+}
+
+def esc(s): return html.escape(str(s), quote=True)
+
+# ------------------------------------------------------------------- rendering
+_DASH = "–"
+
+def _first_num(s):
+    m = re.match(r"\s*([\d,]+(?:\.\d+)?)", str(s))
+    return m.group(1) if m else None
+
+def _paren_pct(s):
+    m = re.search(r"\(([^)]*?%)\)", str(s))
+    return m.group(1) if m else None
+
+def _bracket(s):
+    m = re.search(r"\[([^\]]*)\]", str(s))
+    return m.group(1) if m else None
+
+def render(cell, fmt, row=None, col=None):
+    """One cell, in the form the page prints it. None when the cell is empty."""
+    if cell is None or not str(cell).strip():
+        return None
+    s = str(cell).strip()
+    if fmt == "raw":
+        return s
+    if fmt in ("n", "N"):
+        return _first_num(s)
+    if fmt == "pct":
+        return _paren_pct(s)
+    if fmt == "ci":
+        p, b = _paren_pct(s), _bracket(s)
+        return p if not b else "%s (%s)" % (p, b.replace("%", ""))
+    if fmt == "n_of_N":
+        n = _first_num(s)
+        N = _first_num(row.get("N1" if col == "n1 (%1) [Wilson]" else "N2", "")) if row else None
+        return n if not N else "%s / %s" % (n, N)
+    if fmt in ("ratio", "ratio0"):
+        pt, b = _first_num(s), _bracket(s)
+        if fmt == "ratio0" or not b:
+            return pt
+        return "%s (%s)" % (pt, b)
+    return s
+
+# --------------------------------------------------------------------- reading
+def parse(csv_text):
+    """A FLAGGING tab -> {Variable text: {column header: cell}}.
+
+    Every 'Key' row restarts the header, because one tab holds several tables
+    with the same columns. First occurrence of a Variable wins, so an addressed
+    row cannot change meaning when a later table repeats the label."""
+    import csv, io as _io
+    out, hdr = {}, None
+    for row in csv.reader(_io.StringIO(csv_text)):
+        if not row:
+            continue
+        first = (row[0] or "").strip()
+        if first == "Key":
+            hdr = [(c or "").strip() for c in row]
+            continue
+        if not hdr or not first:
+            continue
+        d = dict(zip(hdr, row))
+        var = (d.get("Variable") or "").strip()
+        if var and var not in out:
+            out[var] = d
+    return out
+
+
+def fetch(sheet_id, tab, timeout=25):
+    req = urllib.request.Request(GVIZ % (sheet_id, tab),
+                                 headers={"User-Agent": "henryblair.online build"})
+    return urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8", "replace")
+
+
+def tabs_used(cfg):
+    """Every tab this project's fields read, the default one first."""
+    out = [cfg["tab"]]
+    for spec in cfg["fields"].values():
+        t = spec[3] if len(spec) > 3 else cfg["tab"]
+        if t not in out:
+            out.append(t)
+    return out
+
+
+def load(slug, cache_dir, do_fetch=True):
+    """({page key: rendered string}, source). Never raises; falls back to cache."""
+    cfg = SHEETS[slug]
+    cache_path = os.path.join(cache_dir, "%s_cache.json" % slug)
+    rows, source = None, "cache"
+    if do_fetch:
+        try:
+            got = {}
+            for t in tabs_used(cfg):
+                got[t] = parse(fetch(cfg["id"], t))
+            if not any(got.values()):
+                rows = None
+            else:
+                rows, source = got, "sheet"
+        except Exception:
+            rows = None
+    if rows is None and os.path.exists(cache_path):
+        rows = json.load(open(cache_path, encoding="utf-8")).get("rows")
+    if not rows:
+        return None, "unavailable"
+    if source == "sheet":
+        wanted = {}
+        for spec in cfg["fields"].values():
+            wanted.setdefault(spec[3] if len(spec) > 3 else cfg["tab"], set()).add(spec[0])
+        slim = {t: {k: v for k, v in (rows.get(t) or {}).items() if k in names}
+                for t, names in wanted.items()}
+        os.makedirs(cache_dir, exist_ok=True)
+        tmp = cache_path + ".tmp"
+        json.dump({"rows": slim}, open(tmp, "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1, sort_keys=True)
+        os.replace(tmp, cache_path)
+    vals = {}
+    for key, spec in cfg["fields"].items():
+        var, col, fmt = spec[0], spec[1], spec[2]
+        tab = spec[3] if len(spec) > 3 else cfg["tab"]
+        row = (rows.get(tab) or {}).get(var)
+        vals[key] = None if row is None else render(row.get(col), fmt, row, col)
+    return vals, source
+
+
+def bake(html_text, vals):
+    """Rewrite the text of every <span data-q="key"> the page carries."""
+    def sub(m):
+        v = vals.get(m.group(1))
+        return m.group(0) if v is None else '<span data-q="%s">%s</span>' % (esc(m.group(1)), v)
+    return re.sub(r'<span data-q="([a-zA-Z0-9_]+)">.*?</span>', sub, html_text, flags=re.S)
+
+
+# ------------------------------------------------------------------ browser side
+def live_js(slug):
+    """Browser-side refresh for one project. The field map is written from
+    SHEETS here, so the page and the build cannot disagree about a number."""
+    cfg = SHEETS[slug]
+    fields = {k: [v[0], v[1], v[2], (v[3] if len(v) > 3 else cfg["tab"])]
+              for k, v in cfg["fields"].items()}
+    urls = {t: GVIZ % (cfg["id"], t) for t in tabs_used(cfg)}
+    return """/* Refreshes %s from its live workbook (%s).
+   Generated by sheet_live.py - do not edit by hand. */
+(function () {
+  "use strict";
+  var FIELDS = %s;
+  var URLS = %s;
+  if (!document.querySelector("[data-q]")) return;
+
+  function cells(line) {
+    var out = [], cur = "", q = false, i, c;
+    for (i = 0; i < line.length; i++) {
+      c = line[i];
+      if (q) {
+        if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+        else cur += c;
+      } else if (c === '"') q = true;
+      else if (c === ",") { out.push(cur); cur = ""; }
+      else cur += c;
+    }
+    out.push(cur);
+    return out;
+  }
+  function firstNum(s) { var m = String(s).match(/^\\s*([\\d,]+(?:\\.\\d+)?)/); return m ? m[1] : null; }
+  function parenPct(s) { var m = String(s).match(/\\(([^)]*?%%)\\)/); return m ? m[1] : null; }
+  function bracket(s) { var m = String(s).match(/\\[([^\\]]*)\\]/); return m ? m[1] : null; }
+  function render(cell, fmt, row, col) {
+    if (cell == null || !String(cell).trim()) return null;
+    var s = String(cell).trim(), p, b, n, N;
+    if (fmt === "raw") return s;
+    if (fmt === "n" || fmt === "N") return firstNum(s);
+    if (fmt === "pct") return parenPct(s);
+    if (fmt === "ci") { p = parenPct(s); b = bracket(s);
+      return b ? p + " (" + b.replace(/%%/g, "") + ")" : p; }
+    if (fmt === "n_of_N") { n = firstNum(s);
+      N = firstNum(row[col === "n1 (%%1) [Wilson]" ? "N1" : "N2"] || "");
+      return N ? n + " / " + N : n; }
+    if (fmt === "ratio" || fmt === "ratio0") { p = firstNum(s); b = bracket(s);
+      return (fmt === "ratio0" || !b) ? p : p + " (" + b + ")"; }
+    return s;
+  }
+
+  function readTab(txt) {
+      var rows = {}, hdr = null;
+      txt.split(/\\r?\\n/).forEach(function (line) {
+        if (!line) return;
+        var f = cells(line), first = (f[0] || "").trim(), d = {}, i;
+        if (first === "Key") { hdr = f.map(function (c) { return (c || "").trim(); }); return; }
+        if (!hdr || !first) return;
+        for (i = 0; i < hdr.length; i++) d[hdr[i]] = f[i];
+        var v = (d.Variable || "").trim();
+        if (v && !(v in rows)) rows[v] = d;
+      });
+      return rows;
+  }
+
+  var names = Object.keys(URLS);
+  Promise.all(names.map(function (t) {
+    return fetch(URLS[t], { credentials: "omit" })
+      .then(function (r) { if (!r.ok) throw 0; return r.text(); })
+      .then(readTab)
+      .catch(function () { return null; });
+  })).then(function (results) {
+      var byTab = {};
+      names.forEach(function (t, i) { byTab[t] = results[i]; });
+      document.querySelectorAll("[data-q]").forEach(function (el) {
+        var spec = FIELDS[el.getAttribute("data-q")];
+        if (!spec) return;
+        var rows = byTab[spec[3]];
+        if (!rows) return;
+        var row = rows[spec[0]];
+        if (!row) return;
+        var out = render(row[spec[1]], spec[2], row, spec[1]);
+        if (out !== null && out !== el.textContent) el.textContent = out;
+      });
+  }).catch(function () { /* keep the baked numbers */ });
+})();
+""" % (slug, cfg["tab"],
+       json.dumps(fields, ensure_ascii=False, sort_keys=True),
+       json.dumps(urls, ensure_ascii=False, sort_keys=True))

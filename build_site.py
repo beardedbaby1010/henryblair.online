@@ -1021,10 +1021,14 @@ def render_blocks(items, slug):
         if "callout" in b:
             out.append('  <div class="callout">%s</div>' % b["callout"])
         if "stats" in b:
+            # a 4th element names the row this value comes from in the project's
+            # live sheet; it becomes data-q, and the page's live script refreshes it
             out.append('  <div class="statrow">' + "".join(
-                '<div class="stat"><div class="statv">%s</div><div class="statl">%s</div>'
-                '%s</div>' % (esc(v), esc(l), ('<div class="stats">%s</div>' % esc(sub)) if sub else "")
-                for v, l, sub in [(x[0], x[1], x[2] if len(x) > 2 else "") for x in b["stats"]]) + '</div>')
+                '<div class="stat"><div class="statv"%s>%s</div><div class="statl">%s</div>'
+                '%s</div>' % ((' data-q="%s"' % esc(q)) if q else "", esc(v), esc(l),
+                              ('<div class="stats">%s</div>' % esc(sub)) if sub else "")
+                for v, l, sub, q in [(x[0], x[1], x[2] if len(x) > 2 else "",
+                                      x[3] if len(x) > 3 else "") for x in b["stats"]]) + '</div>')
         if "figure" in b:
             f = b["figure"]
             out.append('  <figure><img src="figures/%s" alt="%s">\n'
@@ -1057,7 +1061,7 @@ def auto_sections(p):
         out.append('<section id="%s" class="sec">\n%s</section>' % (sid, inner))
 
     stats = "".join('<div class="stat"><div class="statv">%s</div><div class="statl">%s</div></div>'
-                    % (esc(v), esc(l)) for v, l in p.get("stats", []))
+                    % (esc(x[0]), esc(x[1])) for x in p.get("stats", []))
     o  = '  <div class="masthead2">\n'
     o += '    <div class="tag">%s</div>\n' % esc(p["kicker"])
     o += '    <h1>%s</h1>\n' % esc(p["title"])
@@ -1163,7 +1167,7 @@ def esc(s):
 def card(p):
     linked = bool(p.get("page"))
     stats = "".join('<div class="stat"><div class="v">%s</div><div class="l">%s</div></div>'
-                    % (esc(v), esc(l)) for v, l in p.get("stats", []))
+                    % (esc(x[0]), esc(x[1])) for x in p.get("stats", []))
     tags = "".join('<span class="tag">%s</span>' % esc(t) for t in p.get("tags", []))
     inner = (
         '  <div class="kicker">%s</div>\n'
@@ -1570,15 +1574,135 @@ def build_pca_figure():
     return True
 
 
+VE_PAGE  = os.path.join(ROOT, "projects", "ve-boxed-warning", "index.html")
+VE_CACHE = os.path.join(ROOT, "_source", "ve_qm_cache.json")
+
+def build_ve_figure():
+    """Same contract as build_pca_figure, against the VE workbook.
+
+    The VE page is hand-written rather than generated, so the markers live in
+    the published file itself; block() re-emits them, so this is idempotent."""
+    try:
+        import ve_figure as VF
+    except ImportError:
+        warn("ve_figure.py is missing - the VE cohort figure cannot be built")
+        return False
+    if not os.path.exists(VE_PAGE):
+        warn("%s is missing" % os.path.relpath(VE_PAGE, ROOT)); return False
+    vals, network, hcos, source = VF.load(VE_CACHE)
+    if vals is None:
+        warn("could not read the VE workbook and no cache exists - "
+             "leaving the VE figure as it is")
+        return False
+    missing = sorted(k for k, v in vals.items() if v is None)
+    if missing:
+        warn("VE workbook is missing %d value(s): %s" % (len(missing), ", ".join(missing)))
+        return False
+    html = io.open(VE_PAGE, encoding="utf-8", errors="replace").read()
+    a, b = html.find(VF.MARK_A), html.find(VF.MARK_B)
+    if a < 0 or b < a:
+        warn("VEFIG markers not found in projects/ve-boxed-warning/index.html"); return False
+    new = html[:a] + VF.block(vals, network, hcos, source=source) + html[b + len(VF.MARK_B):]
+    if new != html:
+        io.open(VE_PAGE, "w", encoding="utf-8").write(new)
+    js = os.path.join(ROOT, "assets", "ve-live.js")
+    io.open(js, "w", encoding="utf-8").write(VF.live_js())
+    note("VE cohort figure: %d counts %s (new starts %s, network %s)"
+         % (len(vals), "from the workbook" if source == "sheet" else "from cache",
+            format(vals["inc"], ","), format(network, ",") if network else "?"))
+    return True
+
+
+PVR_PAGE  = os.path.join(ROOT, "projects", "oab-pvr", "index.html")
+PVR_CACHE = os.path.join(ROOT, "_source", "pvr_cache.json")
+
+def build_pvr_live():
+    """Bake the PVR workbook's current numbers into the page and write the
+    browser-side refresh. Runs after the hub is generated, because it rewrites
+    the text inside the data-q spans that build_auto_hub emitted."""
+    try:
+        import pvr_live as PL
+    except ImportError:
+        warn("pvr_live.py is missing - the PVR page cannot be refreshed")
+        return False
+    if not os.path.exists(PVR_PAGE):
+        warn("%s is missing" % os.path.relpath(PVR_PAGE, ROOT)); return False
+    vals, source = PL.load(PVR_CACHE)
+    if vals is None:
+        warn("could not read the PVR workbook and no cache exists - "
+             "leaving the PVR numbers as they are")
+        return False
+    missing = sorted(k for k, v in vals.items() if v is None)
+    if missing:
+        warn("PVR workbook is missing %d value(s): %s" % (len(missing), ", ".join(missing)))
+    html = io.open(PVR_PAGE, encoding="utf-8", errors="replace").read()
+    new = PL.bake(html, vals)
+    tag = '<script src="/assets/pvr-live.js" defer></script>'
+    if tag not in new:
+        new = new.replace("</main>", "</main>\n" + tag)
+    if new != html:
+        io.open(PVR_PAGE, "w", encoding="utf-8").write(new)
+    io.open(os.path.join(ROOT, "assets", "pvr-live.js"), "w", encoding="utf-8").write(PL.live_js())
+    note("PVR page: %d live values %s (measured mean %s mL)"
+         % (len([v for v in vals.values() if v is not None]),
+            "from the workbook" if source == "sheet" else "from cache", vals.get("mean_meas")))
+    return True
+
+
+def build_sheet_live():
+    """Bake each FLAGGING-workbook project's current numbers into its page and
+    write that project's browser-side refresh. Runs after the hubs are
+    generated, because it rewrites the text inside the data-q spans they emit."""
+    try:
+        import sheet_live as SL
+    except ImportError:
+        warn("sheet_live.py is missing - the live workbook links cannot be built")
+        return False
+    cache_dir = os.path.join(ROOT, "_source")
+    ok = True
+    for slug, cfg in sorted(SL.SHEETS.items()):
+        if not cfg.get("fields"):
+            continue                      # declared, hooks not written yet
+        page = os.path.join(ROOT, "projects", slug, "index.html")
+        if not os.path.exists(page):
+            warn("%s: no page at %s" % (slug, os.path.relpath(page, ROOT)))
+            ok = False
+            continue
+        vals, source = SL.load(slug, cache_dir)
+        if vals is None:
+            warn("%s: workbook unreachable and no cache - page left as it is" % slug)
+            ok = False
+            continue
+        missing = sorted(k for k, v in vals.items() if v is None)
+        if missing:
+            warn("%s: workbook is missing %d value(s): %s"
+                 % (slug, len(missing), ", ".join(missing)))
+        html = io.open(page, encoding="utf-8", errors="replace").read()
+        new = SL.bake(html, vals)
+        tag = '<script src="/assets/live-%s.js" defer></script>' % slug
+        if tag not in new:
+            new = new.replace("</main>", "</main>\n" + tag)
+        if new != html:
+            io.open(page, "w", encoding="utf-8").write(new)
+        io.open(os.path.join(ROOT, "assets", "live-%s.js" % slug),
+                "w", encoding="utf-8").write(SL.live_js(slug))
+        note("%s: %d live values %s" % (slug, len([v for v in vals.values() if v is not None]),
+                                        "from the workbook" if source == "sheet" else "from cache"))
+    return ok
+
+
 if __name__ == "__main__":
     print("Building %s" % ROOT)
     ok = True
     ok &= build_pca_figure()
+    ok &= build_ve_figure()
     for p in CFG.PROJECTS:
         if p.get("page") or p.get("paper"):
             print("  %s" % p["slug"])
         ok &= build_project_page(p)
         ok &= build_gate(p)
+    ok &= build_pvr_live()
+    ok &= build_sheet_live()
     for pg in CFG.PAGES:
         if pg.get("gate"):      # a gate page is written whole, bar included
             continue

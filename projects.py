@@ -242,16 +242,16 @@ PROJECTS = [
     {
         "slug": "ve-boxed-warning", "tab": "Vaginal Estrogen", "group": "current",
         "title": "Prescribing After the Warning Disappeared",
-        "kicker": "Retrospective cohort study · TriNetX Global Collaborative Network",
-        "status": "Manuscript V3",
+        "kicker": "Retrospective cohort study · TriNetX US Collaborative Network · Jan 2023 – Mar 2026",
+        "status": "Three manuscripts",
         "summary": "For twenty-two years low-dose vaginal estrogen carried the same boxed warning as "
-                   "high-dose systemic hormone therapy. The FDA removed it on 11 November 2025. Nine months "
-                   "on either side of that date, prescribing rose — and it rose most in the women the "
-                   "warning had most deterred.",
-        "stats": [("+14.3%", "use per woman seen"),
-                  ("1.29",   "rate ratio in breast-cancer survivors"),
-                  ("1.47 / 0.88", "positive vs negative controls"),
-                  ("192,157","women on vaginal estrogen")],
+                   "high-dose systemic hormone therapy. The FDA announced its intent to remove it on "
+                   "10 November 2025, three months before any label changed — and prescribing inflected "
+                   "at the announcement, not at the label. It did not reach everyone equally.",
+        "stats": [("+45.0%", "change in slope at Nov 2025"),
+                  ("+48% vs +21%", "five-month rise vs a year earlier"),
+                  ("0.77", "rate ratio in breast-cancer survivors"),
+                  ("39.8 → 56.4", "White–Black gap per 10,000")],
         "tags": ["Menopause", "GSM", "FDA labeling", "Pharmacoepidemiology", "Breast cancer", "TriNetX"],
         "page": {"kind": "static"},
         "paper": {"pdf": "Maimo_Work/3_VE/Old/Old_Manuscripts/Henry - VE Manuscript V3.pdf",
@@ -356,11 +356,12 @@ PROJECTS = [
                         {"stats": [("95%", "normal residual (<100 mL)", "4% acceptably elevated"),
                                    ("1%", "incomplete emptying", "a single participant"),
                                    ("0%", "met retention criteria", "none reached 300 mL"),
-                                   ("29.5 mL", "mean measured residual", "vs 43.0 mL estimated")]},
+                                   ("29.5", "mean measured residual, mL", "vs 43.0 mL estimated", "mean_meas")]},
                         {"h3": "The estimates were not accurate"},
-                        {"prose": "Twenty-two per cent of women estimated within 30% of their measured "
-                                  "value. Estimated and measured volumes were significantly but weakly "
-                                  "correlated (slope 0.21, 95% CI 0.06–0.36; p = 0.006), with R² = 0.076 — "
+                        {"prose": "<span data-q=\"est_within\">22%</span> of women estimated within 30% of their "
+                                  "measured value. Estimated and measured volumes were significantly but weakly "
+                                  "correlated (slope 0.21, 95% CI 0.06–0.36; p = <span data-q=\"reg_p\">0.006</span>), "
+                                  "with R² = <span data-q=\"r2\">0.076</span> — "
                                   "the self-estimate explains about 8% of the variance, which is a real "
                                   "association and a useless one for any individual patient."},
                         {"figure": {"src": "fig1.jpg",
@@ -379,23 +380,26 @@ PROJECTS = [
                                      ["Acceptably elevated", "10", "2", "0", "0", "12", "16.7%"],
                                      ["Incomplete emptying", "2", "1", "0", "0", "3", "0%"],
                                      ["Retention", "0", "0", "0", "0", "0", "—"],
-                                     {"cls": "up", "cells": ["Measured total", "95", "4", "1", "0", "100", "85.0%"]}],
+                                     {"cls": "up", "cells": ["Measured total", "<span data-q=\"meas_normal\">95</span>", "4", "1", "0", "100",
+                                              "<span data-q=\"correct_tot\">85.0%</span>"]}],
                             "note": "<b>Table 3, Panel B.</b> Rows are what participants estimated; columns are "
                                     "what was measured. Correctly classified is the diagonal divided by the "
                                     "row total — the proportion of women choosing a category who were right."}},
                         {"figure": {"src": "fig2.jpg",
-                                    "caption": "<b>Figure 2.</b> Distribution of estimated and measured "
-                                               "post-void residual volumes."}},
+                                    "caption": "<b>Figure 2.</b> Inter-void interval by urinary-frequency status. "
+                                               "Women endorsing frequency void about two hours apart, those denying it "
+                                               "about three and a half (Welch p = <span data-q=\"fig1_p\">0.002</span>)."}},
                         {"h3": "Nothing predicted who would estimate well"},
                         {"prose": "Mann-Whitney U tests across every urinary symptom and comorbidity — "
                                   "frequency, incomplete emptying, hesitancy, incontinence, urgency, "
                                   "nocturia, anxiety, depression, diabetes, diuretic use, prior pelvic "
                                   "radiation — found no significant association with estimation accuracy "
-                                  "(all p &gt; 0.12). There is no subgroup in whom self-estimation can be "
-                                  "trusted more."},
+                                  "(all p &gt; <span data-q=\"mwu_min\">0.123</span>). There is no subgroup in whom "
+                                  "self-estimation can be trusted more."},
                         {"figure": {"src": "fig3.jpg",
-                                    "caption": "<b>Figure 3.</b> Estimation accuracy across urinary symptoms "
-                                               "and comorbidities."}},
+                                    "caption": "<b>Figure 3.</b> Self-estimated category against the measured category. "
+                                               "The total bar is the <span data-q=\"correct_tot\">85.0%</span> that is almost "
+                                               "entirely the normal row."}},
                     ],
                 },
                 {
@@ -1747,7 +1751,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "How often does a patient leave the hospital with an opioid after urologic surgery, and is that decided by the operation or by the patient?",
             "approach": ["We identified urologic procedures in the 2024 American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "The primary outcome was any opioid prescription at discharge; the secondary outcome was a prescription above 200 oral morphine milligram equivalents.", "Rates were compared across procedures, approaches and patient groups with unadjusted two-proportion tests."],
-            "findings": ["Of 59,773 patients, 33,110 (55.4%) were discharged with an opioid.", "Prescribing ranged from 26.0% after bladder tumor resection to 79.1% after kidney surgery and varied by approach (endoscopic 26.9%, open 65.7%, minimally invasive 75.1%).", "Opioids were prescribed less to patients aged ≥ 70 (45.3% vs 62.2%), and more often to women (62.4% vs 53.8%) and inpatients (61.3% vs 51.5%; all p<0.001).", "Readmission rates were similar in those with vs without an opioid (overall 5.8% vs 6.2%) but also varied by procedure (TURBT 5.7% vs 5.6%; Radical prostatectomy 4.1% vs 5.2%)."],
+            "findings": ["Of 59,773 patients, 33,110 (55.4%) were discharged with an opioid.", "Prescribing ranged from 26.0% after bladder tumor resection to 79.1% after kidney surgery and varied by approach (endoscopic 26.9%, open 65.7%, minimally invasive 75.1%).", "Opioids were prescribed less to patients aged ≥ 70 (45.3% vs 62.2%), and more often to women (62.4% vs 53.8%) and inpatients (61.3% vs 51.5%; all p<0.001).", "Readmission rates were similar in those with vs without an opioid (overall <span data-q=\"readmit_rx\">5.8%</span> vs <span data-q=\"readmit_norx\">6.2%</span>) but also varied by procedure (TURBT 5.7% vs 5.6%; Radical prostatectomy 4.1% vs 5.2%)."],
             "findings_note": "More than half of patients leave the hospital with an opioid after urologic surgery. Procedure type explains far more of the variation (26% to 79%) than any patient factor (45% to 62%). Low prescribing after endoscopic procedures suggests opioid-free discharge is feasible for many patients.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-opioids-at-discharge/"}],
@@ -1770,7 +1774,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "Laser procedures are chosen to limit bleeding. Across thirteen years of national data, does that hold — and has bleeding fallen for every approach?",
             "approach": ["We identified TURP, PVP and HoLEP cases in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Outcomes were transfusion within 72 hours, reoperation and readmission for bleeding, a composite of the three, complications and readmission.", "PVP and HoLEP were compared with TURP using unadjusted relative risks, and yearly transfusion was tested for linear trend."],
-            "findings": ["Of 123,020 procedures, 82,020 were TURP, 31,087 PVP and 9,913 HoLEP; HoLEP’s share rose from 5.8% to 14.8%.", "Compared with TURP, PVP had lower transfusion (0.25% vs 0.90%; relative risk 0.28, 95% confidence interval 0.22-0.35) and half the bleeding composite (1.4% vs 2.6%).", "HoLEP had similar bleeding (2.5% vs 2.6%) but fewer serious complications (1.4% vs 1.7%) and readmissions (4.1% vs 5.3%).", "Transfusion fell after all three: TURP 1.7% to 0.6%, PVP 0.5% to 0.0% (both p<0.001), HoLEP 2.5% to 0.5% (p=0.049)."],
+            "findings": ["Of 123,020 procedures, 82,020 were TURP, 31,087 PVP and 9,913 HoLEP; HoLEP’s share rose from 5.8% to 14.8%.", "Compared with TURP, PVP had lower transfusion (<span data-q=\"pvp_transf\">0.3%</span> vs <span data-q=\"turp_transf\">0.9%</span>; relative risk <span data-q=\"pvp_transf_rr\">0.28 (0.22\u20130.35)</span>) and half the bleeding composite (<span data-q=\"pvp_bleed\">1.4%</span> vs <span data-q=\"turp_bleed\">2.6%</span>).", "HoLEP had similar bleeding (<span data-q=\"holep_bleed\">2.5%</span> vs <span data-q=\"turp_bleed\">2.6%</span>) but fewer serious complications (<span data-q=\"holep_serious\">1.4%</span> vs <span data-q=\"turp_serious\">1.7%</span>) and readmissions (<span data-q=\"holep_readmit\">4.1%</span> vs <span data-q=\"turp_readmit\">5.3%</span>).", "Transfusion fell after all three: TURP 1.7% to 0.6%, PVP 0.5% to 0.0% (both p<0.001), HoLEP 2.5% to 0.5% (p=0.049)."],
             "findings_note": "PVP carried the lowest bleeding risk, while HoLEP matched TURP on bleeding with fewer complications and readmissions. Transfusion after surgery for benign prostatic hyperplasia has become rare nationally, declining for every procedure. It is likely that improved techniques, technology, and experience have contributed to this trend. Comparisons are unadjusted and do not account for prostate size.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-bph-bleeding/"}],
@@ -1783,7 +1787,8 @@ PROJECTS = [
         "kicker": "ACS NSQIP Participant Use File · 2012–2024",
         "status": "Abstract submitted — 2027 AUA Annual Meeting",
         "summary": "Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge after robot-assisted radical prostatectomy (RARP) and asked whether its growth has been accompanied by more readmissions or complications.",
-        "stats": [("119,220", "patients"), ("&lt;1→15.6%", "same-day discharge"), ("0.78", "readmission risk ratio"), ("16×", "growth after 2018")],
+        "stats": [("119,220", "patients"), ("&lt;1→15.6%", "same-day discharge"),
+                  ("0.78", "readmission risk ratio", "", "readmit_rr0"), ("16×", "growth after 2018")],
         "tags": ["Prostate cancer", "Same-day discharge", "Health policy", "NSQIP"],
         "page": {"kind": "auto"},
         "hub": {
@@ -1793,7 +1798,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "Medicare opened the door to same-day discharge after prostatectomy in 2018. Did surgeons walk through it, and did readmissions rise when they did?",
             "approach": ["We identified RARP cases (laparoscopic or robotic; 94% robotic where recorded) in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Yearly same-day discharge rates were tested for linear trend.", "Thirty-day outcomes were compared with overnight stay, and readmission between 2012-2018 and 2019-2024, using unadjusted relative risks."],
-            "findings": ["Of 119,220 patients, 7,088 (5.9%) went home the same day.", "The rate stayed below 1% through 2018, then rose to 1.9% in 2019 and 15.6% in 2024 (p<0.001 for trend), including patients aged 70 or older (0.6% to 8.2%).", "Compared with overnight stay, same-day discharge was associated with lower readmission (3.3% vs 4.2%; relative risk 0.78, 95% confidence interval 0.69-0.89), complications (5.0% vs 6.4%) and reoperation (0.5% vs 1.1%).", "Overall readmission did not change between eras (4.1% vs 4.2%; relative risk 1.02, 0.97-1.08)."],
+            "findings": ["Of 119,220 patients, <span data-q=\"n_sdd\">7,088</span> (5.9%) went home the same day.", "The rate stayed below 1% through 2018, then rose to 1.9% in 2019 and 15.6% in 2024 (p<0.001 for trend), including patients aged 70 or older (0.6% to 8.2%).", "Compared with overnight stay, same-day discharge was associated with lower readmission (<span data-q=\"readmit_sdd\">3.3%</span> vs <span data-q=\"readmit_on\">4.2%</span>; relative risk <span data-q=\"readmit_rr\">0.78 (0.69\u20130.89)</span>), complications (<span data-q=\"anycomp_sdd\">5.0%</span> vs <span data-q=\"anycomp_on\">6.4%</span>; <span data-q=\"anycomp_rr\">0.78 (0.71\u20130.87)</span>) and reoperation (<span data-q=\"reop_sdd\">0.5%</span> vs <span data-q=\"reop_on\">1.1%</span>; <span data-q=\"reop_rr\">0.50 (0.36\u20130.68)</span>).", "Overall readmission did not change between eras (4.1% vs 4.2%; relative risk 1.02, 0.97-1.08)."],
             "findings_note": "Same-day discharge after RARP grew sixteenfold after 2018 and now applies to about one in six patients, without a rise in national readmission rates. Lower complication rates after same-day discharge likely reflect selection of healthier patients, and comparisons are unadjusted.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-same-day-discharge/"}],
@@ -1816,7 +1821,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "Robotic simple prostatectomy has all but replaced the open operation. What did that change in transfusion and complications?",
             "approach": ["We identified simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) - either RASP (robot used) or OSP (open, no robot).", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Robotic share was tested for linear trend.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by anesthesia risk class, frailty, age ≥70 years, obesity and anemia."],
-            "findings": ["Of 3,033 simple prostatectomies, 2,580 (85.1%) were RASP, rising from 73.2% in 2022 to 91.2% in 2024 (p-trend<0.001).", "RASP had lower transfusion within 72 hours (1.8% vs 18.3%; relative risk 0.10, 95% confidence interval 0.07-0.14), any complication (11.2% vs 28.0%), readmission (5.5% vs 8.2%) and reoperation (1.6% vs 4.2%).", "Superficial wound infection (0.9% vs 2.6%) and kidney injury (0.7% vs 2.6%) were also less frequent; urinary infection, thromboembolism, pneumonia and sepsis did not differ.", "Lower transfusion held in every subgroup."],
+            "findings": ["Of 3,033 simple prostatectomies, 2,580 (85.1%) were RASP, rising from 73.2% in 2022 to 91.2% in 2024 (p-trend<0.001).", "RASP had lower transfusion within 72 hours (<span data-q=\"rasp_transf\">1.8%</span> vs <span data-q=\"osp_transf\">18.3%</span>; relative risk <span data-q=\"transf_rr\">0.10 (0.07\u20130.14)</span>), any complication (<span data-q=\"rasp_anycomp\">11.2%</span> vs <span data-q=\"osp_anycomp\">28.0%</span>), readmission (<span data-q=\"rasp_readmit\">5.5%</span> vs <span data-q=\"osp_readmit\">8.2%</span>) and reoperation (<span data-q=\"rasp_reop\">1.6%</span> vs <span data-q=\"osp_reop\">4.2%</span>).", "Superficial wound infection (0.9% vs 2.6%) and kidney injury (0.7% vs 2.6%) were also less frequent; urinary infection, thromboembolism, pneumonia and sepsis did not differ.", "Lower transfusion held in every subgroup."],
             "findings_note": "RASP now accounts for more than 90% of simple prostatectomies in NSQIP hospitals and is associated with a tenfold lower transfusion rate and less than half the complication rate of OSP, a benefit that persists in older, frail and anemic patients. Comparisons are unadjusted and OSP patients carried more comorbidity, so selection bias is likely.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-rasp-vs-osp/"}],
@@ -1839,7 +1844,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "Age and frailty are routinely used to steer older men away from robotic simple prostatectomy. Do the outcomes justify that?",
             "approach": ["We identified robotic simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP).", "Serious complications were defined as wound dehiscence/infection, organ space infections, pneumonia, re-intubation, pulmonary embolism, renal failure, cerebrovascular accident, cardiac arrest, sepsis, and septic shock.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by frailty (Modified Frailty Index (mFI) ≥ 2) and elderly status (age ≥75 years)."],
-            "findings": ["Of 2,580 men, 691 (26.8%) were aged 75 or older, 519 (20.5%) were frail and 182 (7.2% were both).", "Older men had more complications overall (13.5% vs 10.3%; RR 1.3 95% confidence interval 1.03-1.64), transfusion (3.2% vs 1.3%), non-home discharge (2.0% vs 0.6%) and stays longer than one day (32.9% vs 25.8%), but similar serious complications (3.8% vs 3.4%) and readmission (5.6% vs 5.5%).", "Frail men had longer stays (36.0% vs 25.6%).", "Mortality was 0.1%."],
+            "findings": ["Of 2,580 men, 691 (26.8%) were aged 75 or older, 519 (20.5%) were frail and 182 (7.2% were both).", "Older men had more complications overall (<span data-q=\"old_anycomp\">13.5%</span> vs <span data-q=\"young_anycomp\">10.3%</span>; RR <span data-q=\"old_anycomp_rr\">1.30 (1.03\u20131.64)</span>), transfusion (<span data-q=\"old_transf\">3.2%</span> vs <span data-q=\"young_transf\">1.3%</span>), non-home discharge (<span data-q=\"old_nonhome\">2.0%</span> vs <span data-q=\"young_nonhome\">0.6%</span>) and stays longer than one day (32.9% vs 25.8%), but similar serious complications (3.8% vs 3.4%) and readmission (5.6% vs 5.5%).", "Frail men had longer stays (36.0% vs 25.6%).", "Mortality was 0.1%."],
             "findings_note": "In men aged 75 or older and frail men, RASP was associated with longer stays, more transfusion, and more non-home discharge. However, rates of serious complication, readmission, and mortality remained low and similar to younger, non-frail men. RASP has demonstrated safety in the frail and elderly population with comparable rates of serious complications, readmission, and mortality.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-rasp-elderly-frail/"}],
@@ -1862,7 +1867,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "Vaginal native-tissue repair is often presented as the lower-risk option for apical prolapse. Does the national record agree?",
             "approach": ["We identified patients who underwent SCP (CPT 57425, designated robotic) or SSLF (CPT 57282) in 2022-2024 in the National Surgical Quality Improvement Program (NSQIP).", "Serious complications were defined as wound dehiscence/infection, organ space infections, pneumonia, re-intubation, pulmonary embolism, renal failure, cerebrovascular accident, cardiac arrest, sepsis, and septic shock.", "Other complications included superficial infections, UTI, deep venous thromboses, and blood transfusions.", "Outcomes were compared with unadjusted relative risks (RR) and two-proportion or Fisher’s exact tests."],
-            "findings": ["Of 12,623 patients, 7,589 underwent robotic SCP and 5,034 SSLF; 89% and 94% had concomitant procedures.", "Robotic SCP had fewer overall complications (6.6% vs 8.8%), reoperations (0.9% vs 1.5%) and stays >1 day (5.4% vs 14.0%).", "Serious complications (1.4% vs 1.3%) and readmission (1.9% each) were similar.", "UTI was less common after robotic SCP versus SSLF (3.6% vs 5.1%; RR 0.70, 95% CI 0.60-0.83).", "On subgroup analysis of patients without concomitant procedures, UTI risk remained elevated for the SSLF group (RR 0.56 [0.41-0.77])."],
+            "findings": ["Of 12,623 patients, 7,589 underwent robotic SCP and 5,034 SSLF; 89% and 94% had concomitant procedures.", "Robotic SCP had fewer overall complications (<span data-q=\"scp_anycomp\">6.6%</span> vs <span data-q=\"sslf_anycomp\">8.8%</span>), reoperations (<span data-q=\"scp_reop\">0.9%</span> vs <span data-q=\"sslf_reop\">1.5%</span>) and stays &gt;1 day (<span data-q=\"scp_los\">5.4%</span> vs <span data-q=\"sslf_los\">14.0%</span>).", "Serious complications (<span data-q=\"scp_serious\">1.4%</span> vs <span data-q=\"sslf_serious\">1.3%</span>) and readmission (1.9% each) were similar.", "UTI was less common after robotic SCP versus SSLF (<span data-q=\"scp_uti\">3.6%</span> vs <span data-q=\"sslf_uti\">5.1%</span>; RR <span data-q=\"uti_rr\">0.70 (0.60\u20130.83)</span>).", "On subgroup analysis of patients without concomitant procedures, UTI risk remained elevated for the SSLF group (RR 0.56 [0.41-0.77])."],
             "findings_note": "Because SCP addresses all vaginal compartments, fewer SCP patients required concomitant procedures, potentially affecting outcomes. UTI differences suggest that the vaginal approach may influence UTI risk. However, unadjusted comparisons and differences in patient selection and prolapse severity may impact findings. Nonetheless, these results may help counsel patients hesitant about SCP.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-colpopexy/"}],
@@ -1871,7 +1876,7 @@ PROJECTS = [
     },
     {
         "slug": "trinetx-query-console", "tab": None, "group": "other",
-        "title": "A command line for the TriNetX query browser",
+        "title": "A command line interface for the TriNetX query browser",
         "kicker": "Research tooling \u00b7 TriNetX US Collaborative Network",
         "status": "In use \u2014 it maintains the workbooks behind the prostate cancer and "
                   "vaginal estrogen studies",

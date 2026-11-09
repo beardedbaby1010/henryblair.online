@@ -21,9 +21,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Prescribing After the Warning Disappeared">
 <title>Prescribing After the Warning Disappeared — project hub</title>
-<meta name="description" content="Vaginal-estrogen prescribing in the nine months before and after the FDA removed the boxed warning — a TriNetX retrospective cohort study.">
+<meta name="description" content="Vaginal-estrogen prescribing before and after the FDA announced removal of the boxed warning — a 39-month TriNetX series with control drugs, breast-cancer strata and racial gaps.">
 <link rel="stylesheet" href="/assets/site.css?v=e6038feb4e">
 <link rel="stylesheet" href="/assets/project.css?v=a98797abd7">
+<style>.hub .sub{display:inline-block;font-size:.78em;color:#6b7280;font-weight:400;letter-spacing:.01em}</style>
 </head>
 <body>
 
@@ -46,38 +47,43 @@
 <nav class="hubside">
   <a href="#overview">Overview</a>
   <a href="#design">How the study was built</a>
-  <a href="#cohorts">Cohorts</a>
-  <a href="#monthly">Monthly trend</a>
-  <a href="#subgroups">Subgroups</a>
-  <a href="#incident">Who the new users were</a>
-  <a href="#formulation">Formulation</a>
+  <a href="#derivation">Cohort derivation</a>
+  <a href="#cohorts">Who was in the cohorts</a>
+  <a href="#trend">The monthly trend</a>
+  <a href="#primary">The primary comparison</a>
   <a href="#controls">Control drugs</a>
-  <a href="#additional">Additional variables</a>
+  <a href="#breakmonth">Break-month sensitivity</a>
+  <a href="#breast">Breast cancer</a>
+  <a href="#whostarts">Who starts</a>
+  <a href="#race">Race and ethnicity</a>
+  <a href="#formulation">Formulation</a>
+  <a href="#continuation">Continuation</a>
+  <a href="#notyet">Open threads</a>
   <a href="#limitations">Limitations</a>
   <a href="#next">What comes next</a>
   <a href="#references">References</a>
   <a href="#about">About the study</a>
-  <div class="sidefoot">Henry M. Blair · Arshia Sandozi, MD<br>Department of Urology, Maimonides Medical Center<br>TriNetX Global Collaborative Network<br>Extraction August 3rd, 2026</div>
+  <div class="sidefoot">Henry M. Blair · Arshia Sandozi, MD<br>Department of Urology, Maimonides Medical Center<br>TriNetX US Collaborative Network<br>75 HCOs · Jan 2023 – Mar 2026</div>
 </nav>
 
 <main class="hub">
 
 <section id="overview" class="sec">
   <div class="masthead2">
-    <div class="tag">Retrospective cohort study · TriNetX Global Collaborative Network · extracted August 3rd, 2026</div>
+    <div class="tag">Retrospective cohort study · TriNetX US Collaborative Network · Jan 2023 – Mar 2026</div>
     <h1>Prescribing After the Warning Disappeared</h1>
     <p class="authors">Henry M. Blair &middot; Arshia Sandozi, MD &middot; Department of Urology, Maimonides Medical Center, Brooklyn, NY</p>
-    <p class="lede">For twenty-two years, low-dose vaginal estrogen carried the same boxed warning as high-dose systemic hormone therapy &mdash; a class-wide label applied after the Women's Health Initiative, to a drug that delivers a small fraction of that dose locally. On <b>November 11th, 2025 the FDA removed it</b>. This study asks whether one sentence of regulatory language changed what clinicians actually prescribed, and for whom.</p>
+    <p class="lede">For twenty-two years, low-dose vaginal estrogen carried the same boxed warning as high-dose systemic hormone therapy &mdash; a class-wide label applied after the Women's Health Initiative, to a drug that delivers a small fraction of that dose locally. On <b>November 10th, 2025 the FDA announced its intent to remove it</b>; the first revised labels were not approved until February 12th, 2026. That three-month gap between the signal and the act is what makes this testable &mdash; and among vaginal products only the ring was relabeled, so the formulations can be asked the same question.</p>
   </div>
 
   <div class="statrow">
-    <div class="stat"><div class="statv">+14.3%</div><div class="statl">rise in use per woman seen</div><div class="stats">2.61% → 2.99%; RR 1.14 (1.14–1.15)</div></div>
-    <div class="stat"><div class="statv">1.29</div><div class="statl">rate ratio in breast-cancer survivors</div><div class="stats">the group the warning most deterred</div></div>
-    <div class="stat"><div class="statv">1.47 vs 0.88</div><div class="statl">estradiol patch vs negative controls</div><div class="stats">only the estrogens rose</div></div>
-    <div class="stat"><div class="statv">192,157</div><div class="statl">women on vaginal estrogen, pre-window</div><div class="stats">190,602 post · 69 → 63 HCOs</div></div>
+    <div class="stat"><div class="statv">+45.0%</div><div class="statl">change in slope at Nov 2025</div><div class="stats">per year, calibrated to the control drugs; 95% CI +1.3 to +107.6, p = 0.043</div></div>
+    <div class="stat"><div class="statv">+48% vs +21%</div><div class="statl">five-month rise, against the same window a year earlier</div><div class="stats">no FDA action in the control window</div></div>
+    <div class="stat"><div class="statv">0.77</div><div class="statl">rate ratio in breast-cancer survivors</div><div class="stats">the most symptomatic recipients, treated a quarter less</div></div>
+    <div class="stat"><div class="statv">39.8 &rarr; 56.4</div><div class="statl">White&ndash;Black gap per 10,000</div><div class="stats">relative gap unchanged; absolute gap up 42%</div></div>
   </div>
 
-  <div class="callout"><b>Unmasking the trend.</b> Although absolute user counts were nearly flat from 2025 to 2026 (192,157 → 190,602), this obscures the underlying data. The number of women observed on the network fell 13.2% over the same period, largely due to data latency. After accounting for this smaller denominator, per-woman use actually increased 14.3%.</div>
+  <div class="callout"><b>Three questions, one query tree.</b> Did prescribing change beyond the trend it was already on, and did it follow the announcement or the label? Did the change reach the women the warning was aimed at? And did it reach everyone? Across the series 362,240 women started vaginal estrogen and 816,693 continued it, and initiation rose from 19.5 to 40.5 per 10,000 women in care. Everything here is a rate per 10,000 women aged 40&ndash;90 in active care in the same window, because user counts in a federated network move when organizations join or leave it.</div>
 
   <div class="two">
     <div class="keybox">
@@ -86,231 +92,327 @@
     </div>
     <div class="keybox">
       <h3>The answer</h3>
-      <p>Use rose promptly, led by new initiation rather than refills, and scaled with how much the warning had deterred each group: largest in breast-cancer survivors and aromatase-inhibitor users, smallest where use was already routine. Negative-control drugs fell over the same window.</p>
+      <p>Prescribing was climbing steeply already, and the announcement &mdash; not the label &mdash; preceded a further acceleration that survives calibration against unrelated drugs, in both new and continuing use. There was no step change, so what shifted is trajectory and not level. Uptake did not favour the one relabeled formulation. Survivors remain the most symptomatic recipients and the least treated, and the racial gaps are wider in absolute terms than before.</p>
     </div>
   </div>
 </section>
 
 <section id="design" class="sec">
   <h2>How the study was built</h2>
-  <p class="secintro">A before-and-after comparison is the easiest study to run and one of the easiest to get wrong. Four design decisions carry this one.</p>
+  <p class="secintro">A before-and-after comparison is the easiest study to run and one of the easiest to get wrong. Five design decisions carry this one.</p>
 
-  <h3>1. Matched nine-month windows</h3>
-  <p>Pre-period November 11th, 2024 &ndash; August 3rd, 2025; post-period November 11th, 2025 &ndash; August 3rd, 2026. Aligning by month-of-period rather than absolute date holds the strong seasonality of ambulatory gynecologic care constant and makes each post-period month comparable to its own counterpart a year earlier.</p>
+  <h3>1. A monthly series, not two snapshots</h3>
+  <p>Thirty-nine consecutive months, January 2023 through March 2026 &mdash; later months excluded as immature &mdash; each with its own numerator and its own denominator. A two-point comparison cannot distinguish a change from a trend that was already running; a series can. The pre-announcement trend here was already <b>+25.8% per year</b>, which is exactly the thing a two-point design would have mistaken for an effect.</p>
 
-  <h3>2. Incident separated from prevalent</h3>
-  <p>Incident users had a vaginal-estradiol order in the window and none in the preceding year; prevalent users had received it before. A change in prescribing behavior should appear first in new decisions, while continuing use moves slowly on refill inertia. Pooling the two attenuates exactly the signal being looked for &mdash; and conflating them is one of the documented failure modes of federated-network studies.</p>
+  <h3>2. Windows aligned to the announcement, and a prior-year control for each</h3>
+  <p>Two five-month windows &mdash; November 2024&ndash;March 2025 and November 2025&ndash;March 2026 &mdash; plus the tighter January&ndash;March pair that avoids the November boundary entirely. Every comparison is run again one year earlier, over months in which nothing regulatory happened, so the question is never &ldquo;did use rise?&rdquo; but &ldquo;did it rise by more than it was already rising?&rdquo;</p>
 
-  <h3>3. A denominator that cannot drift</h3>
-  <p>User counts in a federated network move when organizations join or leave it. Use is therefore expressed as a rate: vaginal-estrogen users divided by adult women with at least one ambulatory encounter (CPT 99202&ndash;99215) in the same window. The same denominator is applied to both periods, so network churn cancels.</p>
+  <h3>3. Incident separated from prevalent</h3>
+  <p>Incident use required a first vaginal-estradiol prescription after a washout with no prior vaginal estrogen of any kind; prevalent use omits the washout. A change in prescribing behaviour should appear first in new decisions, while continuing use moves slowly on refill inertia. Pooling the two attenuates exactly the signal being looked for &mdash; and conflating them is one of the documented failure modes of federated-network studies.</p>
 
-  <h3>4. Controls that can falsify the result</h3>
-  <p>A positive control (the systemic estradiol patch, which shared in the same regulatory reappraisal) should move with the exposure if the effect is real and estrogen-specific. Negative controls (alendronate, levothyroxine &mdash; chronic drugs for overlapping populations of older women, unrelated to the estrogen label) should not move at all. Both predictions were made before the numbers were in.</p>
+  <h3>4. A denominator that cannot drift</h3>
+  <p>Use is expressed as a rate: women starting vaginal estrogen divided by women aged 40&ndash;90 in active care, where active care is established by a diagnosis or outpatient evaluation-and-management code during the <i>same calendar months of the preceding year</i>. Defining the care contact in a prior, non-overlapping period avoids the circularity of a denominator partly constituted by the encounter at which the prescription is written. The same construction is applied to every period and every subgroup.</p>
 
-  <div class="callout"><b>Why the design is this defensive.</b> Recent methodological reviews of TriNetX-based research document a recurring set of failures: implausible index-event definitions, denominator drift, prevalent-incident conflation, data-lag bias, and reliance on p-values in cohorts so large that everything is significant. Each of the four decisions above answers one of them directly, and the last two months of the post-period were censored as immature before any primary inference was drawn.</div>
+  <h3>5. Controls that can falsify the result</h3>
+  <p>A positive control &mdash; the systemic estradiol patch, which shared the same announcement but a route for which the systemic-risk extrapolation is not in dispute. Three negative controls &mdash; levothyroxine, alendronate and atorvastatin, chronic drugs for overlapping populations of older women, unrelated to the estrogen label. The segmented model is re-fitted against each of the three and their slope changes treated as a null distribution, so the estrogen estimate is reported <b>calibrated</b> rather than raw. That matters here: the controls were not flat.</p>
+
+  <div class="callout"><b>Why the design is this defensive.</b> Recent methodological reviews of TriNetX-based research document a recurring set of failures: implausible index-event definitions, denominator drift, prevalent&ndash;incident conflation, data-lag bias, and reliance on p-values in cohorts so large that everything is significant. Each of the five decisions above answers one of them directly, and the series is truncated at March 2026 as the last mature month before any primary inference is drawn.</div>
+</section>
+
+<section id="derivation" class="sec">
+  <h2>Cohort derivation <span class="snap">Figure 1</span></h2>
+  <!--VEFIG-->
+  <p class="secintro">Three abstracts come out of one query tree. The cohort is reached from the network one criterion at a time, and each band below is one of the three: how the trend was measured, how the breast-cancer strata were built, and how the composition of the rise was recovered.</p>
+  <div class="diagramwrap" id="vefig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1578 1204" class="pcafig" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Cohort and query derivation"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="#8fa2b5"/></marker></defs><rect width="100%" height="100%" fill="#ffffff"/><text x="44" y="54" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="28" font-weight="800" fill="#1b2a3c">Cohort and query derivation</text><text x="44" y="78" font-size="12.5" fill="#5c7083">Women aged 40–90 in active care · TriNetX US Collaborative Network · 76 of 78 health-care organisations</text><text x="44" y="97" font-size="11" fill="#5c7083">Windows Nov 2024 – Mar 2025 and Nov 2025 – Mar 2026; the window the spine counts is shown at left. Each panel is schematic: it shows which strata the cohort is carried through, not a count per branch.</text><text x="44" y="132" font-size="9.5" font-weight="700" fill="#5c7083" letter-spacing=".10em">WINDOWS</text><text x="262" y="132" font-size="9.5" font-weight="700" fill="#5c7083" letter-spacing=".10em">COHORT CONSTRUCTION</text><rect x="670" y="142" width="864" height="36" rx="6" fill="#eef1f4" stroke="#cfd8e1"/><text x="1102.0" y="165" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">A.  Prescribing trend, control drugs and formulation</text><rect x="670" y="492" width="864" height="36" rx="6" fill="#eef1f4" stroke="#cfd8e1"/><text x="1102.0" y="515" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">B.  Breast cancer, receptor status, and what is prescribed instead</text><rect x="670" y="822" width="864" height="36" rx="6" fill="#eef1f4" stroke="#cfd8e1"/><text x="1102.0" y="845" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">C.  Who the post-announcement rise reached</text><rect x="262" y="420.0" width="338" height="78" rx="6" fill="#24374f"/><text x="431.0" y="444.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="14" font-weight="700" fill="#ffffff">TriNetX US Collaborative Network</text><text x="431.0" y="484.0" text-anchor="middle" font-size="16" font-weight="800" fill="rgba(255,255,255,.92)" data-q="_network">n = 42,926,997</text><path d="M431.0 498.0 V526.0" fill="none" stroke="#8fa2b5" stroke-width="1.6" marker-end="url(#ah)"/><rect x="262" y="528.0" width="338" height="78" rx="6" fill="#ffffff" stroke="#1b2a3c" stroke-width="1.3"/><text x="431.0" y="552.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="14" font-weight="700" fill="#1b2a3c">Women aged 40–90 in active care</text><text x="431.0" y="569.0" text-anchor="middle" font-size="10.5" fill="#5c7083">diagnosis or outpatient E&amp;M code in the same months a year earlier</text><text x="431.0" y="592.0" text-anchor="middle" font-size="16" font-weight="800" fill="#1b2a3c" data-q="incare">n = 5,115,347</text><path d="M431.0 606.0 V634.0" fill="none" stroke="#8fa2b5" stroke-width="1.6" marker-end="url(#ah)"/><rect x="262" y="636.0" width="338" height="78" rx="6" fill="#24374f"/><text x="431.0" y="660.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="14" font-weight="700" fill="#ffffff">Started vaginal estrogen</text><text x="431.0" y="677.0" text-anchor="middle" font-size="10.5" fill="rgba(255,255,255,.70)">RxNorm 4083 vaginal, none on or before the preceding 31 Oct</text><text x="431.0" y="700.0" text-anchor="middle" font-size="16" font-weight="800" fill="rgba(255,255,255,.92)" data-q="inc">n = 50,496</text><path d="M431.0 714.0 V742.0" fill="none" stroke="#8fa2b5" stroke-width="1.6" marker-end="url(#ah)"/><rect x="262" y="744.0" width="338" height="78" rx="6" fill="#24374f"/><text x="431.0" y="768.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="14" font-weight="700" fill="#ffffff">Continued vaginal estrogen</text><text x="431.0" y="785.0" text-anchor="middle" font-size="10.5" fill="rgba(255,255,255,.70)">washout omitted — any record in the window</text><text x="431.0" y="808.0" text-anchor="middle" font-size="16" font-weight="800" fill="rgba(255,255,255,.92)" data-q="prev">n = 128,428</text><text x="234.0" y="540.0" font-size="9" font-weight="700" fill="#5c7083" text-anchor="end" letter-spacing=".07em">COMPARISON WINDOW</text><rect x="44.0" y="551.0" width="190" height="22" rx="4" fill="#f3f5f8" stroke="#dbe2ea"/><text x="52.0" y="566.0" font-size="10.5" fill="#5c7083">Nov 24 – Mar 25</text><text x="226.0" y="566.0" font-size="10.5" font-weight="700" fill="#1b2a3c" text-anchor="end" data-q="incare24">5,141,965</text><rect x="44.0" y="580.0" width="190" height="22" rx="4" fill="#f3f5f8" stroke="#dbe2ea"/><text x="52.0" y="595.0" font-size="10.5" fill="#5c7083">Nov 25 – Mar 26</text><text x="226.0" y="595.0" font-size="10.5" font-weight="700" fill="#1b2a3c" text-anchor="end" data-q="incare">5,115,347</text><path d="M242 567.0 H257" fill="none" stroke="#b9c5d0" stroke-width="1.1" stroke-dasharray="3 3"/><text x="234.0" y="648.0" font-size="9" font-weight="700" fill="#5c7083" text-anchor="end" letter-spacing=".07em">COMPARISON WINDOW</text><rect x="44.0" y="659.0" width="190" height="22" rx="4" fill="#f3f5f8" stroke="#dbe2ea"/><text x="52.0" y="674.0" font-size="10.5" fill="#5c7083">Nov 24 – Mar 25</text><text x="226.0" y="674.0" font-size="10.5" font-weight="700" fill="#1b2a3c" text-anchor="end" data-q="inc24">34,429</text><rect x="44.0" y="688.0" width="190" height="22" rx="4" fill="#f3f5f8" stroke="#dbe2ea"/><text x="52.0" y="703.0" font-size="10.5" fill="#5c7083">Nov 25 – Mar 26</text><text x="226.0" y="703.0" font-size="10.5" font-weight="700" fill="#1b2a3c" text-anchor="end" data-q="inc">50,496</text><path d="M242 675.0 H257" fill="none" stroke="#b9c5d0" stroke-width="1.1" stroke-dasharray="3 3"/><text x="234.0" y="770.5" font-size="9" font-weight="700" fill="#5c7083" text-anchor="end" letter-spacing=".07em">DENOMINATOR</text><rect x="44.0" y="781.5" width="190" height="22" rx="4" fill="#f3f5f8" stroke="#dbe2ea"/><text x="52.0" y="796.5" font-size="10.5" fill="#5c7083">Women in care</text><text x="226.0" y="796.5" font-size="10.5" font-weight="700" fill="#1b2a3c" text-anchor="end" data-q="prevden">5,562,816</text><path d="M242 783.0 H257" fill="none" stroke="#b9c5d0" stroke-width="1.1" stroke-dasharray="3 3"/><path d="M600 675.0 H626.0" fill="none" stroke="#8fa2b5" stroke-width="1.6"/><path d="M626.0 274.5 V675.0" fill="none" stroke="#8fa2b5" stroke-width="1.6"/><path d="M626.0 274.5 H661.0" fill="none" stroke="#8fa2b5" stroke-width="1.5" marker-end="url(#ah)"/><path d="M626.0 361.5 H661.0" fill="none" stroke="#8fa2b5" stroke-width="1.5" marker-end="url(#ah)"/><path d="M600 675.0 H626.0" fill="none" stroke="#8fa2b5" stroke-width="1.6"/><path d="M626.0 581.0 V745.0" fill="none" stroke="#8fa2b5" stroke-width="1.6"/><path d="M626.0 581.0 H661.0" fill="none" stroke="#8fa2b5" stroke-width="1.5" marker-end="url(#ah)"/><path d="M626.0 668.0 H661.0" fill="none" stroke="#8fa2b5" stroke-width="1.5" marker-end="url(#ah)"/><path d="M626.0 745.0 H661.0" fill="none" stroke="#8fa2b5" stroke-width="1.5" marker-end="url(#ah)"/><path d="M600 675.0 H626.0" fill="none" stroke="#8fa2b5" stroke-width="1.6"/><path d="M626.0 675.0 V988.0" fill="none" stroke="#8fa2b5" stroke-width="1.6"/><path d="M626.0 988.0 H661.0" fill="none" stroke="#8fa2b5" stroke-width="1.5" marker-end="url(#ah)"/><path d="M947.0 231.0 V405.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M914.0 274.5 H947.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M914.0 361.5 H947.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M947.0 231.0 H971.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M947.0 318.0 H971.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M947.0 405.0 H971.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 231.0 V405.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1224.0 231.0 H1257.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1224.0 318.0 H1257.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1224.0 405.0 H1257.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1257.0 231.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 318.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 405.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M947.0 581.0 V745.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M914.0 581.0 H947.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M914.0 668.0 H947.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M947.0 581.0 H971.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M947.0 668.0 H971.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M947.0 745.0 H971.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 571.0 V745.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1224.0 581.0 H1257.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1224.0 668.0 H1257.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1224.0 745.0 H1257.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1257.0 571.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 648.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 735.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M947.0 944.5 V1031.5" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M914.0 988.0 H947.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M947.0 944.5 H971.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M947.0 1031.5 H971.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 901.0 V1065.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1224.0 944.5 H1257.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1224.0 1031.5 H1257.0" fill="none" stroke="#8fa2b5" stroke-width="1.4"/><path d="M1257.0 901.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 978.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><path d="M1257.0 1065.0 H1281.0" fill="none" stroke="#8fa2b5" stroke-width="1.4" marker-end="url(#ah)"/><rect x="670.0" y="239.5" width="244" height="70.0" rx="6" fill="#24374f"/><text x="792.0" y="265.5" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Incident use</text><text x="792.0" y="287.5" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">no prior vaginal estrogen</text><rect x="670.0" y="326.5" width="244" height="70.0" rx="6" fill="#24374f"/><text x="792.0" y="352.5" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Prevalent use</text><text x="792.0" y="374.5" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">washout omitted</text><rect x="980.0" y="196.0" width="244" height="70.0" rx="6" fill="#3e5773"/><text x="1102.0" y="222.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Monthly rate per 10,000</text><text x="1102.0" y="244.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">39 months, Jan 2023 – Mar 2026</text><rect x="980.0" y="283.0" width="244" height="70.0" rx="6" fill="#3e5773"/><text x="1102.0" y="309.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Control drugs</text><text x="1102.0" y="331.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">one positive, three negative</text><rect x="980.0" y="370.0" width="244" height="70.0" rx="6" fill="#9bacbd"/><text x="1102.0" y="396.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Formulation</text><text x="1102.0" y="418.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">ring · tablet/insert · cream</text><rect x="1290.0" y="196.0" width="244" height="70.0" rx="6" fill="#e8edf3" stroke="#3e5773" stroke-width="1.1"/><text x="1412.0" y="222.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Level and slope at Nov 2025</text><text x="1412.0" y="244.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="#5c7083">segmented, one harmonic</text><rect x="1290.0" y="283.0" width="244" height="70.0" rx="6" fill="#e8edf3" stroke="#3e5773" stroke-width="1.1"/><text x="1412.0" y="309.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Calibrated slope change</text><text x="1412.0" y="331.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="#5c7083">against the three controls</text><rect x="1290.0" y="370.0" width="244" height="70.0" rx="6" fill="#f3f5f8" stroke="#9bacbd" stroke-width="1.1"/><text x="1412.0" y="396.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Share of classified starts</text><text x="1412.0" y="418.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="#5c7083">ring is the only relabeled product</text><rect x="670.0" y="546.0" width="244" height="70.0" rx="6" fill="#24374f"/><text x="792.0" y="572.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Breast-cancer history</text><text x="792.0" y="594.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">Z85.3</text><rect x="670.0" y="633.0" width="244" height="70.0" rx="6" fill="#24374f"/><text x="792.0" y="659.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">History or active disease</text><text x="792.0" y="681.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">Z85.3 or C50</text><rect x="670.0" y="720.0" width="244" height="50.0" rx="6" fill="#9bacbd"/><text x="792.0" y="751.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">No breast-cancer code</text><rect x="980.0" y="546.0" width="244" height="70.0" rx="6" fill="#5a7694"/><text x="1102.0" y="572.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">ER-positive</text><text x="1102.0" y="594.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">Z17.0</text><rect x="980.0" y="633.0" width="244" height="70.0" rx="6" fill="#5a7694"/><text x="1102.0" y="659.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">ER-negative</text><text x="1102.0" y="681.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">Z17.1</text><rect x="980.0" y="720.0" width="244" height="50.0" rx="6" fill="#9bacbd"/><text x="1102.0" y="751.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Receptor not coded</text><rect x="1290.0" y="546.0" width="244" height="50.0" rx="6" fill="#edf1f5" stroke="#5a7694" stroke-width="1.1"/><text x="1412.0" y="577.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Initiation rate and rate ratio</text><rect x="1290.0" y="613.0" width="244" height="70.0" rx="6" fill="#edf1f5" stroke="#5a7694" stroke-width="1.1"/><text x="1412.0" y="639.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Coded symptom burden</text><text x="1412.0" y="661.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="#5c7083">prevalence ratio among initiators</text><rect x="1290.0" y="700.0" width="244" height="70.0" rx="6" fill="#f3f5f8" stroke="#9bacbd" stroke-width="1.1"/><text x="1412.0" y="726.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Prasterone or ospemifene</text><text x="1412.0" y="748.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="#5c7083">non-estrogen alternative</text><rect x="670.0" y="963.0" width="244" height="50.0" rx="6" fill="#24374f"/><text x="792.0" y="994.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Women starting in each window</text><rect x="980.0" y="909.5" width="244" height="70.0" rx="6" fill="#3e5773"/><text x="1102.0" y="935.5" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Recorded race</text><text x="1102.0" y="957.5" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">applied to the cohort&#x27;s patient count</text><rect x="980.0" y="996.5" width="244" height="70.0" rx="6" fill="#3e5773"/><text x="1102.0" y="1022.5" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#ffffff">Recorded ethnicity</text><text x="1102.0" y="1044.5" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgba(255,255,255,.80)">a separate axis</text><rect x="1290.0" y="876.0" width="244" height="50.0" rx="6" fill="#e8edf3" stroke="#3e5773" stroke-width="1.1"/><text x="1412.0" y="907.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Rate per 10,000 within each group</text><rect x="1290.0" y="943.0" width="244" height="70.0" rx="6" fill="#f3f5f8" stroke="#9bacbd" stroke-width="1.1"/><text x="1412.0" y="969.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Rate ratio vs White women</text><text x="1412.0" y="991.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="#5c7083">Hispanic vs non-Hispanic</text><rect x="1290.0" y="1030.0" width="244" height="70.0" rx="6" fill="#e8edf3" stroke="#3e5773" stroke-width="1.1"/><text x="1412.0" y="1056.0" text-anchor="middle" font-family="Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif" font-size="15" font-weight="700" fill="#1b2a3c">Absolute difference per 10,000</text><text x="1412.0" y="1078.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="#5c7083">the measure that moved</text><path d="M44 1124.0 H1534" fill="none" stroke="#b9c5d0" stroke-width="1"/><rect x="44.0" y="1134.0" width="13" height="13" rx="3" fill="#24374f"/><text x="63.0" y="1144.0" font-size="10.5" fill="#5c7083">Whole cohort</text><rect x="168.0" y="1134.0" width="13" height="13" rx="3" fill="#3e5773"/><text x="187.0" y="1144.0" font-size="10.5" fill="#5c7083">Trend and reach</text><rect x="310.0" y="1134.0" width="13" height="13" rx="3" fill="#5a7694"/><text x="329.0" y="1144.0" font-size="10.5" fill="#5c7083">Breast cancer</text><rect x="440.0" y="1134.0" width="13" height="13" rx="3" fill="#9bacbd"/><text x="459.0" y="1144.0" font-size="10.5" fill="#5c7083">Comparison arm</text><text x="1534" y="1144.0" text-anchor="end" font-size="10" fill="#5c7083">Counts from the VE master workbook (QM sheet); every rate on this page shares this denominator.</text></svg></div>
+  <p class="tblnote"><b>Figure 1.</b> Cohort and query derivation. Every count in the spine is addressed by its query name in the VE master workbook, never typed in — last known-good values — the workbook was unreachable at build time. Dark boxes are cohorts, solid colour marks the query families run against them, and outlined boxes are the quantities each family produces.</p>
+  <script src="/assets/ve-live.js" defer></script>
+  <!--/VEFIG-->
 </section>
 
 <section id="cohorts" class="sec">
-  <h2>Cohorts <span class="snap">Table 1</span></h2>
-  <p class="secintro">Women with at least one order or administration of vaginal estradiol &mdash; cream, tablet or insert, and ring formulations by RxNorm ingredient code, deliberately excluding the higher-dose systemic ring.</p>
+  <h2>Who was in the cohorts <span class="snap">Tables 1a–1b</span></h2>
+  <p class="secintro">Four cohorts, each at both windows: every woman aged 40&ndash;90 in care, every woman who started vaginal estrogen, and the two strata the warning was aimed at &mdash; women with a breast-cancer history and women on an aromatase inhibitor.</p>
   <div class="tblwrap"><table>
-    <thead><tr><th>Characteristic</th><th>Total, pre</th><th>Incident, pre</th><th>Total, post</th><th>Incident, post</th></tr></thead>
+    <thead><tr><th>Characteristic</th><th>Women in care, Nov-24</th><th>Women in care, Nov-25</th><th>New starts, Nov-24</th><th>New starts, Nov-25</th></tr></thead>
     <tbody>
-      <tr><td>Patients, n</td><td class="n">192,157</td><td class="n">151,483</td><td class="n">190,602</td><td class="n">147,950</td></tr>
-      <tr><td>Health-care organizations, n</td><td class="n">69</td><td class="n">69</td><td class="n">63</td><td class="n">63</td></tr>
-      <tr><td>Age, mean ± SD, years</td><td class="n">64 ± 13</td><td class="n">63 ± 13</td><td class="n">63 ± 13</td><td class="n">62 ± 13</td></tr>
-      <tr><td>Body-mass index, mean ± SD</td><td class="n">27.7 ± 6.3</td><td class="n">27.8 ± 6.4</td><td class="n">27.9 ± 6.4</td><td class="n">28.0 ± 6.4</td></tr>
-      <tr><td>White race, n (%)</td><td class="n">154,494 (80.4)</td><td class="n">121,641 (80.3)</td><td class="n">151,910 (79.7)</td><td class="n">117,176 (79.2)</td></tr>
-      <tr><td>Non-Hispanic ethnicity, n (%)</td><td class="n">142,965 (74.4)</td><td class="n">111,794 (73.8)</td><td class="n">142,761 (74.9)</td><td class="n">110,371 (74.6)</td></tr>
-      <tr><td>Menopausal disorder (N95), n (%)</td><td class="n">123,576 (64.3)</td><td class="n">95,946 (63.3)</td><td class="n">120,688 (63.3)</td><td class="n">95,011 (64.2)</td></tr>
-      <tr><td>Genitourinary syndrome (N95.2), n (%)</td><td class="n">88,831 (46.2)</td><td class="n">66,832 (44.1)</td><td class="n">80,379 (42.2)</td><td class="n">60,768 (41.1)</td></tr>
-      <tr><td>Dyspareunia (N94.1), n (%)</td><td class="n">21,131 (11.0)</td><td class="n">16,267 (10.7)</td><td class="n">19,280 (10.1)</td><td class="n">14,794 (10.0)</td></tr>
-      <tr><td>Breast-cancer history (Z85.3), n (%)</td><td class="n">8,109 (4.2)</td><td class="n">6,169 (4.1)</td><td class="n">7,728 (4.1)</td><td class="n">6,099 (4.1)</td></tr>
-      <tr><td>Active breast cancer (C50), n (%)</td><td class="n">8,852 (4.6)</td><td class="n">6,898 (4.6)</td><td class="n">8,694 (4.6)</td><td class="n">6,984 (4.7)</td></tr>
-      <tr><td>Tamoxifen, n (%)</td><td class="n">1,862 (1.0)</td><td class="n">1,423 (0.9)</td><td class="n">1,964 (1.0)</td><td class="n">1,571 (1.1)</td></tr>
-      <tr><td>Aromatase inhibitor, n (%)</td><td class="n">4,839 (2.5)</td><td class="n">3,877 (2.6)</td><td class="n">4,857 (2.5)</td><td class="n">3,891 (2.6)</td></tr>
-      <tr><td>Prior hysterectomy, n (%)</td><td class="n">10,770 (5.6)</td><td class="n">8,603 (5.7)</td><td class="n">9,863 (5.2)</td><td class="n">7,933 (5.4)</td></tr>
-      <tr><td>Osteoporosis (M81), n (%)</td><td class="n">39,765 (20.7)</td><td class="n">29,672 (19.6)</td><td class="n">36,067 (18.9)</td><td class="n">27,355 (18.5)</td></tr>
+      <tr class="up"><td>Patients, n</td><td class="n">7,925,664</td><td class="n">7,630,951</td><td class="n">49,281</td><td class="n">68,766</td></tr>
+      <tr><td>Age, mean ± SD, years</td><td class="n">63 ± 14</td><td class="n">63 ± 13</td><td class="n">64 ± 11</td><td class="n">63 ± 12</td></tr>
+      <tr><td>White, %</td><td class="n">70.9</td><td class="n">71.2</td><td class="n">79.9</td><td class="n">79.4</td></tr>
+      <tr><td>Black or African American, %</td><td class="n">13.8</td><td class="n">13.5</td><td class="n">7.3</td><td class="n">7.5</td></tr>
+      <tr><td>Hispanic or Latino, %</td><td class="n">7.9</td><td class="n">8.0</td><td class="n">6.1</td><td class="n">6.8</td></tr>
+      <tr><td>Menopausal disorder (N95), n (%)</td><td class="n">1,263,589 (15.9)</td><td class="n">1,243,990 (16.3)</td><td class="n">32,657 (66.3)</td><td class="n">45,020 (65.5)</td></tr>
+      <tr><td>GSM / atrophic vaginitis (N95.2), n (%)</td><td class="n">323,326 (4.1)</td><td class="n">295,889 (3.9)</td><td class="n">21,235 (43.1)</td><td class="n">25,381 (36.9)</td></tr>
+      <tr><td>Dyspareunia (N94.1), n (%)</td><td class="n">124,575 (1.6)</td><td class="n">117,441 (1.5)</td><td class="n">4,797 (9.7)</td><td class="n">5,625 (8.2)</td></tr>
+      <tr><td>UTI (N39.0), n (%)</td><td class="n">1,458,701 (18.4)</td><td class="n">1,366,143 (17.9)</td><td class="n">16,937 (34.4)</td><td class="n">22,334 (32.5)</td></tr>
+      <tr><td>Urinary incontinence (N39.4), n (%)</td><td class="n">467,906 (5.9)</td><td class="n">450,812 (5.9)</td><td class="n">10,707 (21.7)</td><td class="n">13,308 (19.4)</td></tr>
+      <tr><td>Genital prolapse (N81), n (%)</td><td class="n">314,001 (4.0)</td><td class="n">301,550 (4.0)</td><td class="n">9,110 (18.5)</td><td class="n">11,023 (16.0)</td></tr>
+      <tr><td>Breast-cancer history (Z85.3), n (%)</td><td class="n">438,789 (5.5)</td><td class="n">424,276 (5.6)</td><td class="n">2,164 (4.4)</td><td class="n">3,191 (4.6)</td></tr>
+      <tr><td>Breast cancer (C50), n (%)</td><td class="n">468,571 (5.9)</td><td class="n">463,264 (6.1)</td><td class="n">2,386 (4.8)</td><td class="n">3,691 (5.4)</td></tr>
+      <tr><td>Osteoporosis (M81), n (%)</td><td class="n">1,169,647 (14.8)</td><td class="n">1,160,225 (15.2)</td><td class="n">9,627 (19.5)</td><td class="n">11,947 (17.4)</td></tr>
+      <tr><td>Hysterectomy (Z90.710), n (%)</td><td class="n">720,776 (9.1)</td><td class="n">693,391 (9.1)</td><td class="n">6,977 (14.2)</td><td class="n">9,056 (13.2)</td></tr>
+      <tr><td>Tamoxifen, n (%)</td><td class="n">78,361 (1.0)</td><td class="n">78,243 (1.0)</td><td class="n">493 (1.0)</td><td class="n">860 (1.3)</td></tr>
+      <tr><td>Anastrozole, n (%)</td><td class="n">124,283 (1.6)</td><td class="n">120,620 (1.6)</td><td class="n">616 (1.2)</td><td class="n">958 (1.4)</td></tr>
+      <tr><td>Prasterone, n (%)</td><td class="n">16,738 (0.2)</td><td class="n">15,785 (0.2)</td><td class="n">437 (0.9)</td><td class="n">486 (0.7)</td></tr>
+      <tr><td>Ospemifene, n (%)</td><td class="n">3,653 (0.0)</td><td class="n">3,528 (0.0)</td><td class="n">145 (0.3)</td><td class="n">139 (0.2)</td></tr>
     </tbody>
   </table></div>
-  <p class="tblnote"><b>Table 1.</b> Values are n (% of the corresponding cohort) unless noted. "Incident" denotes new initiation with no vaginal-estrogen order in the prior year. Race and ethnicity counts are reconstructed from network-reported percentages. The two windows are closely matched on age, BMI and comorbidity burden — the populations are comparable, which is what makes the rate comparison interpretable.</p>
+  <p class="tblnote"><b>Table 1a.</b> Every woman aged 40–90 in active care, and every woman who started vaginal estrogen, at each five-month window; percentages are of that column’s own n, and race and ethnicity are the recorded shares of each cohort. The two in-care windows are closely matched on age and comorbidity burden, which is what makes the rate comparison interpretable — but the new-start cohort is a less symptomatic group in 2026 than in 2025 (GSM 43.1% → 36.9%, urinary incontinence 21.7% → 19.4%), consistent with the rise reaching beyond the already-coded population. <b>One reconciliation to note:</b> this characteristics query returns 49,281 and 68,766 new starts against distinct-patient denominators of 7,925,664 and 7,630,951, while the cohort query behind the <a href="#breast">breast-cancer</a> and <a href="#race">race</a> analyses returns 34,429 and 50,496 against 5,141,965 and 5,115,347. They are different queries with different washouts, not different answers to the same question, and no rate on this page mixes them.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Characteristic</th><th>Breast-cancer hx, Nov-24</th><th>Breast-cancer hx, Nov-25</th><th>AI users, Nov-24</th><th>AI users, Nov-25</th></tr></thead>
+    <tbody>
+      <tr class="up"><td>Patients, n</td><td class="n">1,054</td><td class="n">1,612</td><td class="n">350</td><td class="n">645</td></tr>
+      <tr><td>Age, mean ± SD, years</td><td class="n">69 ± 12</td><td class="n">68 ± 12</td><td class="n">66 ± 13</td><td class="n">63 ± 13</td></tr>
+      <tr><td>White, %</td><td class="n">84.7</td><td class="n">85.3</td><td class="n">80.3</td><td class="n">85.5</td></tr>
+      <tr><td>Black or African American, %</td><td class="n">6.0</td><td class="n">6.0</td><td class="n">6.9</td><td class="n">5.4</td></tr>
+      <tr><td>Hispanic or Latino, %</td><td class="n">3.9</td><td class="n">4.2</td><td class="n">4.9</td><td class="n">3.7</td></tr>
+      <tr><td>Menopausal disorder (N95), n (%)</td><td class="n">774 (73.4)</td><td class="n">1,161 (72.0)</td><td class="n">210 (60.0)</td><td class="n">401 (62.2)</td></tr>
+      <tr><td>GSM / atrophic vaginitis (N95.2), n (%)</td><td class="n">526 (49.9)</td><td class="n">727 (45.1)</td><td class="n">142 (40.6)</td><td class="n">224 (34.7)</td></tr>
+      <tr><td>Dyspareunia (N94.1), n (%)</td><td class="n">124 (11.8)</td><td class="n">169 (10.5)</td><td class="n">45 (12.9)</td><td class="n">77 (11.9)</td></tr>
+      <tr><td>UTI (N39.0), n (%)</td><td class="n">511 (48.5)</td><td class="n">780 (48.4)</td><td class="n">145 (41.4)</td><td class="n">235 (36.4)</td></tr>
+      <tr><td>Urinary incontinence (N39.4), n (%)</td><td class="n">316 (30.0)</td><td class="n">404 (25.0)</td><td class="n">71 (20.3)</td><td class="n">93 (14.4)</td></tr>
+      <tr><td>Genital prolapse (N81), n (%)</td><td class="n">234 (22.2)</td><td class="n">302 (18.7)</td><td class="n">48 (13.7)</td><td class="n">81 (12.5)</td></tr>
+      <tr><td>Breast-cancer history (Z85.3), n (%)</td><td class="n">1,054 (100.0)</td><td class="n">1,612 (100.0)</td><td class="n">240 (68.6)</td><td class="n">388 (60.2)</td></tr>
+      <tr><td>Breast cancer (C50), n (%)</td><td class="n">874 (82.9)</td><td class="n">1,340 (83.1)</td><td class="n">307 (87.7)</td><td class="n">580 (89.9)</td></tr>
+      <tr><td>Osteoporosis (M81), n (%)</td><td class="n">401 (38.0)</td><td class="n">571 (35.4)</td><td class="n">111 (31.7)</td><td class="n">178 (27.6)</td></tr>
+      <tr><td>Hysterectomy (Z90.710), n (%)</td><td class="n">284 (26.9)</td><td class="n">390 (24.2)</td><td class="n">77 (22.0)</td><td class="n">112 (17.3)</td></tr>
+      <tr><td>Tamoxifen, n (%)</td><td class="n">171 (16.2)</td><td class="n">282 (17.5)</td><td class="n">76 (21.7)</td><td class="n">140 (21.7)</td></tr>
+      <tr><td>Anastrozole, n (%)</td><td class="n">255 (24.2)</td><td class="n">410 (25.4)</td><td class="n">244 (69.7)</td><td class="n">414 (64.2)</td></tr>
+      <tr><td>Prasterone, n (%)</td><td class="n">13 (1.2)</td><td class="n">20 (1.2)</td><td class="n">10 (2.9)</td><td class="n">13 (2.0)</td></tr>
+      <tr><td>Ospemifene, n (%)</td><td class="n">&lt;10</td><td class="n">10 (0.6)</td><td class="n">&lt;10</td><td class="n">&lt;10</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tblnote"><b>Table 1b.</b> The two strata the boxed warning was aimed at: women who started vaginal estrogen and carry a breast-cancer history code, and women who started while on an aromatase inhibitor. Percentages are of that column’s own n. Counts between one and ten are masked by TriNetX and shown as &lt;10, which is why several aromatase-inhibitor rows read exactly 10. Both strata are older and more symptomatic than the general new-start cohort, and both roughly doubled in size between the windows (1,054 &rarr; 1,612 and 350 &rarr; 645).</p>
 </section>
 
-<section id="monthly" class="sec">
-  <h2>Monthly trend <span class="snap">Figure 1 · Table 2</span></h2>
-  <p class="secintro">Across the mature November-through-April window, incident initiation rose 11.6%, total use 10.8%, and prevalent use 2.0% &mdash; the ordering a regulatory change predicts, since labels act on new decisions before they act on refills.</p>
+<section id="trend" class="sec">
+  <h2>The monthly trend <span class="snap">Figures 2&ndash;3 · Table 2</span></h2>
+  <p class="secintro">Initiation was already climbing steeply before the announcement &mdash; 25.8% a year &mdash; which is why the question is about the <i>change</i> in slope and not about whether the line goes up.</p>
   <figure>
-    <img src="figures/Monthly_vaginal_estrogen_use_incident_new_users.jpg" alt="Monthly incident vaginal-estrogen users, pre versus post, aligned by month of period">
-    <figcaption><b>Figure 1.</b> Monthly incident (new) vaginal-estrogen users, pre versus post, aligned by month-of-period. The shaded region marks the incomplete data-lag tail (June–July), censored from primary inference.</figcaption>
+    <img src="figures/Figure2_trend.png" alt="Monthly vaginal estrogen initiation per 10,000 women in care, January 2023 to March 2026, with the pre-announcement trend projected forward">
+    <figcaption><b>Figure 2.</b> Monthly initiation per 10,000 women aged 40&ndash;90 in active care. The dashed line is the pre-announcement model &mdash; trend plus one Fourier harmonic for seasonality &mdash; carried forward; the vertical line marks November 2025. Incident use rose from 19.5 to 40.5 per 10,000 across the series.</figcaption>
   </figure>
   <div class="tblwrap"><table>
-    <thead><tr><th>Series</th><th>Nov</th><th>Dec</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Nov–Apr</th></tr></thead>
+    <thead><tr><th>Segmented model</th><th>Estimate</th><th>95% CI</th><th>p</th></tr></thead>
     <tbody>
-      <tr class="up"><td>Incident (new)</td><td class="n">+10.8%</td><td class="n">+11.5%</td><td class="n">+21.1%</td><td class="n">+21.6%</td><td class="n">+11.2%</td><td class="n">−5.1%</td><td class="n"><b>+11.6%</b></td></tr>
-      <tr><td>Total (all)</td><td class="n">+5.8%</td><td class="n">+11.2%</td><td class="n">+21.1%</td><td class="n">+18.9%</td><td class="n">+11.1%</td><td class="n">−2.6%</td><td class="n"><b>+10.8%</b></td></tr>
-      <tr><td>Prevalent (continuing)</td><td class="n">+0.1%</td><td class="n">+0.6%</td><td class="n">+10.6%</td><td class="n">+5.3%</td><td class="n">+0.3%</td><td class="n">−5.1%</td><td class="n"><b>+2.0%</b></td></tr>
+      <tr><td>Pre-announcement trend, incident use</td><td class="n">+25.8%/yr</td><td class="n">&mdash;</td><td class="n">&lt;0.001</td></tr>
+      <tr><td>Level shift at Nov 2025</td><td class="n">+0.5%</td><td class="n">&mdash;</td><td class="n">0.92</td></tr>
+      <tr class="up"><td>Change in slope at Nov 2025</td><td class="n">+54.5%/yr</td><td class="n">&mdash;</td><td class="n">0.010</td></tr>
+      <tr class="up"><td>Change in slope, calibrated to the control drugs</td><td class="n">+45.0%/yr</td><td class="n">+1.3 to +107.6</td><td class="n">0.043</td></tr>
+      <tr><td>Continuing use, change in slope (calibrated)</td><td class="n">+37.6%/yr</td><td class="n">+4.5 to +81.3</td><td class="n">0.023</td></tr>
+      <tr class="down"><td>Placebo break at September 2025</td><td class="n">no slope change</td><td class="n">&mdash;</td><td class="n">0.13</td></tr>
+      <tr class="down"><td>Placebo break at January 2026</td><td class="n">no slope change</td><td class="n">&mdash;</td><td class="n">0.60</td></tr>
     </tbody>
   </table></div>
-  <p class="tblnote"><b>Table 2.</b> Percent change = post ÷ pre − 1 within each aligned month. The April dip and the omitted May–July tail fall in the incomplete data-maturation window. New initiation leads continuing use throughout.</p>
+  <p class="tblnote"><b>Table 2.</b> Weighted least squares on log(rate) with numerator weights, a level shift and a slope change at November 2025, and a twelve-month sine&ndash;cosine pair &mdash; algebraically the quasi-Poisson segmented model, and the same estimator implemented on sheet 2 of the workbook. Estimates are back-transformed to percent change per year. <b>What moved was the slope, not the level</b>: there is no step at November 2025, there is a hinge &mdash; and re-fitting the break at months with no FDA action produces nothing.</p>
+  <figure>
+    <img src="figures/Figure3_incident_prevalent.png" alt="Monthly incident and prevalent vaginal estrogen use per 10,000 women in care">
+    <figcaption><b>Figure 3.</b> New and continuing use on one scale. Both rose, and the calibrated slope change is significant in both &mdash; which matters, because an artifact of how new starts are defined would not move continuing use as well.</figcaption>
+  </figure>
 </section>
 
-<section id="subgroups" class="sec">
-  <h2>Subgroups <span class="snap">Figure 2 · Table 3</span></h2>
-  <p class="secintro">This is the section that separates a regulatory effect from a general rise in prescribing. A broad trend — more visits, a coding change — would lift every subgroup roughly equally. What happened instead is that the increase scaled with how much the warning had deterred each group.</p>
+<section id="primary" class="sec">
+  <h2>The primary comparison <span class="snap">Figure 4 · Table 3</span></h2>
+  <p class="secintro">The same comparison run three ways, each with the prior-year control sitting beside it. The control is the whole argument: use rose 21% between January&ndash;March 2024 and January&ndash;March 2025, when nothing happened, and 54% in the equivalent window around the announcement.</p>
   <figure>
-    <img src="figures/Vaginal_estrogen_use_by_subgroup_after_FDA_warning_removal.jpg" alt="Forest plot of within-subgroup post-versus-pre rate ratios with 95% confidence intervals">
-    <figcaption><b>Figure 2.</b> Post-versus-pre rate ratios of vaginal-estrogen use by subgroup, with 95% confidence intervals. Values right of the dashed line indicate an increase after the label change.</figcaption>
+    <img src="figures/Figure4_primary.png" alt="Forest plot of rate ratios after versus before the announcement, with the prior-year control">
+    <figcaption><b>Figure 4.</b> Rate ratios after versus before, with 95% Katz confidence intervals. The bottom row is the prior-year control: the same comparison shifted back twelve months, over a period containing no FDA action.</figcaption>
   </figure>
   <div class="tblwrap"><table>
-    <thead><tr><th>Subgroup</th><th>Rate, pre</th><th>Rate, post</th><th>Rate ratio (95% CI)</th><th>p</th></tr></thead>
+    <thead><tr><th>Comparison</th><th>Before: n / N</th><th>After: n / N</th><th>Rate ratio (95% CI)</th></tr></thead>
     <tbody>
-      <tr class="up"><td>Breast-cancer history (Z85.3)</td><td class="n">1.76%</td><td class="n">2.27%</td><td class="n">1.29 (1.23–1.35)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="up"><td>Breast cancer (C50 or Z85.3)</td><td class="n">1.25%</td><td class="n">1.57%</td><td class="n">1.25 (1.21–1.30)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="up"><td>Aromatase inhibitor</td><td class="n">1.11%</td><td class="n">1.37%</td><td class="n">1.24 (1.15–1.33)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="up"><td>Hysterectomy (Z90.710/.711)</td><td class="n">3.84%</td><td class="n">4.84%</td><td class="n">1.26 (1.23–1.30)</td><td class="n">&lt;0.001</td></tr>
-      <tr><td>GSM diagnosis (N95.2)</td><td class="n">43.55%</td><td class="n">48.97%</td><td class="n">1.12 (1.12–1.13)</td><td class="n">&lt;0.001</td></tr>
-      <tr><td>Age &lt; 65 (per women seen)</td><td class="n">2.00%</td><td class="n">2.50%</td><td class="n">1.25 (1.24–1.26)</td><td class="n">&lt;0.001</td></tr>
-      <tr><td>Age ≥ 65 (per women seen)</td><td class="n">4.61%</td><td class="n">4.84%</td><td class="n">1.05 (1.04–1.06)</td><td class="n">&lt;0.001</td></tr>
+      <tr class="up"><td>Incident use, Jan&ndash;Mar 2026 vs Jan&ndash;Mar 2025</td><td class="n">19,703 / 8,013,299</td><td class="n">29,433 / 7,790,510</td><td class="n">1.54 (1.51&ndash;1.56)</td></tr>
+      <tr><td>Incident use, Nov 2025&ndash;Mar 2026 vs Nov 2024&ndash;Mar 2025</td><td class="n">31,783 / 13,190,276</td><td class="n">46,707 / 13,075,508</td><td class="n">1.48 (1.46&ndash;1.50)</td></tr>
+      <tr><td>Prevalent use, Jan&ndash;Mar 2026 vs Jan&ndash;Mar 2025</td><td class="n">56,839 / 8,704,989</td><td class="n">81,476 / 8,656,188</td><td class="n">1.44 (1.43&ndash;1.46)</td></tr>
+      <tr class="down"><td>Trend control &mdash; incident, Jan&ndash;Mar 2025 vs Jan&ndash;Mar 2024</td><td class="n">15,761 / 7,741,035</td><td class="n">19,703 / 8,013,299</td><td class="n">1.21 (1.18&ndash;1.23)</td></tr>
     </tbody>
   </table></div>
-  <p class="tblnote"><b>Table 3.</b> Rate = subgroup patients on vaginal estrogen ÷ all subgroup patients seen in the matched window, so the ratio reflects prescribing within the group rather than any change in the group's size. RR = post ÷ pre; two-proportion z-tests.</p>
-  <div class="callout"><b>Read the gradient, not the individual numbers.</b> Breast-cancer survivors (1.29) and aromatase-inhibitor users (1.24) — the patients for whom the warning posed the greatest barrier — moved most. Women with a coded GSM diagnosis, already treated 43.6% of the time, moved least (1.12). That ordering is hard to produce with a coding artifact and hard to attribute to chance.</div>
-</section>
-
-<section id="incident" class="sec">
-  <h2>Who the new users were <span class="snap">Figures 3–4 · Table 4</span></h2>
-  <p class="secintro">If the label change pulled in a different kind of patient, the case-mix of new initiators would shift. It largely did not — the composition held steady while the volume rose.</p>
-  <div class="two">
-    <figure>
-      <img src="figures/Case_mix_of_new_vaginal_estrogen_users_by_subgroup.jpg" alt="Case-mix of incident vaginal-estrogen users by subgroup, pre versus post">
-      <figcaption><b>Figure 3.</b> Case-mix of incident users by subgroup, as a share of the incident cohort.</figcaption>
-    </figure>
-    <figure>
-      <img src="figures/Comparison_risk_ratios_new_incident_users.jpg" alt="Risk ratios post versus pre for incident-user characteristics with confidence intervals">
-      <figcaption><b>Figure 4.</b> Risk ratios (post vs pre) for incident-user characteristics, with 95% CIs.</figcaption>
-    </figure>
-  </div>
-  <div class="tblwrap"><table>
-    <thead><tr><th>Variable</th><th>% pre</th><th>% post</th><th>Risk ratio (95% CI)</th><th>p</th></tr></thead>
-    <tbody>
-      <tr><td>Menopausal disorder (N95)</td><td class="n">63.3%</td><td class="n">64.2%</td><td class="n">1.01 (1.01–1.02)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="down"><td>GSM (N95.2)</td><td class="n">44.1%</td><td class="n">41.1%</td><td class="n">0.93 (0.92–0.94)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="down"><td>Postmenopausal bleeding (N95.0)</td><td class="n">8.6%</td><td class="n">8.1%</td><td class="n">0.94 (0.92–0.96)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="down"><td>Dyspareunia (N94.1)</td><td class="n">10.7%</td><td class="n">10.0%</td><td class="n">0.93 (0.91–0.95)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="down"><td>Vulvodynia (N94.81)</td><td class="n">1.4%</td><td class="n">1.1%</td><td class="n">0.78 (0.73–0.83)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="up"><td>Active breast cancer (C50)</td><td class="n">4.6%</td><td class="n">4.7%</td><td class="n">1.04 (1.00–1.07)</td><td class="n">0.030</td></tr>
-      <tr><td>Breast-cancer history (Z85.3)</td><td class="n">4.1%</td><td class="n">4.1%</td><td class="n">1.01 (0.98–1.05)</td><td class="n">0.491</td></tr>
-      <tr class="down"><td>Osteoporosis (M81)</td><td class="n">19.6%</td><td class="n">18.5%</td><td class="n">0.94 (0.93–0.96)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="down"><td>Osteopenia (M85.8)</td><td class="n">25.6%</td><td class="n">24.7%</td><td class="n">0.96 (0.95–0.98)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="up"><td>Tamoxifen</td><td class="n">0.9%</td><td class="n">1.1%</td><td class="n">1.13 (1.05–1.21)</td><td class="n">&lt;0.001</td></tr>
-      <tr><td>Aromatase inhibitor</td><td class="n">2.6%</td><td class="n">2.6%</td><td class="n">1.03 (0.98–1.07)</td><td class="n">0.225</td></tr>
-      <tr class="down"><td>Prior hysterectomy</td><td class="n">5.7%</td><td class="n">5.4%</td><td class="n">0.94 (0.92–0.97)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="down"><td>Prasterone (vaginal DHEA)</td><td class="n">1.2%</td><td class="n">1.0%</td><td class="n">0.84 (0.78–0.89)</td><td class="n">&lt;0.001</td></tr>
-      <tr class="down"><td>Ospemifene</td><td class="n">0.5%</td><td class="n">0.3%</td><td class="n">0.73 (0.65–0.82)</td><td class="n">&lt;0.001</td></tr>
-    </tbody>
-  </table></div>
-  <p class="tblnote"><b>Table 4.</b> Percentages are of the incident cohort; RR = %post ÷ %pre. Diagnoses of the established GSM population declined modestly as a share of new users — consistent with the increase reaching beyond the already-coded population. The two non-estrogen GSM therapies both fell, compatible with substitution toward vaginal estrogen, though these data cannot confirm it.</p>
-</section>
-
-<section id="formulation" class="sec">
-  <h2>Formulation <span class="snap">Figure 5 · Table 5</span></h2>
-  <p class="secintro">The increase was not confined to one product. Branded formulations rose disproportionately among new users; generic and unspecified products, roughly 98% of use, barely moved.</p>
-  <figure>
-    <img src="figures/Vaginal_estrogen_formulation_among_new_users_branded_only.jpg" alt="Branded vaginal-estradiol formulation shares among incident users, pre versus post">
-    <figcaption><b>Figure 5.</b> Branded vaginal-estradiol formulation shares among incident users, pre versus post. Cream shows the steepest relative increase; these data do not identify why.</figcaption>
-  </figure>
-  <div class="tblwrap"><table>
-    <thead><tr><th>Formulation</th><th>% pre</th><th>% post</th><th>Risk ratio</th><th>p</th><th>Cohort</th></tr></thead>
-    <tbody>
-      <tr class="up"><td>Cream (Estrace)</td><td class="n">15.4</td><td class="n">18.1</td><td class="n">1.18</td><td class="n">&lt;0.001</td><td>Incident</td></tr>
-      <tr><td>Tablet / insert (Vagifem, Imvexxy)</td><td class="n">11.0</td><td class="n">11.5</td><td class="n">1.05</td><td class="n">&lt;0.001</td><td>Incident</td></tr>
-      <tr><td>Ring (Estring)</td><td class="n">9.1</td><td class="n">9.7</td><td class="n">1.06</td><td class="n">&lt;0.001</td><td>Incident</td></tr>
-      <tr class="up"><td>Cream (Estrace)</td><td class="n">14.4</td><td class="n">17.0</td><td class="n">1.18</td><td class="n">&lt;0.001</td><td>All</td></tr>
-      <tr><td>Tablet / insert (Vagifem, Imvexxy)</td><td class="n">10.2</td><td class="n">11.2</td><td class="n">1.10</td><td class="n">&lt;0.001</td><td>All</td></tr>
-      <tr><td>Ring (Estring)</td><td class="n">8.4</td><td class="n">9.3</td><td class="n">1.11</td><td class="n">&lt;0.001</td><td>All</td></tr>
-    </tbody>
-  </table></div>
-  <p class="tblnote"><b>Table 5.</b> Percentages are of the corresponding cohort. Formulation buckets overlap — a patient may fill more than one — and are read as prevalences rather than a partition. Generic and unspecified products (~98% of each cohort) moved negligibly and are omitted.</p>
+  <p class="tblnote"><b>Table 3.</b> N is women in care in the window; n is women starting (or, for the prevalent row, continuing) vaginal estrogen. Rate ratios are Katz with 95% confidence intervals. <b>Read the last row first.</b> A 54% rise against a background that was already producing 21% is the quantity of interest, and the two intervals do not overlap.</p>
 </section>
 
 <section id="controls" class="sec">
-  <h2>Control drugs <span class="snap">Figures 6–7 · Table 6</span></h2>
-  <p class="secintro">The standing objection to any before-and-after study is that something else changed. Here the something-else is measured directly, and it points the other way.</p>
+  <h2>Control drugs <span class="snap">Figure 5 · Table 4</span></h2>
+  <p class="secintro">The standing objection to any before-and-after study is that something else changed. Here the something-else is measured directly &mdash; and it is the reason the headline estimate is reported calibrated rather than raw.</p>
+  <figure>
+    <img src="figures/Figure5_controls.png" alt="Vaginal estrogen plotted against levothyroxine, alendronate and atorvastatin, each indexed to its own January to October 2025 mean">
+    <figcaption><b>Figure 5.</b> Vaginal estrogen against three negative-control drugs, each series indexed to its own January&ndash;October 2025 mean so that the four can share a scale.</figcaption>
+  </figure>
   <div class="tblwrap"><table>
-    <thead><tr><th>Drug</th><th>Role</th><th>Rate ratio</th><th>× vs vaginal estrogen</th></tr></thead>
+    <thead><tr><th>Drug</th><th>Role</th><th>Before: n / N</th><th>After: n / N</th><th>Rate ratio (95% CI)</th></tr></thead>
     <tbody>
-      <tr class="up"><td>Vaginal estrogen (all)</td><td>Exposure</td><td class="n">1.14</td><td class="n">1.00</td></tr>
-      <tr class="up"><td>Systemic estradiol patch</td><td>Positive control</td><td class="n">1.47</td><td class="n">1.28</td></tr>
-      <tr class="down"><td>Alendronate</td><td>Negative control</td><td class="n">0.88</td><td class="n">0.77</td></tr>
-      <tr class="down"><td>Levothyroxine</td><td>Negative control</td><td class="n">0.88</td><td class="n">0.77</td></tr>
-      <tr class="down"><td>Ospemifene</td><td>Substitution</td><td class="n">0.78</td><td class="n">0.68</td></tr>
-      <tr><td>Prasterone (vaginal DHEA)</td><td>Substitution</td><td class="n">0.98</td><td class="n">0.86</td></tr>
-      <tr class="down"><td>Tamoxifen / raloxifene</td><td>Comparator</td><td class="n">0.93</td><td class="n">0.82</td></tr>
+      <tr class="up"><td>Systemic estradiol patch</td><td>Positive control</td><td class="n">1,376 / 8,013,299</td><td class="n">2,638 / 7,790,510</td><td class="n">1.97 (1.85&ndash;2.10)</td></tr>
+      <tr class="up"><td>Vaginal estrogen (continuing)</td><td>Exposure</td><td class="n">56,839 / 8,704,989</td><td class="n">81,476 / 8,656,188</td><td class="n">1.44 (1.43&ndash;1.46)</td></tr>
+      <tr><td>Alendronate</td><td>Negative control</td><td class="n">45,108 / 8,704,989</td><td class="n">46,320 / 8,656,188</td><td class="n">1.03 (1.02&ndash;1.05)</td></tr>
+      <tr><td>Levothyroxine</td><td>Negative control</td><td class="n">343,071 / 8,704,989</td><td class="n">336,889 / 8,656,188</td><td class="n">0.99 (0.98&ndash;0.99)</td></tr>
+      <tr><td>Atorvastatin</td><td>Negative control</td><td class="n">330,219 / 8,704,989</td><td class="n">320,153 / 8,656,188</td><td class="n">0.97 (0.97&ndash;0.98)</td></tr>
     </tbody>
   </table></div>
-  <p class="tblnote"><b>Table 6.</b> Rate = drug users ÷ women seen in the window (shared denominator). "× vs VE" is the drug's rate ratio divided by that of vaginal estrogen. The two estrogen products rose; unrelated negative controls fell about 12% over the same window, in the same clinics, among overlapping populations of older women. The main feature distinguishing the drugs that rose from the drugs that fell is that they are estrogens.</p>
-  <figure>
-    <img src="figures/Specificity_check_control_drugs_vs_vaginal_estrogen.jpg" alt="Post versus pre rate ratios per woman seen for vaginal estrogen and control drugs">
-    <figcaption><b>Figure 6.</b> Post-versus-pre rate ratios per woman seen for vaginal estrogen and control drugs, with 95% confidence intervals.</figcaption>
-  </figure>
-  <figure>
-    <img src="figures/Vaginal_estrogen_vs_levothyroxine_monthly_indexed.jpg" alt="Monthly vaginal estrogen versus levothyroxine, each indexed to its own first month">
-    <figcaption><b>Figure 7.</b> Monthly vaginal estrogen versus levothyroxine, each indexed to its own first month (=100). The vertical line marks the November 11th, 2025 warning removal. The two series track together through the pre-period and diverge after it.</figcaption>
-  </figure>
+  <p class="tblnote"><b>Table 4.</b> January&ndash;March 2025 versus January&ndash;March 2026, shared denominator. Across the windows the three unrelated chronic drugs moved by three per cent or less in either direction.</p>
+  <div class="callout"><b>The controls accelerated too, and that is why the estimate is calibrated.</b> The window ratios above make the negative controls look flat, but the segmented model fitted to each of them shows all three picking up speed over the same months. Treating the three slope changes as a null distribution and subtracting their mean brings the vaginal estrogen estimate down from +54.5%/yr to <b>+45.0%/yr</b> and widens the interval to +1.3 to +107.6 (p = 0.043) &mdash; still significant, but materially smaller than the raw figure. The calibrated number is the one this page reports as the result.</div>
+  <p>The positive control needs the same care. The systemic estradiol patch rose by a larger window ratio than vaginal estrogen (1.97 against 1.54), which read alone would say the announcement moved systemic therapy more. The time series says otherwise: the patch entered the window already climbing at about 40% a year and did not measurably depart from that trajectory, while vaginal estrogen entered on a shallower trend and added to it. <b>A pre-post ratio in a rising series is not an effect</b>, and the two drugs separate only once both are modelled.</p>
 </section>
 
-<section id="additional" class="sec">
-  <h2>Additional variables <span class="snap">Figure 8 · Tables 7–8</span></h2>
-  <p class="secintro">A wider panel of comorbidities and co-prescribed agents, examined for any competing explanation. None is evident: skeletal diagnoses and systemic conjugated estrogens fall along the maturing-denominator baseline, while active-cancer-treatment markers hold or rise.</p>
-  <div class="tblwrap"><table>
-    <thead><tr><th>Variable</th><th>Total pre</th><th>Incident pre</th><th>Total post</th><th>Incident post</th></tr></thead>
-    <tbody>
-      <tr><td>Dyspareunia (N94.1)</td><td class="n">21,131 (11.0%)</td><td class="n">16,267 (10.7%)</td><td class="n">19,280 (10.1%)</td><td class="n">14,794 (10.0%)</td></tr>
-      <tr><td>Vulvodynia (N94.81)</td><td class="n">2,907 (1.5%)</td><td class="n">2,082 (1.4%)</td><td class="n">2,189 (1.1%)</td><td class="n">1,589 (1.1%)</td></tr>
-      <tr><td>Osteoporosis (M81)</td><td class="n">39,765 (20.7%)</td><td class="n">29,672 (19.6%)</td><td class="n">36,067 (18.9%)</td><td class="n">27,355 (18.5%)</td></tr>
-      <tr><td>Osteopenia (M85.8)</td><td class="n">51,884 (27.0%)</td><td class="n">38,816 (25.6%)</td><td class="n">48,165 (25.3%)</td><td class="n">36,571 (24.7%)</td></tr>
-      <tr><td>Conjugated estrogens</td><td class="n">27,285 (14.2%)</td><td class="n">20,192 (13.3%)</td><td class="n">22,132 (11.6%)</td><td class="n">16,271 (11.0%)</td></tr>
-      <tr><td>Antineoplastic hormones</td><td class="n">2,945 (1.5%)</td><td class="n">2,369 (1.6%)</td><td class="n">3,188 (1.7%)</td><td class="n">2,599 (1.8%)</td></tr>
-      <tr><td>Leuprolide (GnRH agonist)</td><td class="n">979 (0.5%)</td><td class="n">850 (0.6%)</td><td class="n">1,118 (0.6%)</td><td class="n">942 (0.6%)</td></tr>
-      <tr><td>Raloxifene (SERM)</td><td class="n">1,642 (0.9%)</td><td class="n">1,179 (0.8%)</td><td class="n">1,294 (0.7%)</td><td class="n">966 (0.7%)</td></tr>
-    </tbody>
-  </table></div>
-  <p class="tblnote"><b>Table 7.</b> Percentages are of the corresponding cohort.</p>
+<section id="breakmonth" class="sec">
+  <h2>Break-month sensitivity <span class="snap">Figure 6</span></h2>
+  <p class="secintro">November 2025 was pre-specified as the break. It is worth showing what happens if it is wrong.</p>
   <figure>
-    <img src="figures/Additional_variables_risk_ratios_among_new_incident_users.jpg" alt="Risk ratios post versus pre for additional comorbidities and medications among incident users">
-    <figcaption><b>Figure 8.</b> Risk ratios (post vs pre) for additional comorbidities and medications among incident users, with 95% CIs. No competing driver of the estrogen rise is evident.</figcaption>
+    <img src="figures/Figure6_breakmonth.png" alt="Slope change estimates, raw and calibrated, for seven assumed break months from July 2025 to January 2026">
+    <figcaption><b>Figure 6.</b> The segmented model re-fitted at each of seven assumed break months, raw and calibrated to the controls. The pre-specified month is shaded.</figcaption>
+  </figure>
+  <p>The estimate is largest at the pre-specified month and shrinks on either side of it. Re-fitting the break at months with no FDA action produces no slope change at all &mdash; September 2025 gives p = 0.13 and January 2026 p = 0.60 &mdash; which is the pattern a real event produces and a drifting trend does not. It is also the honest read that the intervals widen sharply once the break is placed late in the series, because fewer post-break months remain to estimate a slope from. <b>The sign is robust; the magnitude is not precisely identified</b>, and five post-announcement months is a short series on which to rest it.</p>
+</section>
+
+<section id="breast" class="sec">
+  <h2>Breast cancer <span class="snap">Figures 7&ndash;8 · Table 5</span></h2>
+  <p class="secintro">The boxed warning named breast cancer among its harms, and it is read as contraindicating the drug after breast cancer. If caution tracked tumour biology, receptor-positive survivors would be treated least of all. The data say something simpler and worse.</p>
+  <figure>
+    <img src="figures/Figure7_burden_vs_use.png" alt="Left: recorded genitourinary diagnoses among women starting vaginal estrogen, breast cancer history versus no breast cancer code. Right: initiation rates per 10,000 before and after the announcement in both groups">
+    <figcaption><b>Figure 7.</b> Overburdened and undertreated. <b>A.</b> Recorded genitourinary diagnoses among women who started vaginal estrogen in the post-announcement window, survivors against women with no breast-cancer code. <b>B.</b> The initiation rates in the same two groups, before and after.</figcaption>
   </figure>
   <div class="tblwrap"><table>
-    <thead><tr><th>Composite variable</th><th>Cohort</th><th>Lower bound</th><th>Upper-bound estimate</th><th>% (est.)</th></tr></thead>
+    <thead><tr><th>Among women starting vaginal estrogen, Nov 2025&ndash;Mar 2026</th><th>Breast-cancer history<br><span class="sub">n = 2,319</span></th><th>No breast-cancer code</th><th>Prevalence ratio</th></tr></thead>
     <tbody>
-      <tr><td>Hysterectomy</td><td>Total pre</td><td class="n">5,013</td><td class="n">10,770</td><td class="n">5.6%</td></tr>
-      <tr><td>Hysterectomy</td><td>Total post</td><td class="n">4,761</td><td class="n">9,863</td><td class="n">5.2%</td></tr>
-      <tr><td>Oophorectomy</td><td>Total pre</td><td class="n">2,457</td><td class="n">2,909</td><td class="n">1.5%</td></tr>
-      <tr><td>Oophorectomy</td><td>Total post</td><td class="n">2,459</td><td class="n">2,859</td><td class="n">1.5%</td></tr>
-      <tr><td>Aromatase inhibitor</td><td>Total pre</td><td class="n">2,258</td><td class="n">4,839</td><td class="n">2.5%</td></tr>
-      <tr><td>Aromatase inhibitor</td><td>Total post</td><td class="n">2,197</td><td class="n">4,857</td><td class="n">2.5%</td></tr>
+      <tr class="up"><td>Urinary frequency</td><td class="n">34.4%</td><td class="n">21.0%</td><td class="n">1.64 (1.55&ndash;1.74)</td></tr>
+      <tr><td>Urinary tract infection</td><td class="n">47.5%</td><td class="n">35.5%</td><td class="n">1.34</td></tr>
+      <tr><td>Dyspareunia</td><td class="n">12.6%</td><td class="n">8.6%</td><td class="n">1.48</td></tr>
+      <tr><td>Atrophic vaginitis</td><td class="n">44.7%</td><td class="n">36.3%</td><td class="n">1.23</td></tr>
     </tbody>
   </table></div>
-  <p class="tblnote"><b>Table 8.</b> Lower bound = largest single contributing code; upper-bound estimate = sum across approach- or agent-specific codes, which overcounts patients carrying more than one. True values lie between; the substantive conclusions are unchanged across the range, and these variables are presented as bounded estimates rather than exact counts throughout.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Initiation per 10,000 women in care</th><th>Nov 2024&ndash;Mar 2025</th><th>Nov 2025&ndash;Mar 2026</th><th>RR vs no breast cancer, before</th><th>RR, after</th></tr></thead>
+    <tbody>
+      <tr class="down"><td>Breast-cancer history (Z85.3)</td><td class="n">49.0</td><td class="n">77.5</td><td class="n">0.72 (0.68&ndash;0.76)</td><td class="n">0.77 (0.74&ndash;0.81)</td></tr>
+      <tr><td>No breast-cancer code</td><td class="n">68.1</td><td class="n">100.0</td><td class="n">reference</td><td class="n">reference</td></tr>
+      <tr class="down"><td>History or active disease (Z85.3 or C50)</td><td class="n">52.2</td><td class="n">85.4</td><td class="n">0.76</td><td class="n">0.85</td></tr>
+      <tr><td>Neither history nor active</td><td class="n">68.3</td><td class="n">99.9</td><td class="n">reference</td><td class="n">reference</td></tr>
+      <tr class="down"><td>Continuing use, breast-cancer history</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n" colspan="2">0.69</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tblnote"><b>Table 5.</b> Prevalence ratios in the upper table compare recorded diagnoses among women who started the drug; rate ratios in the lower table compare initiation within each stratum against the matched comparison group in the same window. <b>Survivors who receive vaginal estrogen are more symptomatic than other recipients, and as a group receive it about a quarter less often.</b> Uptake rose faster in survivors after the announcement &mdash; 0.72 to 0.77, and 0.76 to 0.85 on the broader definition &mdash; narrowing the gap without closing it.</p>
+  <figure>
+    <img src="figures/Figure8_receptor.png" alt="Forest plot of the rate ratio of receptor-positive versus receptor-negative survivors, before and after the announcement, both intervals crossing one">
+    <figcaption><b>Figure 8.</b> Receptor-positive against receptor-negative survivors, before and after. Both intervals cross 1.</figcaption>
+  </figure>
+  <div class="callout"><b>The shortfall is no smaller where the theoretical concern does not apply.</b> Receptor-positive and receptor-negative survivors initiated at indistinguishable rates in both windows &mdash; 0.94 (0.75&ndash;1.18) before and 0.98 (0.82&ndash;1.17) after. If the caution were about estrogen feeding a hormone-responsive tumour, receptor-negative women should look like women without breast cancer. They do not. The undertreatment reads as blanket caution about the diagnosis rather than individualised risk, and it persisted after the announcement.</div>
+</section>
+
+<section id="whostarts" class="sec">
+  <h2>Who starts <span class="snap">Figure 9 · Table 6</span></h2>
+  <p class="secintro">Before asking who was missed, it is worth checking that the prescribing is reaching symptomatic women at all.</p>
+  <figure>
+    <img src="figures/Figure9_enrichment.png" alt="Forest plot of prevalence ratios for genitourinary diagnoses among initiators versus women in care who did not start">
+    <figcaption><b>Figure 9.</b> Genitourinary diagnoses among women who started vaginal estrogen, against women in care who did not. Log scale.</figcaption>
+  </figure>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Diagnosis</th><th>Did not start</th><th>Started</th><th>Prevalence ratio (95% CI)</th></tr></thead>
+    <tbody>
+      <tr class="up"><td>GSM / atrophic vaginitis (N95.2)</td><td class="n">3.8%</td><td class="n">43.1%</td><td class="n">11.23 (11.05&ndash;11.42)</td></tr>
+      <tr><td>Dyspareunia (N94.1)</td><td class="n">1.5%</td><td class="n">9.7%</td><td class="n">6.40 (6.19&ndash;6.62)</td></tr>
+      <tr><td>Genital prolapse (N81)</td><td class="n">3.9%</td><td class="n">18.5%</td><td class="n">4.78 (4.67&ndash;4.88)</td></tr>
+      <tr><td>Urinary incontinence (N39.4)</td><td class="n">5.8%</td><td class="n">21.7%</td><td class="n">3.74 (3.67&ndash;3.82)</td></tr>
+      <tr><td>Urinary tract infection (N39.0)</td><td class="n">18.3%</td><td class="n">34.4%</td><td class="n">1.88 (1.85&ndash;1.90)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tblnote"><b>Table 6.</b> November 2025&ndash;March 2026 window; initiator n = 49,281. The non-initiator arm is a scaled sample (sampling factor 0.0753) rather than the full denominator, which affects the width of the confidence interval and not the ratio. Women who start are enriched eleven-fold for a GSM diagnosis, so the prescribing is reaching symptomatic women rather than being scattered &mdash; which is what makes the shortfall in <a href="#breast">survivors</a> a shortfall rather than a difference in indication.</p>
+</section>
+
+<section id="race" class="sec">
+  <h2>Race and ethnicity <span class="snap">Figure 10 · Table 7</span></h2>
+  <p class="secintro">A rise in prescribing is not the same as a rise in access. If the increase lands where use was already highest, the absolute distance between groups grows even when the relative distance does not &mdash; and which of the two is reported decides whether the same event is described as equitable or as regressive.</p>
+  <figure>
+    <img src="figures/Figure10_race.png" alt="Left: initiation per 10,000 women by race and ethnicity before and after the announcement. Right: the absolute difference from White women in each window, showing every racial gap widening and the Hispanic gap closing">
+    <figcaption><b>Figure 10.</b> <b>A.</b> Initiation per 10,000 women in care, before and after, with 95% Wilson intervals and the within-group rate ratio. <b>B.</b> The same data as absolute differences from the referent group, with 95% Newcombe intervals; the figure at the right of each row is the change in the size of that gap.</figcaption>
+  </figure>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Group</th><th>Nov 2024&ndash;Mar 2025<br><span class="sub">per 10,000</span></th><th>Nov 2025&ndash;Mar 2026<br><span class="sub">per 10,000</span></th><th>Rate ratio vs White, before</th><th>&hellip; after</th><th>Absolute gap, before &rarr; after</th></tr></thead>
+    <tbody>
+      <tr><td>White</td><td class="n">74.3</td><td class="n">109.5</td><td class="n">reference</td><td class="n">reference</td><td class="n">&mdash;</td></tr>
+      <tr class="down"><td>Black or African American</td><td class="n">34.6</td><td class="n">53.2</td><td class="n">0.46 (0.45&ndash;0.48)</td><td class="n">0.49 (0.47&ndash;0.50)</td><td class="n">39.8 &rarr; 56.4</td></tr>
+      <tr class="down"><td>Native Hawaiian / Pacific Islander</td><td class="n">34.1</td><td class="n">54.7</td><td class="n">0.46</td><td class="n">0.50</td><td class="n">40.2 &rarr; 54.8</td></tr>
+      <tr class="down"><td>Asian</td><td class="n">51.5</td><td class="n">71.2</td><td class="n">0.69</td><td class="n">0.65</td><td class="n">22.8 &rarr; 38.3</td></tr>
+      <tr class="down"><td>American Indian / Alaska Native</td><td class="n">61.8</td><td class="n">86.8</td><td class="n">0.83</td><td class="n">0.79</td><td class="n">12.6 &rarr; 22.7</td></tr>
+      <tr class="up"><td>Hispanic or Latino <span class="sub">(vs non-Hispanic)</span></td><td class="n">61.5</td><td class="n">100.4</td><td class="n">0.87</td><td class="n">0.98</td><td class="n">8.9 &rarr; 1.9</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tblnote"><b>Table 7.</b> Initiation per 10,000 women in care in each five-month window. Race and ethnicity are the recorded demographic distribution of each cohort applied to its patient count. Rate ratios are Katz against White women, and against non-Hispanic women for the Hispanic row; absolute gaps are differences per 10,000 from the same referent.</p>
+
+  <div class="callout"><b>Relative disparity barely moved; absolute disparity widened for every racial group.</b> Black women initiated at less than half the White rate before the announcement (0.46) and at less than half after it (0.49). Over the same months the distance between the two groups grew from 39.8 to 56.4 per 10,000 women in care &mdash; a 42% increase &mdash; and the intervals on those two differences do not overlap. <b>The mechanism is arithmetic and requires no differential response:</b> a proportional rise applied to a higher baseline adds more women. Black women in fact rose slightly faster in proportional terms than White women and still lost ground.</p>
+  </div>
+
+  <p>Ethnicity is the exception, and it shows what closing a gap actually requires. Hispanic women rose from 61.5 to 100.4 per 10,000 against 70.5 to 102.4 in non-Hispanic women &mdash; a differential large enough to overcome the baseline arithmetic. The gap fell from 8.9 to 1.9 per 10,000, the only comparison in the study whose post-announcement difference includes zero. Whatever drove the response among Hispanic women was not what drove it among Black women, and the two should not be described together.</p>
+</section>
+
+<section id="formulation" class="sec">
+  <h2>Formulation <span class="snap">Figure 11 · Table 8</span></h2>
+  <p class="secintro">This is the natural experiment inside the natural experiment. Among vaginal products only the estradiol ring had been relabeled; the inserts and creams kept their original labeling. If prescribers were responding to the <i>label</i>, ring use should have risen relative to the rest.</p>
+  <figure>
+    <img src="figures/Figure11_formulation.png" alt="Formulation share of classified new starts, ring, tablet or insert, and cream, January to March 2025 versus 2026">
+    <figcaption><b>Figure 11.</b> Share of classified new starts by formulation, with Katz rate ratios. The ring, the only relabeled vaginal product, is the one that lost share.</figcaption>
+  </figure>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Formulation</th><th>Jan&ndash;Mar 2025</th><th>Jan&ndash;Mar 2026</th><th>Share ratio (95% CI)</th><th>Absolute growth</th></tr></thead>
+    <tbody>
+      <tr class="down"><td>Ring &mdash; the only relabeled product</td><td class="n">711 (11.8%)</td><td class="n">710 (8.5%)</td><td class="n">0.72 (0.65&ndash;0.79)</td><td class="n">+0%</td></tr>
+      <tr><td>Tablet / insert</td><td class="n">2,625 (43.4%)</td><td class="n">3,530 (42.0%)</td><td class="n">0.97 (0.93&ndash;1.01)</td><td class="n">+34%</td></tr>
+      <tr class="up"><td>Cream</td><td class="n">2,712 (44.8%)</td><td class="n">4,161 (49.5%)</td><td class="n">1.10 (1.07&ndash;1.14)</td><td class="n">+53%</td></tr>
+      <tr><td>All classified starts</td><td class="n">6,048 (100%)</td><td class="n">8,401 (100%)</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+      <tr class="up"><td>All new starts</td><td class="n">19,703</td><td class="n">29,433</td><td class="n">1.54 (1.51&ndash;1.56)</td><td class="n">+49%</td></tr>
+      <tr><td>Unclassified starts</td><td class="n">13,655 (69.3% of all)</td><td class="n">21,032 (71.5% of all)</td><td class="n">1.03 (1.02&ndash;1.04)</td><td class="n">+54%</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tblnote"><b>Table 8.</b> Percentages in the first two columns are of classified starts; the unclassified row is a percentage of all new starts. Only 30.7% of 2025 starts and 28.5% of 2026 starts carry a formulation in the prescription record, which is the main limitation of this analysis. <b>The announcement, not the label.</b> Every formulation grew in absolute terms, but the ring &mdash; the one product whose own label changed &mdash; was flat (711 &rarr; 710) and lost a third of its share, while cream, never relabeled, gained. Uptake did not favour the relabeled formulation.</p>
+</section>
+
+<section id="continuation" class="sec">
+  <h2>Continuation <span class="snap">Figure 12 · Table 9</span></h2>
+  <p class="secintro">If the rise were only people refilling what they already had, the ratio of continuing users to new users would climb. It fell.</p>
+  <figure>
+    <img src="figures/Figure12_continuation.png" alt="Forest plot of the continuation index, prevalent rate divided by incident rate, across five windows">
+    <figcaption><b>Figure 12.</b> The continuation index &mdash; prevalent rate divided by incident rate &mdash; across five windows. A falling index means new starts are outpacing continuing use.</figcaption>
+  </figure>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Window</th><th>Incident</th><th>Prevalent</th><th>Continuation index (95% CI)</th></tr></thead>
+    <tbody>
+      <tr><td>Jan&ndash;Mar 2024</td><td class="n">15,761 / 7,741,035</td><td class="n">46,107 / 8,310,169</td><td class="n">2.73 (2.68&ndash;2.77)</td></tr>
+      <tr><td>Jan&ndash;Mar 2025</td><td class="n">19,703 / 8,013,299</td><td class="n">56,839 / 8,704,989</td><td class="n">2.66 (2.61&ndash;2.70)</td></tr>
+      <tr class="down"><td>Jan&ndash;Mar 2026</td><td class="n">29,433 / 7,790,510</td><td class="n">81,476 / 8,656,188</td><td class="n">2.49 (2.46&ndash;2.52)</td></tr>
+      <tr><td>Nov 2024&ndash;Mar 2025</td><td class="n">31,783 / 13,190,276</td><td class="n">92,204 / 14,367,109</td><td class="n">2.66 (2.63&ndash;2.70)</td></tr>
+      <tr class="down"><td>Nov 2025&ndash;Mar 2026</td><td class="n">46,707 / 13,075,508</td><td class="n">129,888 / 14,528,317</td><td class="n">2.50 (2.48&ndash;2.53)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tblnote"><b>Table 9.</b> The index fell by 6.2% between the January&ndash;March windows either side of the announcement (ratio 0.938, 95% CI 0.919&ndash;0.958) against 2.5% in the prior-year control (0.975, 0.951&ndash;0.998), and by 6.0% between the five-month windows (0.940, 0.924&ndash;0.955). Continuing use did rise &mdash; 1.41 (1.39&ndash;1.43) in the January&ndash;March comparison, against a prior-year control of 1.17 (1.15&ndash;1.19) &mdash; but new starts rose faster, so the cohort tilted toward people who had not been taking it before. <b>That is what a label effect looks like, and it is not what a refill artifact looks like.</b></p>
+</section>
+
+<section id="notyet" class="sec">
+  <h2>Open threads</h2>
+  <p class="secintro">What is on this page is what the workbook and the three abstracts support. These are the pieces still outstanding, named rather than estimated.</p>
+  <ul class="pitfalls">
+    <li><b>The deterrence gradient needs its own queries.</b> The companion manuscript reports initiation ordering monotonically with prior reason for deterrence &mdash; unstratified 1.47, breast-cancer history 1.56, history or active disease 1.62, any aromatase inhibitor 1.91, incident disease 1.94 &mdash; but the aromatase-inhibitor row is currently built on women <i>without</i> a history code, which excludes most aromatase-inhibitor users. Four queries fix it. The ordering is not reported here until they are run.</li>
+    <li><b>Receptor status is coded for a minority.</b> Status codes of either polarity are present for roughly 37% of breast-cancer patients in the network, and coded ER-positive disease accounts for 29% of the cohort against a national estimate near 65%. The strata in <a href="#breast">Figure 8</a> are therefore a non-representative slice, and the drug-augmented definition that recovers part of what the codes miss has its own circularity, since aromatase inhibitors cause the symptom the drug treats.</li>
+    <li><b>The formulation window needs reconciling.</b> The January&ndash;March and November&ndash;March versions of the ring comparison give 11.8 &rarr; 8.5% and 12.0 &rarr; 8.0%. <a href="#formulation">Table 8</a> reports the January&ndash;March pair; the two should be stated consistently before publication.</li>
+    <li><b>The geographic placebo test.</b> The FDA action applies only to the United States, so a regulatory effect should concentrate in U.S. organisations and attenuate elsewhere. Not yet run.</li>
+    <li><b>Regional variation and receptor status by race.</b> Both are available through the platform's cohort explorer without new query families, and both are checks of the network against external estimates rather than new claims.</li>
+  </ul>
 </section>
 
 <section id="limitations" class="sec">
   <h2>Limitations</h2>
   <ul class="pitfalls">
-    <li><b>It is still a before-and-after study.</b> The control-drug design mitigates confounding by secular trend, but it cannot exclude an unmeasured co-intervention that affected estrogens specifically and coincided precisely with the label change.</li>
-    <li><b>The network lags.</b> The most recent months are incomplete, which is why May through July were censored and primary inference rests on the mature window and on rates rather than counts.</li>
-    <li><b>The population is not the country.</b> The Global Collaborative Network is weighted toward U.S. and academic institutions and is predominantly White and non-Hispanic, so the magnitude may not generalize even where the direction does. Because the network also includes non-U.S. organizations not subject to the FDA action, the global estimate here is if anything conservative.</li>
-    <li><b>Orders are not doses.</b> Electronic-health-record orders capture prescribing intent, not dispensing or adherence. This measures what clinicians did, not what patients ultimately used.</li>
-    <li><b>Some variables are bounded, not exact.</b> Hysterectomy, oophorectomy and aromatase-inhibitor exposure rest on overlapping code sets and are best read as the ranges in Table 8.</li>
+    <li><b>It is still a before-and-after study.</b> The controls constrain network-level drift, but they cannot exclude a confounder specific to menopause care &mdash; a guideline, a society statement, a media cycle &mdash; concentrated in the same months. They establish that whatever moved vaginal estrogen did not move levothyroxine, alendronate or atorvastatin, which is narrower than causality and broader than nothing.</li>
+    <li><b>The pre-trend is steep and the controls were not flat.</b> Initiation was rising 25.8% a year before November 2025, and the control drugs accelerated over the same months, which is why the headline estimate is the calibrated +45.0%/yr rather than the raw +54.5%/yr.</li>
+    <li><b>Five post-announcement months.</b> The post-period slope rests on five points and its interval is correspondingly wide. The <a href="#breakmonth">break-month sweep</a> shows the sign is stable and the magnitude is not precisely identified; the estimate should be revisited as the series matures.</li>
+    <li><b>Most starts carry no formulation.</b> Seven in ten prescription records do not identify ring, tablet or cream, so the formulation analysis rests on under a third of the cohort.</li>
+    <li><b>Race and ethnicity are reconstructed.</b> Group counts are the recorded demographic distribution of each cohort applied to its patient count, not direct per-group queries, and the recording itself varies between contributing organisations and is frequently not self-reported.</li>
+    <li><b>The denominator conditions on access.</b> Everyone counted here is already in care, so women entirely outside care are absent from both numerator and denominator. These data cannot separate under-diagnosis from under-treatment, and they understate disparity relative to a general-population denominator.</li>
+    <li><b>Small cells are masked.</b> TriNetX returns counts of one to ten as ten, which constrains the formulation and endocrine-therapy subseries more than the primary series.</li>
+    <li><b>Orders are not doses.</b> Electronic-health-record orders capture prescribing intent, not dispensing or adherence, and the gap between the two is known to be substantial for this drug class.</li>
   </ul>
 </section>
 
 <section id="next" class="sec">
   <h2>What comes next</h2>
-  <p>The most informative next step is a <b>geographic placebo test</b>. The FDA's action applies only to the United States, so a genuinely regulatory effect should concentrate in U.S. health-care organizations and attenuate — ideally vanish — in the international sites that make up the rest of the Global Collaborative Network. Repeating the primary rate comparison restricted to U.S. organizations and contrasting it with the global estimate reported here would either strengthen the causal case substantially or undermine it. That analysis is specified as the primary planned extension of this work.</p>
-  <p>Beyond it: extending the observation window to confirm the increase persists rather than reflecting a one-time release of pent-up demand; linking prescribing to downstream outcomes — symptom relief, urinary-tract-infection rates, and oncologic safety in the breast-cancer subgroup; and qualitative study of how oncologists and gynecologists actually changed their conversations after the announcement.</p>
+  <p>The four aromatase-inhibitor queries in <a href="#notyet">Open threads</a> are the immediate work: they are what turns &ldquo;prescribing rose&rdquo; into &ldquo;the warning was doing the deterring,&rdquo; and an ordering across cohorts is a harder thing to produce by accident than a single difference.</p>
+  <p>Beyond them: extending the series past March 2026 to confirm the new slope persists rather than reflecting a one-time release of pent-up demand; the geographic placebo test; and linking prescribing to downstream outcomes &mdash; symptom relief, urinary-tract-infection rates, and oncologic safety in the breast-cancer subgroup, where the entire clinical argument for lifting the warning rests on a safety claim this dataset can begin to test.</p>
 </section>
-
 <section id="references" class="sec">
   <h2>References</h2>
   <div class="tblwrap"><table class="reftbl">
@@ -327,7 +429,7 @@
       <tr><td>9</td><td>Palacios S, Combalia J, Emsellem C, et al. Therapies for the management of genitourinary syndrome of menopause.<span class="rjour">Post Reprod Health. 2020;26(1):32–42.</span></td></tr>
       <tr><td>10</td><td>U.S. Food and Drug Administration. Removal of boxed warning for low-dose vaginal estrogen products.<span class="rjour">FDA Drug Safety Communication; November 11th, 2025.</span></td></tr>
       <tr><td>11</td><td>Zeeshan FNU, Saqlain A. FDA's 2025 removal of black box warnings on menopausal hormone therapy.<span class="rjour">Ann Med Surg (Lond). 2025. <a href="https://doi.org/10.1097/MS9.0000000000004749" target="_blank" rel="noopener">10.1097/MS9.0000000000004749</a></span></td></tr>
-      <tr><td>12</td><td>TriNetX LLC. TriNetX Global Collaborative Network: methodology and data provenance.<span class="rjour">Cambridge, MA; 2026.</span></td></tr>
+      <tr><td>12</td><td>TriNetX LLC. TriNetX US Collaborative Network: methodology and data provenance.<span class="rjour">Cambridge, MA; 2026.</span></td></tr>
       <tr><td>13</td><td>Ludwig RJ, Anson M, Zirpel H, et al. A comprehensive review of methodologies and application to use the real-world data and analytics platform TriNetX.<span class="rjour">Front Pharmacol. 2025;16:1516126. <a href="https://doi.org/10.3389/fphar.2025.1516126" target="_blank" rel="noopener">10.3389/fphar.2025.1516126</a></span></td></tr>
       <tr><td>14</td><td>Nassar M, Abosheaishaa H, Elfert K, et al. TriNetX and real-world evidence: a critical review of its strengths, limitations, and bias considerations in clinical research.<span class="rjour">ASIDE Intern Med. 2025. <a href="https://doi.org/10.71079/aside.im.03222516" target="_blank" rel="noopener">10.71079/aside.im.03222516</a></span></td></tr>
       <tr><td>15</td><td>Joelving F. Medical students are using a popular research tool to pump out misleading studies.<span class="rjour">Science (ScienceInsider). June 24th, 2026;392(6805).</span></td></tr>
@@ -340,19 +442,21 @@
   </table></div>
 </section>
 
+
 <section id="about" class="sec">
   <h2>About the study</h2>
   <div class="keybox">
-    <p><b>Data source.</b> TriNetX Global Collaborative Network — a federated platform aggregating de-identified electronic-health-record data from more than one hundred health-care organizations. The platform returns aggregate counts computed at each contributing site; no patient-level records leave their source. The study was exempt from institutional-review-board review, with a Downstate not-human-research determination on file.</p>
-    <p><b>Snapshot.</b> All counts extracted August 3rd, 2026. Windows: November 11th, 2024 – August 3rd, 2025 and November 11th, 2025 – August 3rd, 2026.</p>
-    <p><b>Analysis.</b> Two-proportion z-tests with risk ratios, risk differences and 95% confidence intervals; Cohen's h for effect size; Welch t-tests for continuous variables from summary statistics. Because the cohorts number in the hundreds of thousands, nearly every comparison is statistically significant, so effect sizes and confidence intervals are emphasized over p-values throughout. Conducted in the TriNetX Analytics environment with confirmatory computation in a fully referenced spreadsheet model in which every derived figure traces to a single raw-data source.</p>
-    <p><b>Authors.</b> Henry M. Blair; Arshia Sandozi, MD. Department of Urology, Maimonides Medical Center, Brooklyn, NY.</p>
+    <p><b>Data source.</b> TriNetX US Collaborative Network &mdash; a federated platform returning aggregate counts from de-identified electronic health records at participating U.S. health-care organizations. The queries behind this page were run against a snapshot of 75 organizations and 42,417,840 patients; no patient-level records leave their source, and counts of one to ten are returned as ten. The study was approved by the institutional review boards of Maimonides Medical Center and SUNY Downstate Health Sciences University.</p>
+    <p><b>Series and windows.</b> Thirty-nine monthly cohorts of women aged 40&ndash;90 in active care, January 2023 through March 2026, with later months excluded as immature. Comparison windows: January&ndash;March 2025 versus January&ndash;March 2026, and November 2024&ndash;March 2025 versus November 2025&ndash;March 2026, each with the equivalent prior-year pair as a trend control. Active care is established by a diagnosis or outpatient evaluation-and-management code in the same calendar months of the preceding year.</p>
+    <p><b>Analysis.</b> Wilson score intervals for proportions, Katz intervals for rate ratios, Newcombe for absolute differences. The trend model is weighted least squares on log(rate) with numerator weights, a level shift and a slope change at November 2025, and a twelve-month harmonic pair &mdash; algebraically the quasi-Poisson segmented model, implemented identically in the workbook and in the figure generator so the two report the same coefficients. The three negative-control slope changes are treated as a null distribution and their mean subtracted, so the headline estimate is calibrated rather than raw.</p>
+    <p><b>Provenance.</b> Every count, percentage, confidence interval and rate ratio on this page is read from a computed cell of the master workbook or from the submitted abstracts &mdash; the same cells the figure generator reads &mdash; and nothing is recalculated here, except rates per 10,000 formed by dividing a printed numerator by its printed denominator. Where a comparison is not yet computed, it is listed in <a href="#notyet">Open threads</a> rather than estimated.</p>
+    <p><b>Authors.</b> Henry M. Blair; Arshia Sandozi, MD. Departments of Urology, Maimonides Medical Center and SUNY Downstate Health Sciences University, Brooklyn, NY.</p>
   </div>
   <div class="gate">
-    <h3>The manuscript</h3>
-    <p>Everything the manuscript rests on — design, cohorts, every table, every figure, the limitations — is on this page. The manuscript itself sits <a href="/projects/ve-boxed-warning/paper/">behind a passphrase</a> while the work is unpublished; if I sent you one, it opens there. Otherwise <a href="mailto:henrymblair@gmail.com?subject=Request%20for%20the%20vaginal-estrogen%20manuscript">email me</a>.</p>
+    <h3>The manuscripts</h3>
+    <p>This work is three papers &mdash; the trend and the announcement, breast cancer and receptor status, and race and ethnicity. Everything they rest on is on this page. The manuscripts themselves sit <a href="/projects/ve-boxed-warning/paper/">behind a passphrase</a> while the work is unpublished; if I sent you one, it opens there. Otherwise <a href="mailto:henrymblair@gmail.com?subject=Request%20for%20the%20vaginal-estrogen%20manuscripts">email me</a>.</p>
   </div>
-  <div class="pgfoot">Figures produced by ve_figures.py from the VE data master workbook · counts as-queried, never rescaled.</div>
+  <div class="pgfoot">Figures produced by make_figures.py, ms_figures.py and ve_derivation.py from the VE data master workbook · counts as-queried, never rescaled.</div>
 </section>
 
 </main>

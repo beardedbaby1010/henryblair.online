@@ -16,3 +16,8 @@ claude_log.txt
 
 # reference images dropped at the repo root are not site content
 /idea.jpg
+
+# working notes from the Claude session - local only, not published
+concerns.txt
+tasks_accomplished.txt
+_incoming/

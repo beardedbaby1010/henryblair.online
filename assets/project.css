@@ -93,3 +93,7 @@ main.hub{margin-left:var(--hubside);max-width:1160px;
 .wip b{color:#3a3527}
 .hub figure video{width:100%;height:auto;display:block;background:#111}
 .hub .statrow .stat:only-child{border-right:0}
+
+/* live cohort-derivation diagram (pca_figure.py / ve_figure.py) */
+.diagramwrap{background:#fff;border:1px solid var(--line);padding:8px;overflow:auto;margin:16px 0}
+.diagramwrap svg.pcafig{display:block;width:100%;height:auto}

@@ -88,18 +88,18 @@ SOURCES.update(SPINE_SOURCES)
 
 # ------------------------------------------------------------------- palette
 P = {
-    "ink":   "#16202b",
-    "mut":   "#5e6b78",
-    "line":  "#aeb8c1",
-    "arrow": "#9aa3ab",
-    "black": "#13181e",   # the cohort itself
-    "teal":  "#4a90c2",   # bone health
-    "plum":  "#12395e",   # treatment intensification
-    "slate": "#6b7785",   # comparison arms
+    "ink":   "#1b2a3c",
+    "mut":   "#5c7083",
+    "line":  "#b9c5d0",
+    "arrow": "#8fa2b5",
+    "black": "#24374f",   # the cohort itself - deep navy
+    "teal":  "#3e5773",   # first family
+    "plum":  "#5a7694",   # second family
+    "slate": "#9bacbd",   # comparison arms
     "band":  "#eef1f4",
-    "bandbd": "#d7dee4",
+    "bandbd": "#cfd8e1",
 }
-TINT = {"teal": "#eaf3fa", "plum": "#dfe8f1", "slate": "#eff1f4", "black": "#e9ecef"}
+TINT = {"teal": "#e8edf3", "plum": "#edf1f5", "slate": "#f3f5f8", "black": "#e9ecef"}
 SERIF = "Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif"
 SANS = "-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif"
 
@@ -291,8 +291,8 @@ def build(vals, network=None, hcos=None, snapshot=None):
           'letter-spacing=".07em">%s</text>' % (C1X + CW, gy + 8, P["mut"], esc(title)))
 
         def chip(cx, cy, cw, lab, k):
-            A('<rect x="%.1f" y="%.1f" width="%d" height="%d" rx="4" fill="#f2f5f7" '
-              'stroke="#dde3e9"/>' % (cx, cy, cw, CH))
+            A('<rect x="%.1f" y="%.1f" width="%d" height="%d" rx="4" fill="#f3f5f8" '
+              'stroke="#dbe2ea"/>' % (cx, cy, cw, CH))
             A('<text x="%.1f" y="%.1f" font-size="10.5" fill="%s">%s</text>'
               % (cx + 8, cy + 15, P["mut"], esc(lab)))
             A('<text x="%.1f" y="%.1f" font-size="10.5" font-weight="700" fill="%s" '

@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The national shift to same-day discharge after robotic prostatectomy — project</title>
 <meta name="description" content="Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge af">
-<link rel="stylesheet" href="/assets/site.css?v=e6038feb4e">
-<link rel="stylesheet" href="/assets/project.css?v=a98797abd7">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/project.css">
 
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
@@ -18,7 +18,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#111111">
 <meta property="og:site_name" content="Henry M. Blair">
-<meta property="og:image" content="https://henryblair.online/assets/og-image.png?v=fd726d5657">
+<meta property="og:image" content="https://henryblair.online/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -26,7 +26,7 @@
 </head>
 <body>
 
-<!--SITENAV--><a class="sb-badge" href="/" aria-label="Henry M. Blair — home"><img src="/assets/headshot-badge.png?v=3bcc1f9524" alt="" width="320" height="320"></a>
+<!--SITENAV--><a class="sb-badge" href="/" aria-label="Henry M. Blair — home"><img src="/assets/headshot-badge.png" alt="" width="320" height="320"></a>
 <div class="sitebar">
   <a class="sb-brand" href="/">Henry M. Blair</a>
   <nav class="sb-tabs"><a href="/about/">About Me</a><a href="/contact/">Contact Me</a><a href="/resume/">Resume</a><a href="/">Research Portfolio</a><a href="/abstracts/">Abstracts</a><a href="/earlier/">Earlier Work</a><a href="/other/">Other</a></nav>
@@ -79,9 +79,9 @@
 <section id="findings" class="sec">
   <h2>What it shows so far</h2>
   <ul class="pitfalls">
-    <li>Of 119,220 patients, 7,088 (5.9%) went home the same day.</li>
+    <li>Of 119,220 patients, <span data-q="n_sdd">7,088</span> (5.9%) went home the same day.</li>
     <li>The rate stayed below 1% through 2018, then rose to 1.9% in 2019 and 15.6% in 2024 (p<0.001 for trend), including patients aged 70 or older (0.6% to 8.2%).</li>
-    <li>Compared with overnight stay, same-day discharge was associated with lower readmission (3.3% vs 4.2%; relative risk 0.78, 95% confidence interval 0.69-0.89), complications (5.0% vs 6.4%) and reoperation (0.5% vs 1.1%).</li>
+    <li>Compared with overnight stay, same-day discharge was associated with lower readmission (<span data-q="readmit_sdd">3.3%</span> vs <span data-q="readmit_on">4.2%</span>; relative risk <span data-q="readmit_rr">0.78 (0.69–0.89)</span>), complications (<span data-q="anycomp_sdd">5.0%</span> vs <span data-q="anycomp_on">6.4%</span>; <span data-q="anycomp_rr">0.78 (0.71–0.87)</span>) and reoperation (<span data-q="reop_sdd">0.5%</span> vs <span data-q="reop_on">1.1%</span>; <span data-q="reop_rr">0.50 (0.36–0.68)</span>).</li>
     <li>Overall readmission did not change between eras (4.1% vs 4.2%; relative risk 1.02, 0.97-1.08).</li>
   </ul>
   <div class="callout">Same-day discharge after RARP grew sixteenfold after 2018 and now applies to about one in six patients, without a rise in national readmission rates. Lower complication rates after same-day discharge likely reflect selection of healthier patients, and comparisons are unadjusted.</div>
@@ -93,6 +93,6 @@
 </section>
   <div class="pgfoot">This page grows as the work does.</div>
 </main>
-<!--ANALYTICS--><script data-goatcounter="https://henryblair.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script><!--/ANALYTICS-->
+<script src="/assets/live-nsqip-same-day-discharge.js" defer></script>
 </body>
 </html>
