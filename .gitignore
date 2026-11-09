@@ -10,3 +10,6 @@ _to_delete/
 .locktrash/
 downloads/Henry_Blair_CV_*.pdf
 claude_log.txt
+
+# Plaintext CV never belongs in a public repo - it ships gated via _downloadable/
+/Henry_Blair_CV_*.pdf
