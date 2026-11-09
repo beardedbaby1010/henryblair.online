@@ -1,23 +1,23 @@
-.DS_Store
-*.pyc
-__pycache__/
-_source/
-_secrets/
-_downloadable/
-.trash/
-a.txt
-_to_delete/
-.locktrash/
-downloads/Henry_Blair_CV_*.pdf
-claude_log.txt
 
 # Plaintext CV never belongs in a public repo - it ships gated via _downloadable/
-/Henry_Blair_CV_*.pdf
-
 # reference images dropped at the repo root are not site content
-/idea.jpg
-
 # working notes from the Claude session - local only, not published
-concerns.txt
-tasks_accomplished.txt
+*.pyc
+.DS_Store
+.locktrash/
+.trash/
+/Henry_Blair_CV_*.pdf
+/idea.jpg
+__pycache__/
+_audit/fixes/
+_audit/pending.tgz
+_downloadable/
 _incoming/
+_secrets/
+_source/
+_to_delete/
+a.txt
+claude_log.txt
+concerns.txt
+downloads/Henry_Blair_CV_*.pdf
+tasks_accomplished.txt

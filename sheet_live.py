@@ -32,6 +32,8 @@ GVIZ = ("https://docs.google.com/spreadsheets/d/%s/gviz/tq"
 # formats
 #   n      the count            "1,243 (1.1%) [1.0%-1.2%]" -> "1,243"
 #   pct    the percentage                                  -> "1.1%"
+#   pct2   that percentage recomputed from n/N, two decimals -> "0.25%"
+#          (the workbook prints one; the abstracts print two)
 #   ci     percentage with its Wilson interval              -> "1.1% (1.0-1.2)"
 #   n_of_N count over its denominator                       -> "1,243 / 112,132"
 #   N      the denominator alone                            -> "112,132"
@@ -110,8 +112,8 @@ SHEETS = {
         "id": "1RzIoYqAdbkHdEBsBve9sheStWZ5sB3joBsC49ArK3lU",
         "tab": "PVP_vs_TURP",
         "fields": {
-            "pvp_transf":     ("Transfusion \u226472 h", "n2 (%2) [Wilson]", "pct"),
-            "turp_transf":    ("Transfusion \u226472 h", "n1 (%1) [Wilson]", "pct"),
+            "pvp_transf":     ("Transfusion \u226472 h", "n2 (%2) [Wilson]", "pct2"),
+            "turp_transf":    ("Transfusion \u226472 h", "n1 (%1) [Wilson]", "pct2"),
             "pvp_transf_rr":  ("Transfusion \u226472 h", "RR [Katz]", "ratio"),
             "pvp_transf_rr0": ("Transfusion \u226472 h", "RR [Katz]", "ratio0"),
             "pvp_bleed":      ("Bleeding composite", "n2 (%2) [Wilson]", "pct"),
@@ -250,6 +252,15 @@ def render(cell, fmt, row=None, col=None):
         return _first_num(s)
     if fmt == "pct":
         return _paren_pct(s)
+    if fmt == "pct2":
+        n = _first_num(s)
+        N = _first_num(row.get("N1" if col == "n1 (%1) [Wilson]" else "N2", "")) if row else None
+        if not n or not N:
+            return _paren_pct(s)
+        try:
+            return "%.2f%%" % (100.0 * float(n.replace(",", "")) / float(N.replace(",", "")))
+        except (ValueError, ZeroDivisionError):
+            return _paren_pct(s)
     if fmt == "ci":
         p, b = _paren_pct(s), _bracket(s)
         return p if not b else "%s (%s)" % (p, b.replace("%", ""))
@@ -427,6 +438,13 @@ def live_js(slug):
     }
     if (fmt === "n" || fmt === "N") return firstNum(s);
     if (fmt === "pct") return parenPct(s);
+    if (fmt === "pct2") {
+      var p2n = firstNum(s),
+          p2N = row ? firstNum(row[col === "n1 (%%1) [Wilson]" ? "N1" : "N2"] || "") : null;
+      if (!p2n || !p2N) return parenPct(s);
+      var p2v = parseFloat(p2n.replace(/,/g, "")) / parseFloat(p2N.replace(/,/g, ""));
+      return isFinite(p2v) ? (100 * p2v).toFixed(2) + "%%" : parenPct(s);
+    }
     if (fmt === "ci") { p = parenPct(s); b = bracket(s);
       return b ? p + " (" + b.replace(/%%/g, "") + ")" : p; }
     if (fmt === "n_of_N") { n = firstNum(s);

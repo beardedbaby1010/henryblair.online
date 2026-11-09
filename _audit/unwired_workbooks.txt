@@ -1,0 +1,269 @@
+WHAT IS IN THE SIX UNWIRED NSQIP WORKBOOKS
+read live from the sheets, 2026-11-09
+
+All six share one template. Their Outcomes tab is the FLAGGING layout
+sheet_live.py already parses -- the only difference from the wired sheets is
+that the label column is headed "Outcome", which the config's "label" option
+covers. So each of these is a config entry and no new code.
+
+==============================================================================
+Benign vs malignant pathology at partial nephrectomy
+  1fChY7p1uoNHXJiCnw5WxT6r7lFphebs-XsxepEoMT5I
+==============================================================================
+
+  Cohort flow
+    Cohort flow (live)
+    Step
+    Cases in 2019–2024 | 16,788 | 3,291 | 20,079
+
+  Outcomes
+    arms: N1=N1  N2=N2
+    Serious complication                   526 (3.2%) [2.9%–3.5%] 76 (2.4%) [1.9%–3.0%]  RR 0.74 [0.59–0.94]
+    Transfusion within 72 h                585 (3.5%) [3.3%–3.8%] 84 (2.6%) [2.1%–3.2%]  RR 0.74 [0.59–0.92]
+    Urine leak / fistula (GU add-on)       177 (1.1%) [0.9%–1.2%] 32 (1.0%) [0.7%–1.4%]  RR 0.93 [0.64–1.35]
+    Renal insufficiency / failure          394 (2.4%) [2.2%–2.6%] 43 (1.3%) [1.0%–1.8%]  RR 0.56 [0.41–0.77]
+    AKI stage 2–3 by creatinine rise (2022 297 (3.4%) [3.0%–3.8%] 35 (2.1%) [1.5%–2.9%]  RR 0.61 [0.43–0.87]
+    Return to the operating room           261 (1.6%) [1.4%–1.8%] 42 (1.3%) [1.0%–1.8%]  RR 0.83 [0.60–1.14]
+    Readmission                            844 (5.1%) [4.8%–5.5%] 159 (5.0%) [4.3%–5.8%] RR 0.97 [0.82–1.14]
+    Prolonged length of stay (> 75th perce 2,652 (16.1%) [15.5%–1 416 (13.0%) [11.8%–14. RR 0.81 [0.73–0.89]
+    arms: N1=malignant tumours median [IQR]  N2=Mean difference (95% CI)
+    Postoperative length of stay (days)    2.0 [1.0–2.0]          <0.001                 RR 
+    Operative time (min)                   160.0 [120.0–209.0]    <0.001                 RR 
+
+  Sentence bank (first few, written live by the workbook)
+    [Cohort]
+      Of 19,703 patients, 3,211 (16.3%) underwent benign tumours and 16,492 (83.7%) underwent malignant tumours.
+    [Cohort]
+      We identified 19,703 patients (benign tumours, n = 3,211; malignant tumours, n = 16,492) in ACS NSQIP 2019–2024.
+    [Serious complication · relative]
+      Overall, patients with benign pathology had a 18% lower risk of a serious complication than patients with malignant pathology (2.4% vs 3.0%; aRR 0.82, 95% CI 0.64–1.04).
+    [Serious complication · fold]
+      Overall, patients with benign pathology were 1.2× less likely to experience a serious complication than patients with malignant pathology (2.4% vs 3.0%; aRR 0.82, 95% CI 0.64–1.04).
+
+==============================================================================
+Carotid endarterectomy, GA vs not GA
+  1Uku1E00Etbfq1l0zAp4roqUBPIYNW8eoRwc1hSXPLSU
+==============================================================================
+
+  Cohort flow
+    Cohort flow (live)
+    Step
+    Cases in 2012–2024 | 7,590 | 66,811 | 74,401
+
+  Outcomes
+    arms: N1=N1  N2=N2
+    30-day mortality                       10 (0.2%) [0.1%–0.4%]  173 (0.4%) [0.4%–0.5%] RR 2.20 [1.16–4.16]
+    Serious complication                   139 (2.8%) [2.4%–3.3%] 1,427 (3.7%) [3.5%–3.9 RR 1.31 [1.10–1.55]
+    Any complication                       192 (3.9%) [3.4%–4.5%] 2,065 (5.3%) [5.1%–5.5 RR 1.37 [1.18–1.58]
+    Textbook outcome                       4,331 (87.6%) [86.7%–8 32,860 (84.6%) [84.2%– RR 0.97 [0.95–0.98]
+    Transfusion within 72 h                30 (0.6%) [0.4%–0.9%]  356 (0.9%) [0.8%–1.0%] RR 1.51 [1.04–2.19]
+    Readmission                            241 (4.9%) [4.3%–5.5%] 2,190 (5.6%) [5.4%–5.9 RR 1.16 [1.02–1.32]
+    Unplanned readmission                  217 (4.4%) [3.9%–5.0%] 1,966 (5.1%) [4.8%–5.3 RR 1.15 [1.00–1.32]
+    Return to the operating room           120 (2.4%) [2.0%–2.9%] 1,050 (2.7%) [2.5%–2.9 RR 1.11 [0.92–1.34]
+    Non-home discharge                     109 (2.2%) [1.8%–2.7%] 889 (2.3%) [2.1%–2.4%] RR 1.04 [0.85–1.26]
+    Length of stay > 1 day                 878 (17.8%) [16.7%–18. 9,442 (24.3%) [23.9%–2 RR 1.37 [1.29–1.46]
+    Prolonged length of stay (> 75th perce 293 (5.9%) [5.3%–6.6%] 3,382 (8.7%) [8.4%–9.0 RR 1.47 [1.31–1.65]
+    Same-day discharge                     20 (0.4%) [0.3%–0.6%]  228 (0.6%) [0.5%–0.7%] RR 1.45 [0.92–2.29]
+    Superficial SSI                        14 (0.3%) [0.2%–0.5%]  169 (0.4%) [0.4%–0.5%] RR 1.54 [0.89–2.65]
+    Deep / organ-space SSI                 10 (0.2%) [0.1%–0.4%]  74 (0.2%) [0.2%–0.2%]  RR 0.94 [0.49–1.82]
+    Wound dehiscence                       3 (0.1%) [0.0%–0.2%]   14 (0.0%) [0.0%–0.1%]  RR 0.59 [0.17–2.06]
+    Urinary tract infection                18 (0.4%) [0.2%–0.6%]  214 (0.6%) [0.5%–0.6%] RR 1.51 [0.94–2.44]
+    Pneumonia                              25 (0.5%) [0.3%–0.7%]  252 (0.6%) [0.6%–0.7%] RR 1.28 [0.85–1.93]
+    Respiratory failure (reintubation / ve 25 (0.5%) [0.3%–0.7%]  334 (0.9%) [0.8%–1.0%] RR 1.70 [1.13–2.55]
+    Pulmonary embolism                     2 (0.0%) [0.0%–0.1%]   27 (0.1%) [0.0%–0.1%]  RR 1.72 [0.41–7.22]
+    Deep vein thrombosis                   2 (0.0%) [0.0%–0.1%]   31 (0.1%) [0.1%–0.1%]  RR 1.97 [0.47–8.24]
+    Renal insufficiency / failure          14 (0.3%) [0.2%–0.5%]  98 (0.3%) [0.2%–0.3%]  RR 0.89 [0.51–1.56]
+    Sepsis / septic shock                  9 (0.2%) [0.1%–0.3%]   115 (0.3%) [0.2%–0.4%] RR 1.63 [0.83–3.20]
+    Stroke, cardiac arrest or MI           98 (2.0%) [1.6%–2.4%]  978 (2.5%) [2.4%–2.7%] RR 1.27 [1.03–1.56]
+    Stroke                                 63 (1.3%) [1.0%–1.6%]  584 (1.5%) [1.4%–1.6%] RR 1.18 [0.91–1.53]
+    Myocardial infarction                  24 (0.5%) [0.3%–0.7%]  370 (1.0%) [0.9%–1.1%] RR 1.96 [1.30–2.96]
+    Cardiac arrest                         14 (0.3%) [0.2%–0.5%]  87 (0.2%) [0.2%–0.3%]  RR 0.79 [0.45–1.39]
+    Stroke or death                        72 (1.5%) [1.2%–1.8%]  686 (1.8%) [1.6%–1.9%] RR 1.21 [0.95–1.54]
+    C. difficile infection                 2 (0.0%) [0.0%–0.1%]   23 (0.1%) [0.0%–0.1%]  RR 1.46 [0.34–6.20]
+    arms: N1=Not GA median [IQR]  N2=Mean difference (95% CI)
+    Postoperative length of stay (days)    1.0 [1.0–1.0]          <0.001                 RR 
+    Operative time (min)                   110.0 [85.0–140.0]     <0.001                 RR 
+
+  Sentence bank (first few, written live by the workbook)
+    [Cohort]
+      Of 43,801 patients, 38,858 (88.7%) underwent GA and 4,943 (11.3%) underwent Not GA.
+    [Cohort]
+      We identified 43,801 patients (GA, n = 38,858; Not GA, n = 4,943) in ACS NSQIP 2012–2024.
+    [30-day mortality · relative]
+      Overall, general anesthesia had a 137% higher risk of 30-day mortality than not general anesthesia (0.5% vs 0.2%; aRR 2.37, 95% CI 1.24–4.53).
+    [30-day mortality · fold]
+      Overall, general anesthesia were 2.4× more likely to experience 30-day mortality than not general anesthesia (0.5% vs 0.2%; aRR 2.37, 95% CI 1.24–4.53).
+
+==============================================================================
+Cisplatin eligibility and NAC at radical cystectomy
+  1dtJzj8Oa5gpk-mz-6mi1WrAPP_0JzFJSwep5NB0IoQc
+==============================================================================
+
+  Cohort flow
+    Cohort flow (live)
+    Step
+    Cases in 2019–2024 | 11,369 | 5,939 | 17,308
+
+  Outcomes
+    arms: N1=N1  N2=N2
+    Chemotherapy ≤ 90 days before surgery  3,424 (39.6%) [38.6%–4 1,386 (32.2%) [30.8%–3 RR 0.81 [0.77–0.85]
+    Serious complication                   1,861 (18.0%) [17.3%–1 938 (17.9%) [16.9%–19. RR 1.00 [0.93–1.07]
+    Renal insufficiency / failure          610 (5.9%) [5.5%–6.4%] 389 (7.4%) [6.8%–8.2%] RR 1.26 [1.11–1.42]
+    AKI stage 2–3 by creatinine rise (2022 469 (9.5%) [8.7%–10.3% 270 (10.7%) [9.6%–12.0 RR 1.13 [0.98–1.30]
+    30-day mortality                       104 (1.0%) [0.8%–1.2%] 120 (2.3%) [1.9%–2.7%] RR 2.28 [1.76–2.96]
+    Non-home discharge                     645 (6.3%) [5.8%–6.8%] 602 (11.7%) [10.8%–12. RR 1.86 [1.67–2.07]
+    Readmission                            2,246 (21.7%) [20.9%–2 1,115 (21.3%) [20.2%–2 RR 0.98 [0.92–1.05]
+    Prolonged length of stay (> 75th perce 2,232 (21.6%) [20.8%–2 1,322 (25.3%) [24.1%–2 RR 1.17 [1.10–1.24]
+    arms: N1=cisplatin-eligible (CrCl ≥ 60) median [IQR]  N2=Mean difference (95% CI)
+    Postoperative length of stay (days)    6.0 [5.0–9.0]          <0.001                 RR 
+    Operative time (min)                   310.0 [241.0–388.0]    <0.001                 RR 
+
+  Sentence bank (first few, written live by the workbook)
+    [Cohort]
+      Of 15,575 patients, 5,233 (33.6%) underwent cisplatin-ineligible (CrCl < 60) and 10,342 (66.4%) underwent cisplatin-eligible (CrCl ≥ 60).
+    [Cohort]
+      We identified 15,575 patients (cisplatin-ineligible (CrCl < 60), n = 5,233; cisplatin-eligible (CrCl ≥ 60), n = 10,342) in ACS NSQIP 2019–2024.
+    [Chemotherapy ≤ 90 days before surg]
+      Overall, cisplatin-ineligible patients (CrCl < 60 mL/min) had a 26% lower risk of chemotherapy within 90 days before surgery than patients with CrCl ≥ 60 mL/min (31.7% vs 42.9%; aRR 0.74, 95% CI 0.70–0.78).
+    [Chemotherapy ≤ 90 days before surg]
+      Overall, cisplatin-ineligible patients (CrCl < 60 mL/min) were 1.4× less likely to experience chemotherapy within 90 days before surgery than patients with CrCl ≥ 60 mL/min (31.7% vs 42.9%; aRR 0.74, 95% CI 0.70–0.78).
+
+==============================================================================
+Cisplatin window and AKI after nephroureterectomy
+  1d-dAVbDwjE5enshRLJoGWwL6nYRDIaX_bRbRMYEaJ14
+==============================================================================
+
+  Cohort flow
+    Cohort flow (live)
+    Step
+    Cases in 2019–2024 | 3,668 | 2,596 | 6,264
+
+  Outcomes
+    arms: N1=N1  N2=N2
+    Renal insufficiency / failure          136 (3.9%) [3.3%–4.6%] 121 (5.1%) [4.3%–6.1%] RR 1.31 [1.03–1.66]
+    AKI stage 2–3 by creatinine rise (2022 112 (6.3%) [5.3%–7.5%] 86 (7.1%) [5.8%–8.7%]  RR 1.13 [0.86–1.48]
+    AKI stage 3 (creatinine ≥ 3× baseline  13 (0.7%) [0.4%–1.2%]  14 (1.2%) [0.7%–1.9%]  RR 1.58 [0.74–3.35]
+    Serious complication                   180 (5.2%) [4.5%–5.9%] 176 (7.4%) [6.4%–8.5%] RR 1.44 [1.18–1.76]
+    Chemotherapy ≤ 90 days before surgery  246 (12.2%) [10.9%–13. 147 (10.0%) [8.5%–11.6 RR 0.81 [0.67–0.99]
+    30-day mortality                       14 (0.4%) [0.2%–0.7%]  31 (1.3%) [0.9%–1.8%]  RR 3.26 [1.74–6.11]
+    Readmission                            240 (6.9%) [6.1%–7.8%] 233 (9.8%) [8.7%–11.1% RR 1.43 [1.20–1.70]
+    Prolonged length of stay (> 75th perce 630 (18.0%) [16.8%–19. 638 (26.9%) [25.1%–28. RR 1.49 [1.35–1.64]
+    arms: N1=cisplatin-eligible (CrCl ≥ 60) median [IQR]  N2=Mean difference (95% CI)
+    Postoperative length of stay (days)    3.0 [2.0–5.0]          <0.001                 RR 
+    Operative time (min)                   216.0 [164.0–275.0]    0.838                  RR 
+
+  Sentence bank (first few, written live by the workbook)
+    [Cohort]
+      Of 5,865 patients, 2,374 (40.5%) underwent cisplatin-ineligible (CrCl < 60) and 3,491 (59.5%) underwent cisplatin-eligible (CrCl ≥ 60).
+    [Cohort]
+      We identified 5,865 patients (cisplatin-ineligible (CrCl < 60), n = 2,374; cisplatin-eligible (CrCl ≥ 60), n = 3,491) in ACS NSQIP 2019–2024.
+    [Renal insufficiency / failure · re]
+      Overall, cisplatin-ineligible patients (CrCl < 60 mL/min) had a 31% higher risk of acute kidney injury than patients with CrCl ≥ 60 mL/min (5.2% vs 4.0%; aRR 1.31, 95% CI 1.02–1.68).
+    [Renal insufficiency / failure · fo]
+      Overall, cisplatin-ineligible patients (CrCl < 60 mL/min) were 1.3× more likely to experience acute kidney injury than patients with CrCl ≥ 60 mL/min (5.2% vs 4.0%; aRR 1.31, 95% CI 1.02–1.68).
+
+==============================================================================
+Loss of independence after radical cystectomy, 75+
+  1NXwDZ50ueWMebdQ8gSh8wVD6y59F9DwY2JlBOYEuHtA
+==============================================================================
+
+  Cohort flow
+    Cohort flow (live)
+    Step
+    Cases in 2021–2024 | 4,685 | 3,539 | 8,224
+
+  Outcomes
+    arms: N1=N1  N2=N2
+    Loss of independence at discharge (202 1 (33.3%) [6.1%–79.2%] 1,075 (36.3%) [34.6%–3 RR 1.09 [0.22–5.40]
+    Non-home discharge                     270 (6.4%) [5.7%–7.2%] 429 (13.6%) [12.4%–14. RR 2.13 [1.84–2.46]
+    Serious complication                   741 (17.4%) [16.3%–18. 634 (19.7%) [18.4%–21. RR 1.14 [1.03–1.25]
+    Prolonged ileus / NPO (GU add-on)      562 (16.1%) [15.0%–17. 511 (19.1%) [17.6%–20. RR 1.18 [1.06–1.32]
+    Urine leak / fistula (GU add-on)       123 (3.5%) [3.0%–4.2%] 85 (3.2%) [2.6%–3.9%]  RR 0.90 [0.68–1.18]
+    Bowel anastomotic leak (GU add-on)     79 (2.4%) [2.0%–3.0%]  60 (2.4%) [1.9%–3.1%]  RR 0.99 [0.71–1.37]
+    30-day mortality                       48 (1.1%) [0.8%–1.5%]  79 (2.5%) [2.0%–3.1%]  RR 2.19 [1.53–3.12]
+    Readmission                            882 (20.7%) [19.5%–21. 722 (22.5%) [21.1%–24. RR 1.09 [1.00–1.19]
+    Prolonged length of stay (> 75th perce 712 (16.7%) [15.6%–17. 725 (22.6%) [21.2%–24. RR 1.35 [1.23–1.48]
+    arms: N1=aged 65–74 median [IQR]  N2=Mean difference (95% CI)
+    Postoperative length of stay (days)    7.0 [5.0–9.0]          <0.001                 RR 
+    Operative time (min)                   305.0 [239.0–383.0]    <0.001                 RR 
+
+  Sentence bank (first few, written live by the workbook)
+    [Cohort]
+      Of 7,478 patients, 3,212 (43.0%) underwent aged 75 or older and 4,266 (57.0%) underwent aged 65–74.
+    [Cohort]
+      We identified 7,478 patients (aged 75 or older, n = 3,212; aged 65–74, n = 4,266) in ACS NSQIP 2021–2024.
+    [Loss of independence at discharge ]
+      Overall, patients aged 75 or older had a 65% higher risk of loss of independence than patients aged 65–74 (36.1% vs 21.9%; aRR 1.65, 95% CI 0.25–11.03).
+    [Loss of independence at discharge ]
+      Overall, patients aged 75 or older were 1.6× more likely to experience loss of independence than patients aged 65–74 (36.1% vs 21.9%; aRR 1.65, 95% CI 0.25–11.03).
+
+==============================================================================
+Radical vs partial nephrectomy
+  1UliXKizrjd3P9LHdH5t0TUtmG4yRiqOMuykbhvH6JVk
+==============================================================================
+
+  Cohort flow
+    Cohort flow (live)
+    Step
+    Cases in 2019–2024 | 11,267 | 3,431 | 14,698
+
+  Outcomes
+    arms: N1=N1  N2=N2
+    30-day mortality                       16 (0.1%) [0.1%–0.2%]  11 (0.3%) [0.2%–0.6%]  RR 2.35 [1.09–5.07]
+    Serious complication                   297 (2.7%) [2.4%–3.0%] 137 (4.2%) [3.6%–5.0%] RR 1.58 [1.29–1.93]
+    Any complication                       902 (8.1%) [7.6%–8.6%] 448 (13.8%) [12.7%–15. RR 1.70 [1.53–1.89]
+    Textbook outcome                       9,257 (83.3%) [82.6%–8 2,345 (72.2%) [70.7%–7 RR 0.87 [0.85–0.89]
+    Transfusion within 72 h                266 (2.4%) [2.1%–2.7%] 144 (4.4%) [3.8%–5.2%] RR 1.85 [1.52–2.26]
+    Readmission                            501 (4.5%) [4.1%–4.9%] 195 (6.0%) [5.2%–6.9%] RR 1.33 [1.13–1.56]
+    Unplanned readmission                  495 (4.5%) [4.1%–4.9%] 195 (6.0%) [5.2%–6.9%] RR 1.35 [1.15–1.58]
+    Return to the operating room           154 (1.4%) [1.2%–1.6%] 66 (2.0%) [1.6%–2.6%]  RR 1.47 [1.10–1.95]
+    Non-home discharge                     77 (0.7%) [0.6%–0.9%]  79 (2.4%) [2.0%–3.0%]  RR 3.51 [2.57–4.80]
+    Length of stay > 1 day                 5,740 (51.7%) [50.7%–5 2,258 (69.6%) [68.0%–7 RR 1.35 [1.31–1.39]
+    Prolonged length of stay (> 75th perce 1,391 (12.5%) [11.9%–1 738 (22.7%) [21.3%–24. RR 1.82 [1.68–1.97]
+    Same-day discharge                     463 (4.2%) [3.8%–4.6%] 45 (1.4%) [1.0%–1.8%]  RR 0.33 [0.25–0.45]
+    Superficial SSI                        129 (1.2%) [1.0%–1.4%] 53 (1.6%) [1.3%–2.1%]  RR 1.41 [1.02–1.93]
+    Deep / organ-space SSI                 68 (0.6%) [0.5%–0.8%]  29 (0.9%) [0.6%–1.3%]  RR 1.46 [0.95–2.25]
+    Wound dehiscence                       15 (0.1%) [0.1%–0.2%]  22 (0.7%) [0.4%–1.0%]  RR 5.02 [2.61–9.67]
+    Urinary tract infection                151 (1.4%) [1.2%–1.6%] 51 (1.6%) [1.2%–2.1%]  RR 1.16 [0.84–1.58]
+    Pneumonia                              90 (0.8%) [0.7%–1.0%]  30 (0.9%) [0.6%–1.3%]  RR 1.14 [0.76–1.72]
+    Respiratory failure (reintubation / ve 26 (0.2%) [0.2%–0.3%]  21 (0.6%) [0.4%–1.0%]  RR 2.76 [1.56–4.91]
+    Pulmonary embolism                     49 (0.4%) [0.3%–0.6%]  6 (0.2%) [0.1%–0.4%]   RR 0.42 [0.18–0.98]
+    Deep vein thrombosis                   30 (0.3%) [0.2%–0.4%]  14 (0.4%) [0.3%–0.7%]  RR 1.60 [0.85–3.01]
+    Renal insufficiency / failure          186 (1.7%) [1.5%–1.9%] 127 (3.9%) [3.3%–4.6%] RR 2.34 [1.87–2.92]
+    Sepsis / septic shock                  44 (0.4%) [0.3%–0.5%]  26 (0.8%) [0.5%–1.2%]  RR 2.02 [1.25–3.28]
+    Stroke, cardiac arrest or MI           50 (0.5%) [0.3%–0.6%]  43 (1.3%) [1.0%–1.8%]  RR 2.94 [1.96–4.42]
+    Stroke                                 12 (0.1%) [0.1%–0.2%]  7 (0.2%) [0.1%–0.4%]   RR 2.00 [0.79–5.07]
+    Myocardial infarction                  27 (0.2%) [0.2%–0.4%]  32 (1.0%) [0.7%–1.4%]  RR 4.06 [2.43–6.76]
+    Cardiac arrest                         14 (0.1%) [0.1%–0.2%]  9 (0.3%) [0.1%–0.5%]   RR 2.20 [0.95–5.08]
+    Stroke or death                        28 (0.3%) [0.2%–0.4%]  16 (0.5%) [0.3%–0.8%]  RR 1.96 [1.06–3.61]
+    AKI stage 2–3 by creatinine rise (2022 145 (2.5%) [2.1%–2.9%] 103 (6.3%) [5.3%–7.6%] RR 2.58 [2.02–3.30]
+    AKI stage 3 (creatinine ≥ 3× baseline  19 (0.3%) [0.2%–0.5%]  13 (0.8%) [0.5%–1.4%]  RR 2.49 [1.23–5.02]
+    Postoperative delirium (screened patie 15 (5.5%) [3.4%–8.9%]  7 (4.3%) [2.1%–8.5%]   RR 0.78 [0.32–1.87]
+    Loss of independence at discharge (202 69 (11.3%) [9.0%–14.1% 47 (13.9%) [10.7%–18.1 RR 1.23 [0.87–1.74]
+    Urine leak / fistula (GU add-on)       86 (0.8%) [0.6%–1.0%]  8 (0.2%) [0.1%–0.5%]   RR 0.32 [0.15–0.66]
+    Lymphocele / fluid collection (GU add- 216 (1.9%) [1.7%–2.2%] 54 (1.7%) [1.3%–2.2%]  RR 0.86 [0.64–1.15]
+    Prolonged ileus / NPO (GU add-on)      91 (0.8%) [0.7%–1.0%]  76 (2.3%) [1.9%–2.9%]  RR 2.86 [2.11–3.87]
+    Ureteral obstruction (GU add-on)       35 (0.3%) [0.2%–0.4%]  2 (0.1%) [0.0%–0.2%]   RR 0.20 [0.05–0.81]
+    Rectal injury (GU add-on)              13 (0.1%) [0.1%–0.2%]  9 (0.3%) [0.1%–0.5%]   RR 2.37 [1.01–5.54]
+    Bowel anastomotic leak (GU add-on)     12 (0.2%) [0.1%–0.4%]  3 (0.2%) [0.1%–0.5%]   RR 0.80 [0.23–2.84]
+    Chemotherapy ≤ 90 days before surgery  112 (1.0%) [0.8%–1.2%] 80 (2.5%) [2.0%–3.1%]  RR 2.44 [1.84–3.25]
+    Antibiotics > 24 h after surgery (GU a 877 (7.9%) [7.4%–8.4%] 310 (9.6%) [8.6%–10.6% RR 1.21 [1.07–1.37]
+    Mechanical-only VTE prophylaxis (GU ad 3,875 (36.0%) [35.1%–3 890 (28.5%) [26.9%–30. RR 0.79 [0.74–0.84]
+    Drain placed (GU add-on)               5,672 (51.0%) [50.1%–5 678 (20.9%) [19.5%–22. RR 0.41 [0.38–0.44]
+    No lymph nodes evaluated (GU add-on)   8,952 (100.0%) [100.0% 2,450 (100.0%) [99.8%– RR 1.00 [1.00–1.00] (+0
+    Benign pathology (no malignant T stage 0 (0.0%) [0.0%–0.0%]   0 (0.0%) [0.0%–0.1%]   RR 3.42 [0.07–172.45] (
+    C. difficile infection                 18 (0.2%) [0.1%–0.3%]  14 (0.4%) [0.3%–0.7%]  RR 2.66 [1.33–5.35]
+    arms: N1=PN median [IQR]  N2=Mean difference (95% CI)
+    Postoperative length of stay (days)    2.0 [1.0–3.0]          <0.001                 RR 
+    Operative time (min)                   154.0 [112.0–213.0]    <0.001                 RR 
+
+  Sentence bank (first few, written live by the workbook)
+    [Cohort]
+      Of 14,357 patients, 3,246 (22.6%) underwent RN and 11,111 (77.4%) underwent PN.
+    [Cohort]
+      We identified 14,357 patients (RN, n = 3,246; PN, n = 11,111) in ACS NSQIP 2019–2024.
+    [30-day mortality · relative]
+      Overall, patients undergoing radical nephrectomy had a 21% higher risk of death within 30 days than patients undergoing partial nephrectomy (0.2% vs 0.2%; aRR 1.21, 95% CI 0.51–2.86).
+    [30-day mortality · fold]
+      Overall, patients undergoing radical nephrectomy were 1.2× more likely to experience death within 30 days than patients undergoing partial nephrectomy (0.2% vs 0.2%; aRR 1.21, 95% CI 0.51–2.86).
+

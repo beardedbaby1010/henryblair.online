@@ -49,6 +49,13 @@
     }
     if (fmt === "n" || fmt === "N") return firstNum(s);
     if (fmt === "pct") return parenPct(s);
+    if (fmt === "pct2") {
+      var p2n = firstNum(s),
+          p2N = row ? firstNum(row[col === "n1 (%1) [Wilson]" ? "N1" : "N2"] || "") : null;
+      if (!p2n || !p2N) return parenPct(s);
+      var p2v = parseFloat(p2n.replace(/,/g, "")) / parseFloat(p2N.replace(/,/g, ""));
+      return isFinite(p2v) ? (100 * p2v).toFixed(2) + "%" : parenPct(s);
+    }
     if (fmt === "ci") { p = parenPct(s); b = bracket(s);
       return b ? p + " (" + b.replace(/%/g, "") + ")" : p; }
     if (fmt === "n_of_N") { n = firstNum(s);

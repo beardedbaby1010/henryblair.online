@@ -1,0 +1,112 @@
+<!--REGENFIGS-->
+<section id="regen-figures" class="sec">
+  <h2>Regenerate figures from the live sheet</h2>
+
+  <div class="keybox">
+    <p>Every figure generator already takes its workbook from an environment variable
+    (<code>ADI_XLSX</code>, <code>PVR_XLSX</code>, <code>VE_XLSX</code>, <code>URPS_XLSX</code>)
+    and its output directory from a matching <code>*_FIGDIR</code>. So none of them has to be
+    rewritten to read live data: download the Google Sheet as <code>.xlsx</code>, point the
+    variable at the download, run the script untouched. The export carries the computed values
+    alongside the formulas, which is why <code>data_only=True</code> still sees real numbers.</p>
+    <p><code>regen_figures.py</code> in the site repo does exactly that, and nothing else. It
+    reports which figures it wrote and which it overwrote, deletes the download afterwards, and
+    never touches a figure a script did not produce.</p>
+  </div>
+
+  <table class="regen">
+    <thead>
+      <tr><th>Project</th><th>Generator</th><th>Figures land in</th><th>Command</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="/projects/oab-adi/">Deprivation &amp; access</a><br>
+            <a class="sheet" href="https://docs.google.com/spreadsheets/d/1nVRKNIr4aPuSjBQUDhQfK3-7XajJ-Ni0irVtXjmSG1U/edit">live sheet &rarr;</a></td>
+        <td><code>ADI_Project/adi_figs.py</code></td>
+        <td><code>ADI_Project/Figures/</code></td>
+        <td><button class="copy" data-cmd="python3 regen_figures.py adi">python3 regen_figures.py adi</button></td>
+      </tr>
+      <tr>
+        <td>Deprivation &amp; access &mdash; every variable<br>
+            <a class="sheet" href="https://docs.google.com/spreadsheets/d/1nVRKNIr4aPuSjBQUDhQfK3-7XajJ-Ni0irVtXjmSG1U/edit">live sheet &rarr;</a></td>
+        <td><code>ADI_Project/adi_all_variable_figs.py</code></td>
+        <td><code>ADI_Project/Figures/</code></td>
+        <td><button class="copy" data-cmd="python3 regen_figures.py adi-all">python3 regen_figures.py adi-all</button></td>
+      </tr>
+      <tr>
+        <td><a href="/projects/oab-pvr/">PVR self-estimation</a><br>
+            <a class="sheet" href="https://docs.google.com/spreadsheets/d/1lnQ7RmxJbf1sU62X5P9kFJViR0yCRTeMl4sRNJV3zaM/edit">live sheet &rarr;</a></td>
+        <td><code>PVR_Project/pvr_figs.py</code></td>
+        <td><code>PVR_Project/Figures/</code></td>
+        <td><button class="copy" data-cmd="python3 regen_figures.py pvr">python3 regen_figures.py pvr</button></td>
+      </tr>
+      <tr>
+        <td>PVR &mdash; every variable<br>
+            <a class="sheet" href="https://docs.google.com/spreadsheets/d/1lnQ7RmxJbf1sU62X5P9kFJViR0yCRTeMl4sRNJV3zaM/edit">live sheet &rarr;</a></td>
+        <td><code>PVR_Project/pvr_all_variable_figs.py</code></td>
+        <td><code>PVR_Project/Figures/</code></td>
+        <td><button class="copy" data-cmd="python3 regen_figures.py pvr-all">python3 regen_figures.py pvr-all</button></td>
+      </tr>
+      <tr>
+        <td><a href="/projects/ve-boxed-warning/">Vaginal estrogen</a><br>
+            <a class="sheet" href="https://docs.google.com/spreadsheets/d/1Cy64AGkUWwHMHl3a-F2AhOxZOmTl-iOJMsmy5FA85L8/edit">live sheet &rarr;</a></td>
+        <td><code>VE_project/ve_figures.py</code></td>
+        <td><code>VE_project/Figures/</code></td>
+        <td><button class="copy" data-cmd="python3 regen_figures.py ve">python3 regen_figures.py ve</button></td>
+      </tr>
+      <tr>
+        <td><a href="/projects/urogyn-perceptions/">Urogyn survey</a><br>
+            <a class="sheet" href="https://docs.google.com/spreadsheets/d/16xPztZ5epiIFnTUqqXLcgzYIFHapAgoi_4Qu9n-iddw/edit">live sheet &rarr;</a></td>
+        <td><code>Urogyne_project/urps_figs.py</code></td>
+        <td><code>Urogyne_project/urps_figures/</code></td>
+        <td><button class="copy" data-cmd="python3 regen_figures.py urps">python3 regen_figures.py urps</button></td>
+      </tr>
+      <tr class="unmapped">
+        <td><a href="/projects/adt-initiation/">ADT initiation</a><br>
+            <a class="sheet" href="https://docs.google.com/spreadsheets/d/1r61VFTZoFx6jRbCFqB17m_67dbgG_cAGG5uO6r1OQIA/edit">live sheet &rarr;</a></td>
+        <td><code>5_PCa_x_ADT/Scripts/pca_figures.py</code></td>
+        <td><em>not mapped yet</em></td>
+        <td><em>its workbook and outdir variables still need reading &mdash; it is listed and refused rather than guessed at</em></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="regen-foot">Everything at once: <button class="copy" data-cmd="python3 regen_figures.py all">python3 regen_figures.py all</button>
+  &middot; what it would do, without doing it: <code>--dry-run</code>
+  &middot; use the workbook already on disk instead of fetching: <code>--local</code></p>
+
+  <style>
+    table.regen { width:100%; border-collapse:collapse; margin:1.1rem 0; font-size:.94rem; }
+    table.regen th, table.regen td { text-align:left; padding:.5rem .6rem; vertical-align:top;
+      border-bottom:1px solid var(--line, #d9e0e6); }
+    table.regen th { font-weight:600; white-space:nowrap; }
+    table.regen tr.unmapped td { opacity:.62; }
+    table.regen a.sheet { font-size:.84rem; white-space:nowrap; }
+    button.copy { font:inherit; font-size:.86rem; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      cursor:pointer; padding:.3rem .55rem; border:1px solid var(--line, #c3ced6); border-radius:5px;
+      background:var(--grey, #f2f5f7); color:inherit; text-align:left; }
+    button.copy:hover { border-color:#8fa2b5; }
+    button.copy.done { border-color:#4d6a8a; }
+    p.regen-foot { font-size:.9rem; }
+  </style>
+  <script>
+  (function () {
+    document.querySelectorAll("#regen-figures button.copy").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var cmd = b.getAttribute("data-cmd"), was = b.textContent;
+        function ok() { b.textContent = "copied"; b.classList.add("done");
+          setTimeout(function () { b.textContent = was; b.classList.remove("done"); }, 1200); }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(cmd).then(ok, function () { b.textContent = cmd; });
+        } else {
+          var t = document.createElement("textarea");
+          t.value = cmd; document.body.appendChild(t); t.select();
+          try { document.execCommand("copy"); ok(); } catch (e) { /* leave it */ }
+          document.body.removeChild(t);
+        }
+      });
+    });
+  })();
+  </script>
+</section>
+<!--/REGENFIGS-->

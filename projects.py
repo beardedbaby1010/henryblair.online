@@ -732,30 +732,62 @@ PROJECTS = [
     {
         "slug": "ketamine-cystitis", "tab": None, "group": "current",
         "title": "Ketamine cystitis in the United States",
-        "kicker": "National epidemiology",
-        "status": "Early stage",
-        "summary": "Characterizing the incidence and demographics of ketamine-associated cystitis over the "
-                   "past decade — positioned to be the largest study of its kind to date.",
-        "tags": ["Ketamine cystitis", "Epidemiology", "Substance use", "Real-world data"],
+        "kicker": "National Inpatient Sample \u00b7 2016\u20132021",
+        "status": "Abstract submitted \u2014 2027 AUA Annual Meeting",
+        "summary": "Ketamine reaches patients two ways now \u2014 illicitly, and by prescription for "
+                   "depression and chronic pain \u2014 and admissions for its bladder toxicity rose 140% "
+                   "in six years. Where those admissions happened only partly matches where the drug "
+                   "is seized, which points at medical access as an under-recognized contributor.",
+        "stats": [("+140%", "rise in admissions, 2016\u20132021"),
+                  ("4,020", "estimated admissions"),
+                  ("41.5", "mean age, years"),
+                  ("52.2%", "insured by Medicaid")],
+        "tags": ["Ketamine cystitis", "Epidemiology", "Substance use", "National Inpatient Sample",
+                 "Real-world data"],
         "page": {"kind": "auto"},
         "hub": {
-            "people": ["Marc Ganz, MD", "Henry M. Blair"],
+            "people": ["Marc Ganz, MD", "Michael West", "Yitzchak Katlowitz", "Henry M. Blair",
+                       "Gina DeMeo", "Christopher Edwards, MD", "Arshia Sandozi, DO",
+                       "Ariel Schulman, MD"],
             "lede": "Ketamine use has moved in a decade from club drug to prescribed treatment for "
-                    "depression and chronic pain. Its bladder toxicity is well described in case series "
-                    "and poorly described at national scale — which is a problem if prescribing keeps "
-                    "rising.",
-            "question": "How common is ketamine-associated cystitis in the United States, who develops it, "
-                        "and how has that changed over the past decade?",
+                    "depression and chronic pain. Its bladder toxicity is well described in case "
+                    "series and poorly described at national scale \u2014 which is a problem if "
+                    "prescribing keeps rising.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting.",
+            "question": "How common is ketamine-associated cystitis in the United States, who "
+                        "develops it, and does its geography follow illicit supply or medical access?",
             "approach": [
-                "A national real-world cohort, sized to be the largest characterization of this condition "
-                "to date.",
-                "Incidence over time, with attention to whether any change tracks the growth in "
-                "therapeutic ketamine rather than recreational use alone.",
-                "Demographics: age, sex and geography.",
+                "We analysed the 2016\u20132021 National Inpatient Sample. Suspected ketamine cystitis "
+                "was defined by concurrent ICD-10-CM diagnoses of a hallucinogen-related disorder and "
+                "lower urinary tract symptoms.",
+                "NIS weights gave annual rates per 100,000 admissions and variation across Census "
+                "divisions.",
+                "Drug Enforcement Administration Forensic Laboratory Information System ketamine "
+                "reports were mapped by division and standardised to Census populations \u2014 a "
+                "proxy for illicit supply.",
+                "Published retail-dispensing data and national ketamine-clinic counts were reviewed "
+                "to put medical access beside it.",
             ],
-            "status_detail": "Early stage — cohort definition in progress.",
-            "sidefoot": "Marc Ganz, MD · Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
-            "in_progress": True,
+            "findings": [
+                "An estimated 4,020 admissions were identified. Rates rose 140%, from 1.22 per "
+                "100,000 admissions in 2016 to 2.92 in 2021.",
+                "Mean age was 41.5 years; 66.5% were male, 52.2% had Medicaid, and 80.3% were "
+                "treated at urban teaching hospitals.",
+                "Geographic admission patterns only partially overlapped those of 11,329 DEA "
+                "ketamine reports from the same years.",
+                "Over the same period published retail data showed a 350% increase in patients "
+                "dispensed ketamine from 2018\u20132023, and over 300 ketamine-focused clinics were "
+                "listed nationally.",
+            ],
+            "findings_note": "Admissions rose 140% with only partial geographic overlap with illicit "
+                             "ketamine reports. Against rapidly expanding retail dispensing and clinic "
+                             "access, illicit use alone may not explain the growing burden; medical "
+                             "exposure may be an under-recognised contributor and warrants direct "
+                             "investigation.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-ketamine-cystitis/"}],
+            "sidefoot": "Marc Ganz, MD \u00b7 Henry M. Blair<br>Department of Urology, "
+                        "Maimonides Medical Center",
         },
     },
 
@@ -1806,7 +1838,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "How often does a patient leave the hospital with an opioid after urologic surgery, and is that decided by the operation or by the patient?",
             "approach": ["We identified urologic procedures in the 2024 American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "The primary outcome was any opioid prescription at discharge; the secondary outcome was a prescription above 200 oral morphine milligram equivalents.", "Rates were compared across procedures, approaches and patient groups with unadjusted two-proportion tests."],
-            "findings": ["Of 59,773 patients, 33,110 (55.4%) were discharged with an opioid.", "Prescribing ranged from 26.0% after bladder tumor resection to 79.1% after kidney surgery and varied by approach (endoscopic 26.9%, open 65.7%, minimally invasive 75.1%).", "Opioids were prescribed less to patients aged ≥ 70 (45.3% vs 62.2%), and more often to women (62.4% vs 53.8%) and inpatients (61.3% vs 51.5%; all p<0.001).", "Readmission rates were similar in those with vs without an opioid (overall <span data-q=\"readmit_rx\">5.8%</span> vs <span data-q=\"readmit_norx\">6.2%</span>) but also varied by procedure (TURBT 5.7% vs 5.6%; Radical prostatectomy 4.1% vs 5.2%)."],
+            "findings": ["Of 59,773 patients, 33,110 (55.4%) were discharged with an opioid.", "Prescribing ranged from 26.0% after bladder tumor resection to 79.1% after kidney surgery and varied by approach (endoscopic 26.9%, open 65.7%, minimally invasive 75.1%).", "Opioids were prescribed less to patients aged ≥ 70 (45.3% vs 62.2%), and more often to women (62.4% vs 53.8%) and inpatients (61.3% vs 51.5%; all p&lt;0.001).", "Readmission rates were similar in those with vs without an opioid (overall <span data-q=\"readmit_rx\">5.8%</span> vs <span data-q=\"readmit_norx\">6.2%</span>) but also varied by procedure (TURBT 5.7% vs 5.6%; Radical prostatectomy 4.1% vs 5.2%)."],
             "findings_note": "More than half of patients leave the hospital with an opioid after urologic surgery. Procedure type explains far more of the variation (26% to 79%) than any patient factor (45% to 62%). Low prescribing after endoscopic procedures suggests opioid-free discharge is feasible for many patients.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-opioids-at-discharge/"}],
@@ -1829,7 +1861,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "Laser procedures are chosen to limit bleeding. Across thirteen years of national data, does that hold — and has bleeding fallen for every approach?",
             "approach": ["We identified TURP, PVP and HoLEP cases in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Outcomes were transfusion within 72 hours, reoperation and readmission for bleeding, a composite of the three, complications and readmission.", "PVP and HoLEP were compared with TURP using unadjusted relative risks, and yearly transfusion was tested for linear trend."],
-            "findings": ["Of 123,020 procedures, 82,020 were TURP, 31,087 PVP and 9,913 HoLEP; HoLEP’s share rose from 5.8% to 14.8%.", "Compared with TURP, PVP had lower transfusion (<span data-q=\"pvp_transf\">0.3%</span> vs <span data-q=\"turp_transf\">0.9%</span>; relative risk <span data-q=\"pvp_transf_rr\">0.28 (0.22\u20130.35)</span>) and half the bleeding composite (<span data-q=\"pvp_bleed\">1.4%</span> vs <span data-q=\"turp_bleed\">2.6%</span>).", "HoLEP had similar bleeding (<span data-q=\"holep_bleed\">2.5%</span> vs <span data-q=\"turp_bleed\">2.6%</span>) but fewer serious complications (<span data-q=\"holep_serious\">1.4%</span> vs <span data-q=\"turp_serious\">1.7%</span>) and readmissions (<span data-q=\"holep_readmit\">4.1%</span> vs <span data-q=\"turp_readmit\">5.3%</span>).", "Transfusion fell after all three: TURP 1.7% to 0.6%, PVP 0.5% to 0.0% (both p<0.001), HoLEP 2.5% to 0.5% (p=0.049)."],
+            "findings": ["Of 123,020 procedures, 82,020 were TURP, 31,087 PVP and 9,913 HoLEP; HoLEP’s share rose from 5.8% to 14.8%.", "Compared with TURP, PVP had lower transfusion (<span data-q=\"pvp_transf\">0.25%</span> vs <span data-q=\"turp_transf\">0.90%</span>; relative risk <span data-q=\"pvp_transf_rr\">0.28 (0.22\u20130.35)</span>) and half the bleeding composite (<span data-q=\"pvp_bleed\">1.4%</span> vs <span data-q=\"turp_bleed\">2.6%</span>).", "HoLEP had similar bleeding (<span data-q=\"holep_bleed\">2.5%</span> vs <span data-q=\"turp_bleed\">2.6%</span>) but fewer serious complications (<span data-q=\"holep_serious\">1.4%</span> vs <span data-q=\"turp_serious\">1.7%</span>) and readmissions (<span data-q=\"holep_readmit\">4.1%</span> vs <span data-q=\"turp_readmit\">5.3%</span>).", "Transfusion fell after all three: TURP 1.7% to 0.6%, PVP 0.5% to 0.0% (both p&lt;0.001), HoLEP 2.5% to 0.5% (p=0.049)."],
             "findings_note": "PVP carried the lowest bleeding risk, while HoLEP matched TURP on bleeding with fewer complications and readmissions. Transfusion after surgery for benign prostatic hyperplasia has become rare nationally, declining for every procedure. It is likely that improved techniques, technology, and experience have contributed to this trend. Comparisons are unadjusted and do not account for prostate size.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-bph-bleeding/"}],
@@ -1853,7 +1885,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "Medicare opened the door to same-day discharge after prostatectomy in 2018. Did surgeons walk through it, and did readmissions rise when they did?",
             "approach": ["We identified RARP cases (laparoscopic or robotic; 94% robotic where recorded) in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Yearly same-day discharge rates were tested for linear trend.", "Thirty-day outcomes were compared with overnight stay, and readmission between 2012-2018 and 2019-2024, using unadjusted relative risks."],
-            "findings": ["Of 119,220 patients, <span data-q=\"n_sdd\">7,088</span> (5.9%) went home the same day.", "The rate stayed below 1% through 2018, then rose to 1.9% in 2019 and 15.6% in 2024 (p<0.001 for trend), including patients aged 70 or older (0.6% to 8.2%).", "Compared with overnight stay, same-day discharge was associated with lower readmission (<span data-q=\"readmit_sdd\">3.3%</span> vs <span data-q=\"readmit_on\">4.2%</span>; relative risk <span data-q=\"readmit_rr\">0.78 (0.69\u20130.89)</span>), complications (<span data-q=\"anycomp_sdd\">5.0%</span> vs <span data-q=\"anycomp_on\">6.4%</span>; <span data-q=\"anycomp_rr\">0.78 (0.71\u20130.87)</span>) and reoperation (<span data-q=\"reop_sdd\">0.5%</span> vs <span data-q=\"reop_on\">1.1%</span>; <span data-q=\"reop_rr\">0.50 (0.36\u20130.68)</span>).", "Overall readmission did not change between eras (4.1% vs 4.2%; relative risk 1.02, 0.97-1.08)."],
+            "findings": ["Of 119,220 patients, <span data-q=\"n_sdd\">7,088</span> (5.9%) went home the same day.", "The rate stayed below 1% through 2018, then rose to 1.9% in 2019 and 15.6% in 2024 (p&lt;0.001 for trend), including patients aged 70 or older (0.6% to 8.2%).", "Compared with overnight stay, same-day discharge was associated with lower readmission (<span data-q=\"readmit_sdd\">3.3%</span> vs <span data-q=\"readmit_on\">4.2%</span>; relative risk <span data-q=\"readmit_rr\">0.78 (0.69\u20130.89)</span>), complications (<span data-q=\"anycomp_sdd\">5.0%</span> vs <span data-q=\"anycomp_on\">6.4%</span>; <span data-q=\"anycomp_rr\">0.78 (0.71\u20130.87)</span>) and reoperation (<span data-q=\"reop_sdd\">0.5%</span> vs <span data-q=\"reop_on\">1.1%</span>; <span data-q=\"reop_rr\">0.50 (0.36\u20130.68)</span>).", "Overall readmission did not change between eras (4.1% vs 4.2%; relative risk 1.02, 0.97-1.08)."],
             "findings_note": "Same-day discharge after RARP grew sixteenfold after 2018 and now applies to about one in six patients, without a rise in national readmission rates. Lower complication rates after same-day discharge likely reflect selection of healthier patients, and comparisons are unadjusted.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-same-day-discharge/"}],
@@ -1876,7 +1908,7 @@ PROJECTS = [
                              "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
             "question": "Robotic simple prostatectomy has all but replaced the open operation. What did that change in transfusion and complications?",
             "approach": ["We identified simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) - either RASP (robot used) or OSP (open, no robot).", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Robotic share was tested for linear trend.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by anesthesia risk class, frailty, age ≥70 years, obesity and anemia."],
-            "findings": ["Of 3,033 simple prostatectomies, 2,580 (85.1%) were RASP, rising from 73.2% in 2022 to 91.2% in 2024 (p-trend<0.001).", "RASP had lower transfusion within 72 hours (<span data-q=\"rasp_transf\">1.8%</span> vs <span data-q=\"osp_transf\">18.3%</span>; relative risk <span data-q=\"transf_rr\">0.10 (0.07\u20130.14)</span>), any complication (<span data-q=\"rasp_anycomp\">11.2%</span> vs <span data-q=\"osp_anycomp\">28.0%</span>), readmission (<span data-q=\"rasp_readmit\">5.5%</span> vs <span data-q=\"osp_readmit\">8.2%</span>) and reoperation (<span data-q=\"rasp_reop\">1.6%</span> vs <span data-q=\"osp_reop\">4.2%</span>).", "Superficial wound infection (0.9% vs 2.6%) and kidney injury (0.7% vs 2.6%) were also less frequent; urinary infection, thromboembolism, pneumonia and sepsis did not differ.", "Lower transfusion held in every subgroup."],
+            "findings": ["Of 3,033 simple prostatectomies, 2,580 (85.1%) were RASP, rising from 73.2% in 2022 to 91.2% in 2024 (p-trend&lt;0.001).", "RASP had lower transfusion within 72 hours (<span data-q=\"rasp_transf\">1.8%</span> vs <span data-q=\"osp_transf\">18.3%</span>; relative risk <span data-q=\"transf_rr\">0.10 (0.07\u20130.14)</span>), any complication (<span data-q=\"rasp_anycomp\">11.2%</span> vs <span data-q=\"osp_anycomp\">28.0%</span>), readmission (<span data-q=\"rasp_readmit\">5.5%</span> vs <span data-q=\"osp_readmit\">8.2%</span>) and reoperation (<span data-q=\"rasp_reop\">1.6%</span> vs <span data-q=\"osp_reop\">4.2%</span>).", "Superficial wound infection (0.9% vs 2.6%) and kidney injury (0.7% vs 2.6%) were also less frequent; urinary infection, thromboembolism, pneumonia and sepsis did not differ.", "Lower transfusion held in every subgroup."],
             "findings_note": "RASP now accounts for more than 90% of simple prostatectomies in NSQIP hospitals and is associated with a tenfold lower transfusion rate and less than half the complication rate of OSP, a benefit that persists in older, frail and anemic patients. Comparisons are unadjusted and OSP patients carried more comorbidity, so selection bias is likely.",
             "materials": [{"label": "Read the abstract (passphrase)",
                            "url": "/downloads/abstract-nsqip-rasp-vs-osp/"}],
