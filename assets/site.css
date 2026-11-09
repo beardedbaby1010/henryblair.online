@@ -179,26 +179,25 @@ footer a{color:var(--ink)}
   padding:0 14px;border:0;background:none;color:#b9bcbf;cursor:pointer;
   font:inherit;letter-spacing:inherit;white-space:nowrap}
 .sb-menubtn:hover{color:#fff;background:#1c1c1c}
-.sb-menu.on .sb-menubtn{color:#111;background:var(--bg)}
+.sb-menu.on .sb-menubtn{color:#fff;background:#1c1c1c}
 .sb-caret{width:0;height:0;border-left:3.5px solid transparent;
   border-right:3.5px solid transparent;border-top:4px solid currentColor;
   transition:transform .12s ease}
 .sb-menu.on .sb-caret{transform:rotate(180deg)}
-/* The panel opens over the page, not over the bar, so it follows the page:
-   a white surface with the same hairline border and accent as the cards. The
-   open button takes the active-tab treatment so the two read as one shape. */
-.sb-menupanel{position:fixed;z-index:60;margin-top:0;
+/* The panel is the tab bar continuing downward: same black, same hairlines,
+   same 12px/600 sans as the tabs, same inverted treatment for the current
+   page. .sitebar is on each selector so the bar's own "a" rule cannot win. */
+.sitebar .sb-menupanel{position:fixed;z-index:60;margin-top:0;
   min-width:216px;max-height:min(70vh,420px);overflow-y:auto;
-  background:var(--surf);border:1px solid var(--line);border-top:0;border-radius:0;
-  box-shadow:0 14px 28px rgba(17,17,17,.13);padding:0}
-.sitebar .sb-menupanel a{display:block;padding:9px 14px 9px 13px;border-radius:0;
-  border-bottom:1px solid var(--line);border-left:3px solid transparent;
-  font-size:12.5px;font-weight:600;color:var(--ink2);
-  text-decoration:none;white-space:nowrap;transition:border-color .12s,color .12s}
+  background:#111;border:1px solid #333;border-top:0;border-radius:0;
+  box-shadow:0 12px 26px rgba(0,0,0,.45);padding:0}
+.sitebar .sb-menupanel a{display:block;height:var(--sitebar);line-height:var(--sitebar);
+  padding:0 14px;border-radius:0;border:0;border-bottom:1px solid #262626;
+  font-family:var(--sans);font-size:12px;font-weight:600;color:#fff;
+  text-decoration:none;white-space:nowrap}
 .sitebar .sb-menupanel a:last-child{border-bottom:0}
-.sitebar .sb-menupanel a:hover{background:var(--bg);color:var(--accent);border-left-color:var(--accent)}
-.sitebar .sb-menupanel a[aria-current="page"]{color:var(--accent);font-weight:700;
-  border-left-color:#111}
+.sitebar .sb-menupanel a:hover{background:#1c1c1c;color:#fff}
+.sitebar .sb-menupanel a[aria-current="page"]{background:#f4f4f2;color:#111;font-weight:700}
 @media(max-width:640px){.sb-menupanel{min-width:66vw;max-width:86vw}}
 
 /* ---------- card grids (abstracts, earlier work, other) ----------
