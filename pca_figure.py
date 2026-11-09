@@ -262,6 +262,7 @@ def _win(keys):
 SPINE = [
     {"key": None,      "label": "TriNetX US Collaborative Network", "network": True},
     {"key": "pca",     "label": "Prostate cancer",
+     "crit": "ICD-10 C61, age \u226570, \u22652 instances",
      "alt": ("Age-at-diagnosis definition", [("v1", "dx70v1"), ("v2", "dx70v2"),
                                              ("v3", "dx70v3"), ("v4", "dx70v4")])},
     # The 2x criterion is applied last. These two rows are the same cohort with
@@ -269,18 +270,21 @@ SPINE = [
     # rather than on it: they are a check on where the criterion goes, not a
     # stage the analytic cohort passes through.
     {"key": "adt1",    "label": "+ ADT",
+     "crit": "ADT Union, Jan 2017 \u2013 Dec 2023",
      "alt": ("ADT 2\u00d7 applied here \u00b7 index window",
              _win(["a2_1523", "a2_1623", "adt2", "a2_1823", "a2_1824", "a2_1925"]))},
     {"key": "adt1wo",  "label": "+ washout",
+     "crit": "no ADT on or before Dec 31, 2016",
      "alt": ("ADT 2\u00d7 applied here \u00b7 index window",
              _win(["aw_1523", "aw_1623", "adt2wo", "aw_1823", "aw_1824", "aw_1925"]))},
-    {"key": "adt1awo", "label": "+ ADT washout"},
+    {"key": "adt1awo", "label": "+ ADT washout", "crit": "69_ADT_Wash"},
     {"key": "iadt",    "label": "+ ADT 2\u00d7 \u2014 incident-ADT cohort", "anchor": True,
+     "crit": "ADT Union carries \u22652 instances",
      "alt": ("Index window",
              _win(["ia_1523", "ia_1623", "iadt", "ia_1823", "ia_1824", "ia_1925"]))},
 ]
 
-SP_W, SP_H, SP_GAP = 300, 58, 26
+SP_W, SP_H, SP_GAP = 318, 72, 26
 CHIP_H, CHIP_GAP = 21, 6
 
 def chip(x, y, label, value, key, primary=False):
@@ -318,20 +322,24 @@ def spine_svg(vals, cx, top, network=None):
                    % (x, y, SP_W, SP_H, fill, sw))
         out.append('<text x="%.1f" y="%d" text-anchor="middle" font-size="12.5" '
                    'font-weight="700" fill="%s">%s</text>'
-                   % (cx, y + 23, txt, esc(step["label"])))
+                   % (cx, y + 22, txt, esc(step["label"])))
+        if step.get("crit"):
+            cc = "rgba(255,255,255,.62)" if (anchor or step.get("network")) else P["mut"]
+            out.append('<text x="%.1f" y="%d" text-anchor="middle" font-size="10" '
+                       'fill="%s">%s</text>' % (cx, y + 38, cc, esc(step["crit"])))
         if step.get("network"):
             v = format(int(network), ",") if network else "—"
             out.append('<text x="%.1f" y="%d" text-anchor="middle" font-size="14.5" '
                        'font-weight="800" fill="%s" data-q="_network">n = %s</text>'
-                       % (cx, y + 44, sub, v))
+                       % (cx, y + 57, sub, v))
         else:
             out.append('<text x="%.1f" y="%d" text-anchor="middle" font-size="14.5" '
                        'font-weight="800" fill="%s" data-q="%s">n = %s</text>'
-                       % (cx, y + 44, sub, esc(step["key"]), fmt(vals.get(step["key"]))))
+                       % (cx, y + 57, sub, esc(step["key"]), fmt(vals.get(step["key"]))))
         alt = step.get("alt")
         if alt:
             title, pairs = alt
-            ax, ay2 = cx + SP_W / 2.0 + 26, y + 4
+            ax, ay2 = cx + SP_W / 2.0 + 26, y + 11
             out.append('<text x="%.1f" y="%d" font-size="9.5" font-weight="700" '
                        'fill="%s" letter-spacing=".08em">%s</text>'
                        % (ax, ay2 + 6, P["mut"], esc(title.upper())))
