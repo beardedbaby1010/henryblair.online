@@ -693,6 +693,24 @@ def build_gate(p):
     paper = p.get("paper")
     if not paper:
         return True
+    if paper.get("gate") is False:
+        # Not posted and not gated: leave a short page where the gate used to
+        # be, so a link someone already has lands somewhere honest instead of
+        # on a stale passphrase prompt.
+        out = os.path.join(ROOT, "projects", p["slug"], "paper", "index.html")
+        if os.path.exists(os.path.dirname(out)) or True:
+            os.makedirs(os.path.dirname(out), exist_ok=True)
+            open(out, "w", encoding="utf-8").write(
+                '<!doctype html>\n<html lang="en"><head><meta charset="utf-8">\n'
+                '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+                '<meta name="robots" content="noindex">\n'
+                '<meta http-equiv="refresh" content="0;url=/projects/%s/">\n'
+                '<title>%s</title></head><body>\n'
+                '<p>The manuscript is not posted. '
+                '<a href="/projects/%s/">Back to the project</a>.</p>\n'
+                '</body></html>\n' % (p["slug"], esc(p["title"]), p["slug"]))
+            note("-> projects/%s/paper/index.html  (manuscript not gated)" % p["slug"])
+        return True
     slug = p["slug"]
     src = expand(paper["pdf"])
     if not os.path.exists(src):
@@ -1135,11 +1153,19 @@ def auto_sections(p):
         sec("materials", "Materials", body)
 
     if p.get("paper"):
-        body = ('  <h2>The manuscript</h2>\n'
-                '  <div class="gate"><h3>%s</h3><p>%s Behind a passphrase while the work is unpublished — '
-                '<a href="/projects/%s/paper/">open it here</a> if I sent you one, or '
-                '<a href="mailto:henrymblair@gmail.com">email me</a>.</p></div>\n'
-                % (esc(p["paper"].get("label", "Manuscript")), esc(p["paper"].get("note", "")), p["slug"]))
+        pap = p["paper"]
+        if pap.get("gate") is False:
+            body = ('  <h2>The manuscript</h2>\n'
+                    '  <div class="keybox"><h3>%s</h3><p>%s Not posted here yet — '
+                    '<a href="mailto:henrymblair@gmail.com?subject=Manuscript%%20request">'
+                    'email me</a> for a copy.</p></div>\n'
+                    % (esc(pap.get("label", "Manuscript")), esc(pap.get("note", ""))))
+        else:
+            body = ('  <h2>The manuscript</h2>\n'
+                    '  <div class="gate"><h3>%s</h3><p>%s Behind a passphrase while the work is unpublished — '
+                    '<a href="/projects/%s/paper/">open it here</a> if I sent you one, or '
+                    '<a href="mailto:henrymblair@gmail.com">email me</a>.</p></div>\n'
+                    % (esc(pap.get("label", "Manuscript")), esc(pap.get("note", "")), p["slug"]))
         sec("paper", "The manuscript", body)
 
     if h.get("next"):

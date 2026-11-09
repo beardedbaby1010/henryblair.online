@@ -234,3 +234,8 @@ footer a{color:var(--ink)}
   .sectog{left:0}
 }
 @media print{.cvsec .sec-body{display:block !important}.sectog{display:none}}
+
+/* Teaching videos sit in the abstracts grid but are not abstracts: same
+   card, different left edge, and excluded from the grid count. */
+.abs.vid{border-left:3px solid var(--accent)}
+.abs.vid .acat{color:var(--accent)}

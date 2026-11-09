@@ -428,7 +428,9 @@ PROJECTS = [
         "tags": ["Overactive bladder", "Telemedicine", "Guidelines", "Access to care", "Primary care"],
         "page": {"kind": "auto"},
         "paper": {"pdf": "Maimo_Work/1_PVR_Self-Estimation/old_PVR/Henry Edits V7 PVR Manuscript Family Practice.pdf",
-                  "label": "Manuscript V7", "note": "Submitted to Family Practice (OUP)."},
+                  "label": "Manuscript", "gate": False,
+                  "note": "Written for the Journal of Rural Health; earlier versions went to "
+                          "Family Practice and JWOCN."},
         "hub": {
             "people": ["Colby Rondeau, MD", "Henry M. Blair", "Sumyia Razzak",
                                     "Sarah Chaudhary", "Trashana Smith", "Michael Silver",
@@ -624,7 +626,9 @@ PROJECTS = [
         "tags": ["Overactive bladder", "Health equity", "Area Deprivation Index", "Urban health", "Telehealth"],
         "page": {"kind": "auto"},
         "paper": {"pdf": "_source/manuscripts/ADI-and-Travel-Time-V3.pdf",
-                  "label": "Manuscript V3", "note": "With Colby Rondeau, MD and Allison Polland, MD."},
+                  "label": "Manuscript V3",
+                  "note": "Written for the Journal of Urban Health, with Colby Rondeau, MD and "
+                          "Allison Polland, MD."},
         "hub": {
             "people": ["Colby Rondeau, MD", "Luke Jenusaitis, MD", "Elizabeth DeSellier",
                                     "Rebecca Bergmann", "Peace Deh", "Michael Silver",
@@ -2008,8 +2012,9 @@ PROJECTS = [
         "summary": "The ACS NSQIP public files are thirteen years of fixed-width text whose columns appear, "
                    "vanish and change name between years. This is the toolchain I wrote to go from no "
                    "research question at all to a cohort, a live workbook, publication figures and a "
-                   "written guide \u2014 about eight thousand lines of Python, run by double-clicking one file.",
-        "stats": [("8,430", "lines of Python"), ("396", "columns mapped across years"),
+                   "written guide \u2014 about eight thousand lines of Python that write sixteen thousand more of HTML, run by double-clicking one file.",
+        "stats": [("8,258", "lines of Python"), ("16,280", "lines of HTML it writes"),
+                  ("396", "columns mapped across years"),
                   ("13", "PUF years, 2012\u20132024"), ("14", "statistics as live formulas")],
         "tags": ["NSQIP", "Research tooling", "Reproducibility", "Python", "Health services research"],
         "page": {"kind": "auto"},
@@ -2132,9 +2137,9 @@ PROJECTS = [
                         {"figure": {"src": "frailty-outcomes.jpg",
                                     "alt": "Forest plot of thirty-day outcomes by mFI-5 group against a reference of zero",
                                     "caption": "<b>The same gradient, every outcome.</b> Each frailty group against mFI-5 = 0, five outcomes at once, overlap-weighted where the weights exist and crude where they do not."}},
-                        {"figure": {"src": "tavr-share.jpg",
-                                    "alt": "Stacked bars of TAVR and SAVR volume by year with the TAVR share labelled",
-                                    "caption": "<b>Practice change over time.</b> TAVR's share of isolated aortic valve replacement by year, with the trend test the abstract quotes."}},
+                        {"figure": {"src": "tavr-share.png",
+                                    "alt": "TAVR and SAVR as shares of isolated aortic valve replacement, 2013 to 2024, crossing at 50 percent",
+                                    "caption": "<b>Practice change over time.</b> TAVR and SAVR as shares of the same denominator, so the crossing is readable: TAVR passes half of all isolated aortic valve replacement in 2019, falls back below for 2021\u201322, and is clear of it by 2024. The per-year n is printed because the denominator nearly halves across the series. Drawn by <code>tavr_share_figure.py</code>, read live from the workbook."}},
                         {"h3": "A deck that explains the method"},
                         {"prose": "The deck is generated with the project, so it cannot drift "
                                   "from it. It carries the cohort funnel, the covariate list, "

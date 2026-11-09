@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>A pipeline that turns the NSQIP files into a finished analysis — project</title>
 <meta name="description" content="The ACS NSQIP public files are thirteen years of fixed-width text whose columns appear, vanish and change name between years. This is the toolchain I wrote to go from no research q">
-<link rel="stylesheet" href="/assets/site.css?v=d8cf58547d">
+<link rel="stylesheet" href="/assets/site.css?v=b80fe7e06d">
 <link rel="stylesheet" href="/assets/project.css?v=bd25e0b3e7">
 
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
@@ -62,7 +62,7 @@
     <p class="authors">Henry M. Blair</p>
     <p class="lede">Most of the work in a database study is not the analysis. It is turning a vague idea into an answerable question, finding out whether the data can answer it, and then rebuilding the whole thing when a variable turns out to be missing in 2014. This is the machinery I built so that stops being the work.</p>
   </div>
-  <div class="statrow"><div class="stat"><div class="statv">8,430</div><div class="statl">lines of Python</div></div><div class="stat"><div class="statv">396</div><div class="statl">columns mapped across years</div></div><div class="stat"><div class="statv">13</div><div class="statl">PUF years, 2012–2024</div></div><div class="stat"><div class="statv">14</div><div class="statl">statistics as live formulas</div></div></div>
+  <div class="statrow"><div class="stat"><div class="statv">8,258</div><div class="statl">lines of Python</div></div><div class="stat"><div class="statv">16,280</div><div class="statl">lines of HTML it writes</div></div><div class="stat"><div class="statv">396</div><div class="statl">columns mapped across years</div></div><div class="stat"><div class="statv">13</div><div class="statl">PUF years, 2012–2024</div></div><div class="stat"><div class="statv">14</div><div class="statl">statistics as live formulas</div></div></div>
   <div class="callout"><b>Status.</b> In active use. Every NSQIP analysis on this site — bleeding after TURP, PVP and HoLEP; open versus robotic simple prostatectomy; prostatectomy in the elderly and frail; same-day discharge after robotic prostatectomy; opioids at discharge; sacrocolpopexy versus sacrospinous fixation — was produced by this pipeline.</div>
 </section>
 
@@ -102,8 +102,8 @@
   <figcaption><b>A gradient, with its trend test.</b> Serious complication across the mFI-5 frailty score, Wilson intervals, Cochran–Armitage across the ordered groups.</figcaption></figure>
   <figure><img src="figures/frailty-outcomes.jpg" alt="Forest plot of thirty-day outcomes by mFI-5 group against a reference of zero">
   <figcaption><b>The same gradient, every outcome.</b> Each frailty group against mFI-5 = 0, five outcomes at once, overlap-weighted where the weights exist and crude where they do not.</figcaption></figure>
-  <figure><img src="figures/tavr-share.jpg" alt="Stacked bars of TAVR and SAVR volume by year with the TAVR share labelled">
-  <figcaption><b>Practice change over time.</b> TAVR's share of isolated aortic valve replacement by year, with the trend test the abstract quotes.</figcaption></figure>
+  <figure><img src="figures/tavr-share.png" alt="TAVR and SAVR as shares of isolated aortic valve replacement, 2013 to 2024, crossing at 50 percent">
+  <figcaption><b>Practice change over time.</b> TAVR and SAVR as shares of the same denominator, so the crossing is readable: TAVR passes half of all isolated aortic valve replacement in 2019, falls back below for 2021–22, and is clear of it by 2024. The per-year n is printed because the denominator nearly halves across the series. Drawn by <code>tavr_share_figure.py</code>, read live from the workbook.</figcaption></figure>
   <h3>A deck that explains the method</h3>
   <p>The deck is generated with the project, so it cannot drift from it. It carries the cohort funnel, the covariate list, the outcome definitions and the equations behind every interval — which is what a co-author or a reviewer actually asks for.</p>
   <figure><img src="figures/deck-funnel.jpg" alt="Slide showing the cohort funnel from the original cohort down to the analytic cohort">
