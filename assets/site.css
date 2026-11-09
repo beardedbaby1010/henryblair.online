@@ -40,6 +40,14 @@ body{margin:0;padding-top:var(--sitebar);background:var(--bg);color:var(--ink);
 /* ---------- page frame ---------- */
 .wrap{max-width:980px;margin:0 auto;padding:0 clamp(18px,5vw,40px)}
 .wrap.narrow{max-width:760px}
+/* card grids read better edge to edge than at the prose measure */
+.wrap.wide{max-width:1580px}
+/* Only the masthead sits level with the fixed corner badge; indenting it there
+   keeps the full width for the grid below. Above ~1950px the centred box
+   clears the badge on its own. */
+@media(min-width:860px) and (max-width:1947px){
+  .wrap.wide > header.masthead{padding-left:calc(var(--badge) + 24px)}
+}
 header.masthead{padding:64px 0 30px;border-bottom:2px solid #111}
 header.masthead.tight{padding:56px 0 24px}
 h1{font-family:var(--serif);font-size:clamp(34px,6vw,56px);line-height:1.05;
