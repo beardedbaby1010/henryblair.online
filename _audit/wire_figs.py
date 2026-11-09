@@ -33,10 +33,17 @@ FIGS = {
    "procedure \u2014 the era comparison behind the trend.", None),
  ],
  "nsqip-same-day-discharge": [
-  ("Figure_1_forest.png", "Thirty-day outcomes, same-day discharge against overnight "
-   "stay.", None),
-  ("Figure_2_rates.png", "Overlap-weighted 30-day outcome rates, which hold the "
-   "measured case mix fixed between the two groups.", None),
+  ("Figure_1_uptake.png",
+   "Same-day discharge stayed under 1% while laparoscopic prostatectomy sat on "
+   "Medicare\u2019s Inpatient-Only List, then climbed every year after the January 2018 "
+   "removal \u2014 0.9% in 2012 to 15.6% in 2024. Cases per year are printed beneath, "
+   "because the denominator more than doubles across the series.", None),
+  ("Figure_2_readmission.png",
+   "Thirty-day readmission by year and discharge timing. Same-day discharge sits at or "
+   "below overnight stay throughout, and overnight readmission is flat at about 4% while "
+   "same-day discharge scales sixteenfold \u2014 the safety claim the abstract makes. "
+   "Before 2019 there are fewer than 100 same-day cases a year, so those points swing on "
+   "a handful of events and are shaded as noise.", None),
  ],
  "nsqip-rasp-vs-osp": [
   ("Figure_1.png", "Robot-assisted share of simple prostatectomy by year "
