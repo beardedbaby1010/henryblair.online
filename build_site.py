@@ -70,6 +70,59 @@ HEAD_TAGS = """
 <meta name="twitter:card" content="summary_large_image">
 """
 
+# A manuscript figure at column width is often unreadable - axis labels and
+# per-point numbers are the whole content. Clicking one opens it full-size.
+# Injected into the generated hubs, which are self-contained and so cannot
+# share a stylesheet with the rest of the site.
+FIGURE_ZOOM = """
+<style id="fig-zoom-css">
+img[src^="figures/"]{cursor:zoom-in}
+#figzoom{position:fixed;inset:0;z-index:300;display:none;align-items:center;
+  justify-content:center;background:rgba(14,18,22,.92);padding:28px}
+#figzoom.on{display:flex}
+#figzoom img{max-width:100%;max-height:100%;width:auto;height:auto;
+  background:#fff;box-shadow:0 18px 50px rgba(0,0,0,.5);cursor:zoom-out}
+#figzoom button{position:absolute;top:14px;right:18px;width:34px;height:34px;
+  border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.35);color:#fff;
+  font-size:19px;line-height:1;border-radius:3px;cursor:pointer}
+#figzoom button:hover{background:rgba(255,255,255,.14)}
+#figzoom .cap{position:absolute;left:0;right:0;bottom:10px;text-align:center;
+  color:rgba(255,255,255,.8);font-size:12.5px;padding:0 28px}
+@media print{#figzoom{display:none!important}}
+</style>
+<script id="fig-zoom-js">
+(function(){
+  function ready(fn){ if(document.readyState!=='loading'){fn();}
+    else{document.addEventListener('DOMContentLoaded',fn);} }
+  ready(function(){
+    var figs=[].slice.call(document.querySelectorAll('img[src^="figures/"]'));
+    if(!figs.length) return;
+    var box=document.createElement('div'); box.id='figzoom';
+    box.innerHTML='<button type="button" aria-label="Close">&times;</button>'
+                + '<img alt=""><div class="cap"></div>';
+    document.body.appendChild(box);
+    var img=box.querySelector('img'), cap=box.querySelector('.cap'), last=null;
+    function shut(){ box.classList.remove('on'); img.removeAttribute('src');
+      if(last){ last.focus(); last=null; } }
+    function open(src,alt,from){ last=from; img.src=src; img.alt=alt||'';
+      cap.textContent=alt||''; box.classList.add('on');
+      box.querySelector('button').focus(); }
+    figs.forEach(function(f){
+      f.setAttribute('tabindex','0');
+      f.setAttribute('role','button');
+      if(!f.getAttribute('alt')) f.setAttribute('alt','');
+      f.addEventListener('click',function(){ open(f.currentSrc||f.src,f.alt,f); });
+      f.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(f.currentSrc||f.src,f.alt,f); } });
+    });
+    box.addEventListener('click',shut);
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&box.classList.contains('on')) shut(); });
+  });
+})();
+</script>
+"""
+
 SITEBAR_CSS = """
 <style id="site-nav-css">
 :root{--sitebar:34px;--badge:160px}
@@ -295,7 +348,7 @@ def strip_paper(html, slug, gated):
 
 def wrap(html, slug):
     html = re.sub(r'<style id="site-nav-css">.*?</style>', '', html, flags=re.S)
-    html = html.replace("</head>", HEAD_TAGS + SITEBAR_CSS + "</head>", 1)
+    html = html.replace("</head>", HEAD_TAGS + SITEBAR_CSS + FIGURE_ZOOM + "</head>", 1)
     m = re.search(r"<body[^>]*>", html)
     i = m.end()
     return html[:i] + "\n" + nav_html(slug) + "\n" + html[i:]
