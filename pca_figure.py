@@ -177,7 +177,7 @@ SPINE = [
      "sens": ("ADT 2× APPLIED HERE · INDEX WINDOW", _win(["a2_1523", "a2_1925"]))},
     {"key": "adt1wo", "label": "+ washout", "crit": "no ADT on or before Dec 31, 2016",
      "sens": ("ADT 2× APPLIED HERE · INDEX WINDOW", _win(["aw_1523", "aw_1925"]))},
-    {"key": "adt1awo", "label": "+ ADT washout", "crit": "69_ADT_Wash"},
+    {"key": "adt1awo", "label": "+ ADT washout", "crit": "no ADT ever before age 70"},
     {"key": "iadt", "label": "Incident ADT — + ADT 2×", "anchor": True,
      "crit": "ADT Union carries ≥2 instances",
      "sens": ("INDEX WINDOW", _win(["ia_1523", "ia_1925"]))},
