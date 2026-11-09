@@ -45,6 +45,7 @@
   <a href="#parts">The parts</a>
   <a href="#run">A run</a>
   <a href="#repro">Reproducibility</a>
+  <a href="#produces">What it produces</a>
   <a href="#stats">The statistics</a>
   <a href="#data">Data handling</a>
   <a href="#question">The question</a>
@@ -82,6 +83,40 @@
   <h2>Answers are the artefact</h2>
   <p class="secintro">Every answer given to the builder is written to the project as it is given, which makes the run repeatable without the person who ran it.</p>
   <ul class="pitfalls"><li>A saved answer file rebuilds the whole project with no questions asked.</li><li>Re-asking the questions starts from the previous answers, so an amendment is an edit rather than a retype.</li><li>A replay walks today’s questions using an old project’s answers into a <i>copy</i>, so a pipeline change can be inspected against the original before anything replaces it.</li><li>One command rebuilds every project to the current pipeline, backing up first and restoring on failure; published Google Sheets are left alone unless asked.</li></ul>
+</section>
+
+<section id="produces" class="sec">
+  <h2>What a project looks like when it is done</h2>
+  <p class="secintro">Every study built this way ships the same four things: a workbook where each number is a formula, a figure set drawn from that workbook, a methodology deck that explains the design to someone who has never used NSQIP, and a Start Here guide. Nothing below was hand-assembled — the pipeline wrote all of it.</p>
+  <h3>The workbook is the source of truth</h3>
+  <figure><img src="figures/workbook.jpg" alt="A project workbook open in Google Sheets, showing the FLAGGING formula behind an outcomes table">
+  <figcaption><b>The workbook.</b> Every cell in an outcomes table is a FLAGGING call over four numbers — two numerators and two denominators — so a count, a Wilson interval, a Katz risk ratio, a Woolf odds ratio and a Newcombe risk difference all come from one formula. Change a cohort definition and the whole table moves.</figcaption></figure>
+  <h3>Figures are drawn from it, not typed into it</h3>
+  <figure><img src="figures/complication-timing.jpg" alt="Horizontal bars showing the share of each complication occurring after discharge, by length of stay">
+  <figcaption><b>When complications happen.</b> The share of each complication recorded after discharge rather than before it, split by length of stay — the figure that decides whether a short stay is hiding events or preventing them.</figcaption></figure>
+  <figure><img src="figures/tavr-vs-savr.jpg" alt="Forest plot of thirty-day outcomes after TAVR compared with SAVR, overlap-weighted">
+  <figcaption><b>A weighted comparison.</b> Thirty-day outcomes after TAVR against isolated SAVR, with propensity-score overlap weights. Rates, risk ratios and intervals are read from the workbook; the forest is drawn from the same cells.</figcaption></figure>
+  <figure><img src="figures/covariate-balance.jpg" alt="Covariate balance plot before and after overlap weighting">
+  <figcaption><b>Whether the weighting worked.</b> Absolute standardised mean difference for every covariate before and after overlap weighting. The dashed line is 0.1; everything crosses it from the wrong side to the right one.</figcaption></figure>
+  <figure><img src="figures/frailty-trend.jpg" alt="Bar chart of serious complication rate across mFI-5 frailty groups with Wilson intervals">
+  <figcaption><b>A gradient, with its trend test.</b> Serious complication across the mFI-5 frailty score, Wilson intervals, Cochran–Armitage across the ordered groups.</figcaption></figure>
+  <figure><img src="figures/frailty-outcomes.jpg" alt="Forest plot of thirty-day outcomes by mFI-5 group against a reference of zero">
+  <figcaption><b>The same gradient, every outcome.</b> Each frailty group against mFI-5 = 0, five outcomes at once, overlap-weighted where the weights exist and crude where they do not.</figcaption></figure>
+  <figure><img src="figures/tavr-share.jpg" alt="Stacked bars of TAVR and SAVR volume by year with the TAVR share labelled">
+  <figcaption><b>Practice change over time.</b> TAVR's share of isolated aortic valve replacement by year, with the trend test the abstract quotes.</figcaption></figure>
+  <h3>A deck that explains the method</h3>
+  <p>The deck is generated with the project, so it cannot drift from it. It carries the cohort funnel, the covariate list, the outcome definitions and the equations behind every interval — which is what a co-author or a reviewer actually asks for.</p>
+  <figure><img src="figures/deck-funnel.jpg" alt="Slide showing the cohort funnel from the original cohort down to the analytic cohort">
+  <figcaption><b>The cohort funnel.</b> Every exclusion, in order, with the count that survived it.</figcaption></figure>
+  <figure><img src="figures/deck-outcomes.jpg" alt="Slide defining the primary and secondary outcomes used in the project">
+  <figcaption><b>Outcome definitions.</b> What counts as a serious complication, what NSQIP changed in 2022, and the forty-two secondary outcomes carried alongside.</figcaption></figure>
+  <figure><img src="figures/deck-propensity.jpg" alt="Slide explaining propensity-score adjustment with overlap weights">
+  <figcaption><b>The adjustment, in three steps.</b> Propensity score, overlap weights, weighted comparison — and the twenty-three characteristics the model balances.</figcaption></figure>
+  <figure><img src="figures/deck-equations.jpg" alt="Slide giving the risk ratio and risk difference equations with their confidence intervals">
+  <figcaption><b>The equations themselves.</b> Risk ratio with its Katz interval and risk difference with its Wald interval, written out rather than cited.</figcaption></figure>
+  <h3>And a guide for whoever picks it up next</h3>
+  <figure><img src="figures/readme.jpg" alt="The Start Here guide that ships with each project, showing its contents">
+  <figcaption><b>Start Here.</b> Thirteen sections written for someone who has never opened ACS NSQIP: what the project is, what is in the folder, every tab explained, how to change the analysis, and how to get from the sentences to an abstract.</figcaption></figure>
 </section>
 
 <section id="stats" class="sec">

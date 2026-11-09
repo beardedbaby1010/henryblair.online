@@ -1692,7 +1692,7 @@ PROJECTS = [
                  "intro": "Every answer given to the builder is written to the project as it is given, which "
                           "makes the run repeatable without the person who ran it.",
                  "blocks": [
-                     {"bullets": [
+{"bullets": [
                         "A saved answer file rebuilds the whole project with no questions asked.",
                         "Re-asking the questions starts from the previous answers, so an amendment is an "
                         "edit rather than a retype.",
@@ -1703,6 +1703,61 @@ PROJECTS = [
                         "restoring on failure; published Google Sheets are left alone unless asked.",
                      ]},
                  ]},
+                {"id": "produces", "title": "What a project looks like when it is done",
+                 "nav": "What it produces",
+                 "intro": "Every study built this way ships the same four things: a workbook "
+                             "where each number is a formula, a figure set drawn from that "
+                             "workbook, a methodology deck that explains the design to someone "
+                             "who has never used NSQIP, and a Start Here guide. Nothing below "
+                             "was hand-assembled \u2014 the pipeline wrote all of it.",
+                 "blocks": [
+                        {"h3": "The workbook is the source of truth"},
+                        {"figure": {"src": "workbook.jpg",
+                                    "alt": "A project workbook open in Google Sheets, showing the FLAGGING formula behind an outcomes table",
+                                    "caption": "<b>The workbook.</b> Every cell in an outcomes table is a FLAGGING call over four numbers \u2014 two numerators and two denominators \u2014 so a count, a Wilson interval, a Katz risk ratio, a Woolf odds ratio and a Newcombe risk difference all come from one formula. Change a cohort definition and the whole table moves."}},
+                        {"h3": "Figures are drawn from it, not typed into it"},
+                        {"figure": {"src": "complication-timing.jpg",
+                                    "alt": "Horizontal bars showing the share of each complication occurring after discharge, by length of stay",
+                                    "caption": "<b>When complications happen.</b> The share of each complication recorded after discharge rather than before it, split by length of stay \u2014 the figure that decides whether a short stay is hiding events or preventing them."}},
+                        {"figure": {"src": "tavr-vs-savr.jpg",
+                                    "alt": "Forest plot of thirty-day outcomes after TAVR compared with SAVR, overlap-weighted",
+                                    "caption": "<b>A weighted comparison.</b> Thirty-day outcomes after TAVR against isolated SAVR, with propensity-score overlap weights. Rates, risk ratios and intervals are read from the workbook; the forest is drawn from the same cells."}},
+                        {"figure": {"src": "covariate-balance.jpg",
+                                    "alt": "Covariate balance plot before and after overlap weighting",
+                                    "caption": "<b>Whether the weighting worked.</b> Absolute standardised mean difference for every covariate before and after overlap weighting. The dashed line is 0.1; everything crosses it from the wrong side to the right one."}},
+                        {"figure": {"src": "frailty-trend.jpg",
+                                    "alt": "Bar chart of serious complication rate across mFI-5 frailty groups with Wilson intervals",
+                                    "caption": "<b>A gradient, with its trend test.</b> Serious complication across the mFI-5 frailty score, Wilson intervals, Cochran\u2013Armitage across the ordered groups."}},
+                        {"figure": {"src": "frailty-outcomes.jpg",
+                                    "alt": "Forest plot of thirty-day outcomes by mFI-5 group against a reference of zero",
+                                    "caption": "<b>The same gradient, every outcome.</b> Each frailty group against mFI-5 = 0, five outcomes at once, overlap-weighted where the weights exist and crude where they do not."}},
+                        {"figure": {"src": "tavr-share.jpg",
+                                    "alt": "Stacked bars of TAVR and SAVR volume by year with the TAVR share labelled",
+                                    "caption": "<b>Practice change over time.</b> TAVR's share of isolated aortic valve replacement by year, with the trend test the abstract quotes."}},
+                        {"h3": "A deck that explains the method"},
+                        {"prose": "The deck is generated with the project, so it cannot drift "
+                                  "from it. It carries the cohort funnel, the covariate list, "
+                                  "the outcome definitions and the equations behind every "
+                                  "interval \u2014 which is what a co-author or a reviewer "
+                                  "actually asks for."},
+                        {"figure": {"src": "deck-funnel.jpg",
+                                    "alt": "Slide showing the cohort funnel from the original cohort down to the analytic cohort",
+                                    "caption": "<b>The cohort funnel.</b> Every exclusion, in order, with the count that survived it."}},
+                        {"figure": {"src": "deck-outcomes.jpg",
+                                    "alt": "Slide defining the primary and secondary outcomes used in the project",
+                                    "caption": "<b>Outcome definitions.</b> What counts as a serious complication, what NSQIP changed in 2022, and the forty-two secondary outcomes carried alongside."}},
+                        {"figure": {"src": "deck-propensity.jpg",
+                                    "alt": "Slide explaining propensity-score adjustment with overlap weights",
+                                    "caption": "<b>The adjustment, in three steps.</b> Propensity score, overlap weights, weighted comparison \u2014 and the twenty-three characteristics the model balances."}},
+                        {"figure": {"src": "deck-equations.jpg",
+                                    "alt": "Slide giving the risk ratio and risk difference equations with their confidence intervals",
+                                    "caption": "<b>The equations themselves.</b> Risk ratio with its Katz interval and risk difference with its Wald interval, written out rather than cited."}},
+                        {"h3": "And a guide for whoever picks it up next"},
+                        {"figure": {"src": "readme.jpg",
+                                    "alt": "The Start Here guide that ships with each project, showing its contents",
+                                    "caption": "<b>Start Here.</b> Thirteen sections written for someone who has never opened ACS NSQIP: what the project is, what is in the folder, every tab explained, how to change the analysis, and how to get from the sentences to an abstract."}},
+                 ],
+                },
                 {"id": "stats", "title": "Statistics as spreadsheet formulas", "nav": "The statistics",
                  "intro": "A workbook of pasted results goes stale the moment the cohort changes. A "
                           "workbook of formulas cannot.",
