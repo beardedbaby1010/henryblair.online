@@ -57,20 +57,16 @@ def resolve(qm):
     return out
 
 # ------------------------------------------------------------------- palette
-# The top of the tree is the whole cohort, so it is neutral: black. Below it the
-# two questions the study asks get their own blue — light for bone health,
-# dark for treatment intensification — and the comparison arms stay grey so the
-# eye lands on the cohorts that carry a finding.
 P = {
     "ink":    "#16202b",
     "mut":    "#5e6b78",
     "line":   "#c3ccd4",
-    "navy":   "#000000",   # the anchor cohort
-    "blue":   "#2a6f97",
-    "teal":   "#4a90c2",   # bone health — light blue
-    "amber":  "#4a90c2",   # bone-health band header
-    "plum":   "#12395e",   # intensification — dark blue
-    "slate":  "#6b7785",   # comparison / "not" arms
+    "navy":   "#000000",
+    "blue":   "#2a6f97",   # key cohort
+    "teal":   "#4a90c2",
+    "amber":  "#4a90c2",
+    "plum":   "#12395e",
+    "slate":  "#6b7785",
     "bandA":  "#e8f1f8",
     "bandB":  "#e4ecf4",
 }
@@ -218,6 +214,116 @@ def connect(parent_cx, parent_bottom, kids):
                  % (k.x + k.w / 2.0, mid, k.y, P["line"]))
     return "".join(d)
 
+
+# ------------------------------------------------- the derivation spine
+# How the analytic cohort is reached from the network, one criterion at a time.
+# Each step that was tested against other index windows carries those alongside
+# it, so a reader can see how much the cohort depends on the window chosen
+# rather than taking 2017-2023 on faith.
+SPINE_SOURCES = {
+    "pca":      "PCa_new",
+    "adt1":     "PCa ∩ ADT Union ∩ No Washout_new",
+    "adt1wo":   "PCa ∩ ADT Union ∩ Washout_new",
+    "adt1awo":  "PCa ∩ ADT Union ∩ Washout ∩ ADT Washout_new",
+    "adt2":     "PCa ∩ ADT Union 2x ∩ No Washout_new",
+    "adt2wo":   "PCa ∩ ADT Union 2x ∩ Washout_new (IADT_old)",
+    "dx70v1":   "PCa_Dx_at_70_v1_new2",
+    "dx70v2":   "PCa_Dx_at_70_v2_new2",
+    "dx70v3":   "PCa_Dx_at_70_v3_new2",
+    "dx70v4":   "PCa_Dx_at_70_v4_new2",
+    "siadt2":   "v2_SIADT_new",
+    "a2_1523":  "supp_2015-23: ADT Union 2x ∩ No Washout_new",
+    "a2_1623":  "supp_2016-23: ADT Union 2x ∩ No Washout_new",
+    "a2_1823":  "supp_2018-23: ADT Union 2x ∩ No Washout_new",
+    "a2_1824":  "supp_2018-24: ADT Union 2x ∩ No Washout_new",
+    "a2_1925":  "supp_2019-25: ADT Union 2x ∩ No Washout_new",
+    "aw_1523":  "supp_2015-23: ADT Union 2x ∩ Washout_new",
+    "aw_1623":  "supp_2016-23: ADT Union 2x ∩ Washout_new",
+    "aw_1823":  "supp_2018-23: ADT Union 2x ∩ Washout_new",
+    "aw_1824":  "supp_2018-24: ADT Union 2x ∩ Washout_new",
+    "aw_1925":  "supp_2019-25: ADT Union 2x ∩ Washout_new",
+    "ia_1523":  "supp_2015-23: ADT Union 2x ∩ Washout ∩ ADT Washout_new",
+    "ia_1623":  "supp_2016-23: ADT Union 2x ∩ ADT Washout ∩ Washout_new",
+    "ia_1823":  "supp_2018-23: ADT Union 2x ∩ ADT Washout ∩ Washout_new",
+    "ia_1824":  "supp_2018-24: ADT Union 2x ∩ ADT Washout ∩ Washout_new",
+    "ia_1925":  "supp_2019-25: ADT Union 2x ∩ ADT Washout ∩ Washout_new",
+}
+SOURCES.update(SPINE_SOURCES)
+
+WIN = ["2015–23", "2016–23", "2018–23", "2018–24", "2019–25"]
+
+SPINE = [
+    {"key": None,      "label": "TriNetX US Collaborative Network", "network": True},
+    {"key": "pca",     "label": "Prostate cancer",
+     "alt": ("Age-at-diagnosis definition", [("v1", "dx70v1"), ("v2", "dx70v2"),
+                                             ("v3", "dx70v3"), ("v4", "dx70v4")])},
+    {"key": "adt1",    "label": "+ ADT"},
+    {"key": "adt1wo",  "label": "+ washout"},
+    {"key": "adt1awo", "label": "+ ADT washout"},
+    {"key": "iadt",    "label": "+ ADT 2\u00d7 \u2014 incident-ADT cohort", "anchor": True,
+     "alt": ("Index window", list(zip(WIN, ["ia_1523","ia_1623","ia_1823","ia_1824","ia_1925"])))},
+]
+
+SP_W, SP_H, SP_GAP = 300, 58, 26
+CHIP_H, CHIP_GAP = 21, 6
+
+def chip(x, y, label, value, key):
+    """A sensitivity reading: the variant's name and its count, refreshable."""
+    w = max(96.0, 30 + len(label) * 5.6 + len(value) * 6.2)
+    parts = [
+        '<g><rect x="{x:.1f}" y="{y}" width="{w:.1f}" height="{h}" rx="5" '
+        'fill="#f1f4f7" stroke="#dde3e9" stroke-width="1"/>'.format(x=x, y=y, w=w, h=CHIP_H),
+        '<text x="{x:.1f}" y="{y:.1f}" font-size="10.5" fill="{c}">{t}</text>'.format(
+            x=x + 9, y=y + 14.5, c=P["mut"], t=esc(label)),
+        '<text x="{x:.1f}" y="{y:.1f}" font-size="10.5" font-weight="700" fill="{c}" '
+        'text-anchor="end" data-q="{k}">{t}</text></g>'.format(
+            x=x + w - 9, y=y + 14.5, c=P["ink"], k=esc(key), t=esc(value)),
+    ]
+    return "".join(parts), w
+
+
+def spine_svg(vals, cx, top, network=None):
+    """Returns (svg, bottom_y). The last row is the anchor the bands hang from."""
+    out, y = [], top
+    for i, step in enumerate(SPINE):
+        anchor = step.get("anchor")
+        fill = P["navy"] if (anchor or step.get("network")) else "#ffffff"
+        txt  = "#ffffff" if (anchor or step.get("network")) else P["ink"]
+        sub  = "rgba(255,255,255,.86)" if (anchor or step.get("network")) else P["navy"]
+        sw = '' if (anchor or step.get("network")) else ' stroke="%s" stroke-width="1.4"' % P["navy"]
+        x = cx - SP_W / 2.0
+        out.append('<rect x="%.1f" y="%d" width="%d" height="%d" rx="7" fill="%s"%s/>'
+                   % (x, y, SP_W, SP_H, fill, sw))
+        out.append('<text x="%.1f" y="%d" text-anchor="middle" font-size="12.5" '
+                   'font-weight="700" fill="%s">%s</text>'
+                   % (cx, y + 23, txt, esc(step["label"])))
+        if step.get("network"):
+            v = format(int(network), ",") if network else "—"
+            out.append('<text x="%.1f" y="%d" text-anchor="middle" font-size="14.5" '
+                       'font-weight="800" fill="%s" data-q="_network">n = %s</text>'
+                       % (cx, y + 44, sub, v))
+        else:
+            out.append('<text x="%.1f" y="%d" text-anchor="middle" font-size="14.5" '
+                       'font-weight="800" fill="%s" data-q="%s">n = %s</text>'
+                       % (cx, y + 44, sub, esc(step["key"]), fmt(vals.get(step["key"]))))
+        alt = step.get("alt")
+        if alt:
+            title, pairs = alt
+            ax, ay2 = cx + SP_W / 2.0 + 26, y + 4
+            out.append('<text x="%.1f" y="%d" font-size="9.5" font-weight="700" '
+                       'fill="%s" letter-spacing=".08em">%s</text>'
+                       % (ax, ay2 + 6, P["mut"], esc(title.upper())))
+            cxx = ax
+            for lab, k in pairs:
+                g, w = chip(cxx, ay2 + 14, lab, fmt(vals.get(k)), k)
+                out.append(g)
+                cxx += w + CHIP_GAP
+        if i < len(SPINE) - 1:
+            out.append('<path d="M%.1f %d V%d" fill="none" stroke="%s" stroke-width="1.6"/>'
+                       % (cx, y + SP_H, y + SP_H + SP_GAP, P["line"]))
+        y += SP_H + SP_GAP
+    return "".join(out), y - SP_GAP
+
 CHW, PAD = 168, 44
 
 def build(vals, network=None, hcos=None, snapshot=None):
@@ -231,7 +337,7 @@ def build(vals, network=None, hcos=None, snapshot=None):
             cur += r.span + H_GAP * 2
         return cur - H_GAP * 2
 
-    bandA_top = 300
+    bandA_top = 150 + len(SPINE) * (SP_H + SP_GAP) - SP_GAP + 44
     wA = layout(bone, bandA_top + 56)
     depthA = max(n.y for r in bone for n in walk(r)) + BOX_H
     bandB_top = depthA + 64
@@ -246,9 +352,8 @@ def build(vals, network=None, hcos=None, snapshot=None):
             for r in roots:
                 for n in walk(r): n.x += shift
 
-    anchor_w, anchor_h = 240, 66
-    ax = (width - anchor_w) / 2.0
-    ay = 196
+    spine_top = 150
+    spine_h = len(SPINE) * (SP_H + SP_GAP) - SP_GAP
     out = []
     A = out.append
     key_top = depthB + 52
@@ -271,14 +376,8 @@ def build(vals, network=None, hcos=None, snapshot=None):
         A('<text x="%d" y="110" font-size="13" fill="%s" data-q="_meta">%s</text>'
           % (PAD, P["mut"], " · ".join(bits)))
 
-    # anchor cohort
-    A('<rect x="%.1f" y="%d" width="%d" height="%d" rx="8" fill="%s"/>'
-      % (ax, ay, anchor_w, anchor_h, P["navy"]))
-    A('<text x="%.1f" y="%d" text-anchor="middle" font-size="13" font-weight="700" '
-      'fill="#fff">Incident-ADT cohort</text>' % (ax + anchor_w / 2.0, ay + 25))
-    A('<text x="%.1f" y="%d" text-anchor="middle" font-size="16" font-weight="800" '
-      'fill="rgba(255,255,255,.88)" data-q="iadt">n = %s</text>'
-      % (ax + anchor_w / 2.0, ay + 48, fmt(vals.get("iadt"))))
+    sp, spine_bottom = spine_svg(vals, width / 2.0, spine_top, network)
+    A(sp)
 
     for roots, top, w, title, tone in (
             (bone, bandA_top, wA, "Bone-density screening &amp; bone health", "teal"),
@@ -289,7 +388,7 @@ def build(vals, network=None, hcos=None, snapshot=None):
           'fill="%s">%s</text>' % (width / 2.0, top + 23, P[tone], title))
         # spine from the anchor down into the band
         A('<path d="M%.1f %d V%d" fill="none" stroke="%s" stroke-width="1.3"/>'
-          % (width / 2.0, ay + anchor_h if tone == "teal" else top - 26, top, P["line"]))
+          % (width / 2.0, spine_bottom if tone == "teal" else top - 26, top, P["line"]))
         tops = [r for r in roots]
         xs = [r.x + r.w / 2.0 for r in tops]
         mid = top + 34 + 22
@@ -464,6 +563,13 @@ def live_js():
       var changed = 0;
       document.querySelectorAll("[data-q]").forEach(function (el) {
         var key = el.getAttribute("data-q");
+        if (key === "_network") {
+          if (network) {
+            var sN = "n = " + network.toLocaleString("en-US");
+            if (sN !== el.textContent) { el.textContent = sN; changed++; }
+          }
+          return;
+        }
         if (key === "_meta") {
           var bits = [];
           if (network) bits.push(network.toLocaleString("en-US") + " patients");
@@ -493,9 +599,7 @@ def live_js():
 MARK_A, MARK_B = "<!--PCAFIG-->", "<!--/PCAFIG-->"
 
 def block(vals, network=None, hcos=None, snapshot="index 2017–2023", source="sheet"):
-    """The whole figure section: intro sentence, the diagram, and a provenance
-    line. The intro states a partition that must close, computed from the same
-    numbers, so a sentence can never quietly contradict the picture above it."""
+    """The whole figure section: intro sentence, the diagram, and a provenance line."""
     mets, inten, notinten = vals.get("mets"), vals.get("inten"), vals.get("notinten")
     if None not in (mets, inten, notinten) and inten + notinten == mets:
         closes = ("The metastatic partition closes exactly (%s + %s = %s)."
@@ -507,8 +611,8 @@ def block(vals, network=None, hcos=None, snapshot="index 2017–2023", source="s
              }.get(source, "")
     return "".join([
         MARK_A,
-        '\n   <p class="secintro">Each cohort was carved by ANDing one criterion at a '
-        'time onto its parent, anchored to the first incident ADT term. %s</p>\n   ' % closes,
+        '\n   <p class="secintro">The cohort is reached from the network one criterion '
+        'at a time, then carved by ANDing each further criterion onto its parent. %s</p>\n   ' % closes,
         '<div class="diagramwrap">', build(vals, network, hcos, snapshot), '</div>\n   ',
         '<p id="pcafig-note" class="fignote">Every count above is addressed by its query '
         'name in the PCa master workbook, never typed in — %s.</p>\n   ' % where,
