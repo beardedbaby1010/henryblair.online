@@ -17,6 +17,7 @@ Nothing here is a source of truth. Copy lives in projects.py; passphrases live i
 _secrets/passwords.json; manuscripts live wherever projects.py points. All three
 are outside the commit except projects.py.
 """
+import io
 import os
 import re, sys, json, base64, hashlib, hmac, subprocess
 
@@ -264,6 +265,7 @@ def read_file(path, what):
     except OSError as e:
         warn("could not read %s: %s" % (path, e))
         warn("   if it lives in iCloud, open it once in Finder to download it, then re-run")
+        UNREADABLE.add(os.path.abspath(path))
         return None
 
 
@@ -638,6 +640,14 @@ BUILT_GATES = set()   # gate pages this build produced (anything else is retired
 ALIAS_URLS = {}       # alias file name -> the URL that actually serves it
 GATED_ALIASES = {}    # gated source file -> stable alias stem to publish the gate under
 
+# Sources this build could not read. A file evicted to iCloud raises EDEADLK, which
+# is indistinguishable from "deleted" to anything that only asks whether it opened.
+# That is not a distinction the pruners may guess at: deleting a published gate
+# because its source was merely offline takes a document off the site and is not
+# noticed until someone follows a dead link. While this set is non-empty the build
+# refuses to delete anything.
+UNREADABLE = set()
+
 def slugify(name):
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 
@@ -716,6 +726,10 @@ def prune_downloads(published, gates):
     unprotected URL right beside the passphrase page. Anything unexpected is
     removed (or, if it cannot be deleted, moved out of the site and reported)."""
     out = os.path.join(ROOT, "downloads")
+    if UNREADABLE:
+        warn("not pruning downloads/: %d source(s) could not be read this build"
+             % len(UNREADABLE))
+        return
     expected = {n for n in published if n not in gates}
     expected |= {os.path.basename(u.rstrip("/")) for u in ALIAS_URLS.values()}
     expected |= {slugify(GATED_ALIASES.get(n, os.path.splitext(n)[0])) for n in gates if n in published}
@@ -1034,15 +1048,25 @@ def prune_gates():
     roots = [os.path.join(ROOT, "projects"), os.path.join(ROOT, "downloads"),
              os.path.join(ROOT, "watch"),
              os.path.join(ROOT, "in-preparation")]
+    if UNREADABLE:
+        warn("not retiring any gate: %d source(s) could not be read this build"
+             % len(UNREADABLE))
+        return
     for root in roots:
         if not os.path.isdir(root):
             continue
         for dirpath, dirnames, filenames in os.walk(root):
             if "index.html" not in filenames:
                 continue
-            is_gate = '<script id="payload"' in open(os.path.join(dirpath, "index.html"),
-                                                     encoding="utf-8", errors="replace").read(400000)
-            if not is_gate:
+            try:
+                head = open(os.path.join(dirpath, "index.html"),
+                            encoding="utf-8", errors="replace").read(400000)
+            except OSError as e:
+                warn("could not read %s (%s) — leaving it alone"
+                     % (os.path.relpath(dirpath, ROOT), e))
+                UNREADABLE.add(os.path.abspath(os.path.join(dirpath, "index.html")))
+                continue
+            if '<script id="payload"' not in head:
                 continue
             if os.path.abspath(os.path.join(dirpath, "index.html")) in BUILT_GATES:
                 continue
@@ -1269,9 +1293,50 @@ def check_verbatim():
     return ok
 
 
+# ------------------------------------------------- live numbers from the sheet
+# The ADT figure's counts live in the PCa master workbook, not in this repo.
+# The build reads them and bakes them into the page, so the page is correct
+# before any JavaScript runs and stays correct if the workbook is unreachable
+# or later locked down; a small script then refreshes them in the browser.
+PCA_HUB = os.path.join(ROOT, "_source", "pca_project_hub_standalone.html")
+PCA_CACHE = os.path.join(ROOT, "_source", "pca_qm_cache.json")
+
+def build_pca_figure():
+    try:
+        import pca_figure as PF
+    except ImportError:
+        warn("pca_figure.py is missing — the ADT cohort figure cannot be built")
+        return False
+    if not os.path.exists(PCA_HUB):
+        warn("%s is missing" % os.path.relpath(PCA_HUB, ROOT)); return False
+    vals, network, hcos, source = PF.load(PCA_CACHE)
+    if vals is None:
+        warn("could not read the PCa workbook and no cache exists — "
+             "leaving the ADT figure as it is")
+        return False
+    missing = sorted(k for k, v in vals.items() if v is None)
+    if missing:
+        warn("workbook is missing %d value(s): %s" % (len(missing), ", ".join(missing)))
+        return False
+    html = io.open(PCA_HUB, encoding="utf-8", errors="replace").read()
+    a, b = html.find(PF.MARK_A), html.find(PF.MARK_B)
+    if a < 0 or b < a:
+        warn("PCAFIG markers not found in the hub source"); return False
+    new = html[:a] + PF.block(vals, network, hcos, source=source) + html[b + len(PF.MARK_B):]
+    if new != html:
+        io.open(PCA_HUB, "w", encoding="utf-8").write(new)
+    js = os.path.join(ROOT, "assets", "pca-live.js")
+    io.open(js, "w", encoding="utf-8").write(PF.live_js())
+    note("ADT cohort figure: %d counts %s (IADT %s, network %s)"
+         % (len(vals), "from the workbook" if source == "sheet" else "from cache",
+            format(vals["iadt"], ","), format(network, ",") if network else "?"))
+    return True
+
+
 if __name__ == "__main__":
     print("Building %s" % ROOT)
     ok = True
+    ok &= build_pca_figure()
     for p in CFG.PROJECTS:
         if p.get("page") or p.get("paper"):
             print("  %s" % p["slug"])
@@ -1288,6 +1353,12 @@ if __name__ == "__main__":
     ok &= build_home()
     ok &= polish_pages()
     ok &= version_assets()
+    if UNREADABLE:
+        warn("%d source file(s) could not be read; nothing was deleted and the "
+             "published site may be incomplete" % len(UNREADABLE))
+        for f in sorted(UNREADABLE):
+            warn("   %s" % os.path.relpath(f, ROOT))
+        ok = False
     ok &= check_verbatim()
     ok &= check_kit_zip()
     print("Done." if ok else "Done, with problems (see above).")
