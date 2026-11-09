@@ -1102,6 +1102,15 @@ def auto_sections(p):
             body += '  <div class="callout">%s</div>\n' % h["findings_note"]
         sec("findings", "What it shows", body)
 
+    # sections that belong after the findings rather than before the question
+    for cs in h.get("sections_after", []):
+        body = '  <h2>%s%s</h2>\n' % (esc(cs["title"]),
+                                     (' <span class="snap">%s</span>' % esc(cs["tag"])) if cs.get("tag") else "")
+        if cs.get("intro"):
+            body += '  <p class="secintro">%s</p>\n' % cs["intro"]
+        body += render_blocks(cs.get("blocks", []), p["slug"])
+        sec(cs["id"], cs.get("nav", cs["title"]), body)
+
     if h.get("videos"):
         body = '  <h2>The videos</h2>\n'
         for v in h["videos"]:

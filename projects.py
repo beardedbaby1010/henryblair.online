@@ -259,6 +259,163 @@ PROJECTS = [
     },
 
     {
+        "slug": "nsqip-opioids", "tab": "Opioids at Discharge", "group": "current",
+        "title": "Half leave with opioids after urologic surgery",
+        "kicker": "ACS NSQIP Participant Use File · 2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Opioids prescribed at discharge are a modifiable source of persistent use and diversion. Using national data on discharge prescriptions, we described how often patients leave with an opioid after urologic surgery and how prescribing varies by procedure, surgical approach and patient characteristics.",
+        "stats": [("55.4%", "discharged with an opioid"), ("59,773", "patients"), ("26–79%", "range across procedures"), ("2024", "PUF year")],
+        "tags": ["Opioid prescribing", "NSQIP", "Quality improvement", "Urologic surgery"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "sections_after": [
+                {'id': 'figures', 'title': 'Figures', 'nav': 'Figures', 'tag': '9', 'intro': "Produced by the <a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a> from this project's workbook, and recoloured onto the site's palette. Every value drawn here is a cell in that workbook.", 'blocks': [{'figure': {'src': 'Figure_1.png', 'alt': 'Opioid prescription at discharge by procedure category.', 'caption': '<b>Figure 1.</b> Opioid prescription at discharge by procedure category.'}}, {'figure': {'src': 'Figure_1_horizontal.png', 'alt': 'The same comparison, drawn horizontally so the longer procedure labels sit in full.', 'caption': '<b>Figure 1 horizontal.</b> The same comparison, drawn horizontally so the longer procedure labels sit in full. <i>(layout variant)</i>'}}, {'figure': {'src': 'Figure_1b.png', 'alt': 'Prescription and prescription size together: <b>A</b> the share discharged with an opioid, <b>B</b> the size o', 'caption': '<b>Figure 1b.</b> Prescription and prescription size together: <b>A</b> the share discharged with an opioid, <b>B</b> the size of that prescription in oral morphine milligram equivalents, by procedure category.'}}, {'figure': {'src': 'Figure_1c.png', 'alt': 'Opioid prescription at discharge by procedure category.', 'caption': '<b>Figure 1c.</b> Opioid prescription at discharge by procedure category. <i>(layout variant)</i>'}}, {'figure': {'src': 'Figure_1d.png', 'alt': 'Prescription and prescription size by procedure category.', 'caption': '<b>Figure 1d.</b> Prescription and prescription size by procedure category. <i>(layout variant)</i>'}}, {'figure': {'src': 'Figure_2.png', 'alt': 'Opioid prescription at discharge by surgical approach — endoscopic, open, minimally invasive.', 'caption': '<b>Figure 2.</b> Opioid prescription at discharge by surgical approach — endoscopic, open, minimally invasive.'}}, {'figure': {'src': 'Figure_3.png', 'alt': 'Opioid prescription at discharge by patient subgroup.', 'caption': '<b>Figure 3.</b> Opioid prescription at discharge by patient subgroup.'}}, {'figure': {'src': 'Figure_3_horizontal.png', 'alt': 'The same subgroups, drawn horizontally.', 'caption': '<b>Figure 3 horizontal.</b> The same subgroups, drawn horizontally. <i>(layout variant)</i>'}}, {'figure': {'src': 'Figure_4.png', 'alt': 'Prescriptions above 200 oral morphine milligram equivalents, by patient subgroup — the secondary outcome.', 'caption': '<b>Figure 4.</b> Prescriptions above 200 oral morphine milligram equivalents, by patient subgroup — the secondary outcome.'}}]},
+            ],
+            "people": ["Henry M. Blair", "Edward Wu", "Ariel Schulman"],
+            "lede": "Opioids prescribed at discharge are a modifiable source of persistent use and diversion. Using national data on discharge prescriptions, we described how often patients leave with an opioid after urologic surgery and how prescribing varies by procedure, surgical approach and patient characteristics.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "How often does a patient leave the hospital with an opioid after urologic surgery, and is that decided by the operation or by the patient?",
+            "approach": ["We identified urologic procedures in the 2024 American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "The primary outcome was any opioid prescription at discharge; the secondary outcome was a prescription above 200 oral morphine milligram equivalents.", "Rates were compared across procedures, approaches and patient groups with unadjusted two-proportion tests."],
+            "findings": ["Of 59,773 patients, 33,110 (55.4%) were discharged with an opioid.", "Prescribing ranged from 26.0% after bladder tumor resection to 79.1% after kidney surgery and varied by approach (endoscopic 26.9%, open 65.7%, minimally invasive 75.1%).", "Opioids were prescribed less to patients aged ≥ 70 (45.3% vs 62.2%), and more often to women (62.4% vs 53.8%) and inpatients (61.3% vs 51.5%; all p&lt;0.001).", "Readmission rates were similar in those with vs without an opioid (overall <span data-q=\"readmit_rx\">5.8%</span> vs <span data-q=\"readmit_norx\">6.2%</span>) but also varied by procedure (TURBT 5.7% vs 5.6%; Radical prostatectomy 4.1% vs 5.2%)."],
+            "findings_note": "More than half of patients leave the hospital with an opioid after urologic surgery. Procedure type explains far more of the variation (26% to 79%) than any patient factor (45% to 62%). Low prescribing after endoscopic procedures suggests opioid-free discharge is feasible for many patients.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-opioids-at-discharge/"}],
+            "sidefoot": "Henry M. Blair · Edward Wu · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-bph-bleeding", "tab": "BPH Bleeding", "group": "current",
+        "title": "Bleeding after TURP, photoselective vaporization and HoLEP",
+        "kicker": "ACS NSQIP Participant Use File · 2012–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Laser procedures for benign prostatic hyperplasia are often chosen to limit bleeding, particularly in anticoagulated men. We compared 30-day bleeding after transurethral resection of the prostate (TURP), photoselective vaporization (PVP) and holmium laser enucleation (HoLEP), and described changes in procedure mix and transfusion over 13 years.",
+        "stats": [("123,020", "procedures"), ("0.28", "PVP vs TURP transfusion RR"), ("5.8→14.8%", "HoLEP share"), ("13", "years")],
+        "tags": ["BPH", "Surgical therapy", "Bleeding", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "sections_after": [
+                {'id': 'figures', 'title': 'Figures', 'nav': 'Figures', 'tag': '7', 'intro': "Produced by the <a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a> from this project's workbook, and recoloured onto the site's palette. Every value drawn here is a cell in that workbook.", 'blocks': [{'figure': {'src': 'Figure_1.png', 'alt': 'Transfusion within 72 hours after BPH surgery, by year and procedure.', 'caption': '<b>Figure 1.</b> Transfusion within 72 hours after BPH surgery, by year and procedure.'}}, {'figure': {'src': 'Figure_1b.png', 'alt': 'The same series, 2019–2024.', 'caption': '<b>Figure 1b.</b> The same series, 2019–2024. <i>(layout variant)</i>'}}, {'figure': {'src': 'Figure_2.png', 'alt': 'Share of BPH procedures by year and procedure type — how the mix moved over thirteen years.', 'caption': '<b>Figure 2.</b> Share of BPH procedures by year and procedure type — how the mix moved over thirteen years.'}}, {'figure': {'src': 'Figure_3.png', 'alt': 'Thirty-day outcomes after HoLEP and PVP compared with TURP. <b>A</b> HoLEP vs TURP, <b>B</b> PVP vs TURP.', 'caption': '<b>Figure 3.</b> Thirty-day outcomes after HoLEP and PVP compared with TURP. <b>A</b> HoLEP vs TURP, <b>B</b> PVP vs TURP.'}}, {'figure': {'src': 'Figure_3_before_footnote.png', 'alt': "The same forest plot carrying each arm's rates beside the risk ratio.", 'caption': "<b>Figure 3 before footnote.</b> The same forest plot carrying each arm's rates beside the risk ratio. <i>(layout variant)</i>"}}, {'figure': {'src': 'Figure_3b.png', 'alt': 'Thirty-day complications after HoLEP and PVP compared with TURP, complication by complication.', 'caption': '<b>Figure 3b.</b> Thirty-day complications after HoLEP and PVP compared with TURP, complication by complication.'}}, {'figure': {'src': 'Figure_4.png', 'alt': 'Transfusion within 72 hours, 2019–2024 against 2012–2018, by procedure — the era comparison behind the trend.', 'caption': '<b>Figure 4.</b> Transfusion within 72 hours, 2019–2024 against 2012–2018, by procedure — the era comparison behind the trend.'}}]},
+            ],
+            "people": ["Henry M. Blair", "Edward Wu", "Michael Lee", "Payam Hakimian"],
+            "lede": "Laser procedures for benign prostatic hyperplasia are often chosen to limit bleeding, particularly in anticoagulated men. We compared 30-day bleeding after transurethral resection of the prostate (TURP), photoselective vaporization (PVP) and holmium laser enucleation (HoLEP), and described changes in procedure mix and transfusion over 13 years.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Laser procedures are chosen to limit bleeding. Across thirteen years of national data, does that hold — and has bleeding fallen for every approach?",
+            "approach": ["We identified TURP, PVP and HoLEP cases in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Outcomes were transfusion within 72 hours, reoperation and readmission for bleeding, a composite of the three, complications and readmission.", "PVP and HoLEP were compared with TURP using unadjusted relative risks, and yearly transfusion was tested for linear trend."],
+            "findings": ["Of 123,020 procedures, 82,020 were TURP, 31,087 PVP and 9,913 HoLEP; HoLEP’s share rose from 5.8% to 14.8%.", "Compared with TURP, PVP had lower transfusion (<span data-q=\"pvp_transf\">0.25%</span> vs <span data-q=\"turp_transf\">0.90%</span>; relative risk <span data-q=\"pvp_transf_rr\">0.28 (0.22\u20130.35)</span>) and half the bleeding composite (<span data-q=\"pvp_bleed\">1.4%</span> vs <span data-q=\"turp_bleed\">2.6%</span>).", "HoLEP had similar bleeding (<span data-q=\"holep_bleed\">2.5%</span> vs <span data-q=\"turp_bleed\">2.6%</span>) but fewer serious complications (<span data-q=\"holep_serious\">1.4%</span> vs <span data-q=\"turp_serious\">1.7%</span>) and readmissions (<span data-q=\"holep_readmit\">4.1%</span> vs <span data-q=\"turp_readmit\">5.3%</span>).", "Transfusion fell after all three: TURP 1.7% to 0.6%, PVP 0.5% to 0.0% (both p&lt;0.001), HoLEP 2.5% to 0.5% (p=0.049)."],
+            "findings_note": "PVP carried the lowest bleeding risk, while HoLEP matched TURP on bleeding with fewer complications and readmissions. Transfusion after surgery for benign prostatic hyperplasia has become rare nationally, declining for every procedure. It is likely that improved techniques, technology, and experience have contributed to this trend. Comparisons are unadjusted and do not account for prostate size.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-bph-bleeding/"}],
+            "sidefoot": "Henry M. Blair · Edward Wu · Michael Lee<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-same-day-discharge", "tab": "Same-Day Discharge", "group": "current",
+        "title": "The national shift to same-day discharge after robotic prostatectomy",
+        "kicker": "ACS NSQIP Participant Use File · 2012–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge after robot-assisted radical prostatectomy (RARP) and asked whether its growth has been accompanied by more readmissions or complications.",
+        "stats": [("119,220", "patients"), ("&lt;1→15.6%", "same-day discharge"),
+                  ("0.78", "readmission risk ratio", "", "readmit_rr0"), ("16×", "growth after 2018")],
+        "tags": ["Prostate cancer", "Same-day discharge", "Health policy", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "sections_after": [
+                {'id': 'figures', 'title': 'Figures', 'nav': 'Figures', 'tag': '2', 'intro': "Produced by the <a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a> from this project's workbook, and recoloured onto the site's palette. Every value drawn here is a cell in that workbook.", 'blocks': [{'figure': {'src': 'Figure_1_forest.png', 'alt': 'Thirty-day outcomes, same-day discharge against overnight stay.', 'caption': '<b>Figure 1 forest.</b> Thirty-day outcomes, same-day discharge against overnight stay.'}}, {'figure': {'src': 'Figure_2_rates.png', 'alt': 'Overlap-weighted 30-day outcome rates, which hold the measured case mix fixed between the two groups.', 'caption': '<b>Figure 2 rates.</b> Overlap-weighted 30-day outcome rates, which hold the measured case mix fixed between the two groups.'}}]},
+            ],
+            "people": ["Edward Wu", "Henry M. Blair", "Ariel Schulman"],
+            "lede": "Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge after robot-assisted radical prostatectomy (RARP) and asked whether its growth has been accompanied by more readmissions or complications.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Medicare opened the door to same-day discharge after prostatectomy in 2018. Did surgeons walk through it, and did readmissions rise when they did?",
+            "approach": ["We identified RARP cases (laparoscopic or robotic; 94% robotic where recorded) in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Yearly same-day discharge rates were tested for linear trend.", "Thirty-day outcomes were compared with overnight stay, and readmission between 2012-2018 and 2019-2024, using unadjusted relative risks."],
+            "findings": ["Of 119,220 patients, <span data-q=\"n_sdd\">7,088</span> (5.9%) went home the same day.", "The rate stayed below 1% through 2018, then rose to 1.9% in 2019 and 15.6% in 2024 (p&lt;0.001 for trend), including patients aged 70 or older (0.6% to 8.2%).", "Compared with overnight stay, same-day discharge was associated with lower readmission (<span data-q=\"readmit_sdd\">3.3%</span> vs <span data-q=\"readmit_on\">4.2%</span>; relative risk <span data-q=\"readmit_rr\">0.78 (0.69\u20130.89)</span>), complications (<span data-q=\"anycomp_sdd\">5.0%</span> vs <span data-q=\"anycomp_on\">6.4%</span>; <span data-q=\"anycomp_rr\">0.78 (0.71\u20130.87)</span>) and reoperation (<span data-q=\"reop_sdd\">0.5%</span> vs <span data-q=\"reop_on\">1.1%</span>; <span data-q=\"reop_rr\">0.50 (0.36\u20130.68)</span>).", "Overall readmission did not change between eras (4.1% vs 4.2%; relative risk 1.02, 0.97-1.08)."],
+            "findings_note": "Same-day discharge after RARP grew sixteenfold after 2018 and now applies to about one in six patients, without a rise in national readmission rates. Lower complication rates after same-day discharge likely reflect selection of healthier patients, and comparisons are unadjusted.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-same-day-discharge/"}],
+            "sidefoot": "Edward Wu · Henry M. Blair · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-rasp-vs-osp", "tab": "RASP vs OSP", "group": "current",
+        "title": "The rapid rise of robot-assisted simple prostatectomy",
+        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Robot-assisted simple prostatectomy (RASP) is increasingly used for large-gland benign prostatic hyperplasia, but national data on its uptake and early safety compared with open simple prostatectomy (OSP) are limited. We described national adoption of RASP and compared 30-day outcomes between approaches, overall and across patient subgroups.",
+        "stats": [("3,033", "simple prostatectomies"), ("73→91%", "robotic share"), ("0.10", "transfusion risk ratio"), ("11.2% vs 28.0%", "any complication")],
+        "tags": ["BPH", "Simple prostatectomy", "Robotic surgery", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "sections_after": [
+                {'id': 'figures', 'title': 'Figures', 'nav': 'Figures', 'tag': '5', 'intro': "Produced by the <a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a> from this project's workbook, and recoloured onto the site's palette. Every value drawn here is a cell in that workbook.", 'blocks': [{'figure': {'src': 'Figure_1.png', 'alt': 'Robot-assisted share of simple prostatectomy by year (Cochran–Armitage trend z = 9.83, p &lt; 0.001).', 'caption': '<b>Figure 1.</b> Robot-assisted share of simple prostatectomy by year (Cochran–Armitage trend z = 9.83, p &lt; 0.001).'}}, {'figure': {'src': 'Figure_2.png', 'alt': 'Transfusion within 72 hours after simple prostatectomy, by year and approach.', 'caption': '<b>Figure 2.</b> Transfusion within 72 hours after simple prostatectomy, by year and approach.'}}, {'figure': {'src': 'Figure_3.png', 'alt': 'Thirty-day outcomes after simple prostatectomy, RASP against OSP.', 'caption': '<b>Figure 3.</b> Thirty-day outcomes after simple prostatectomy, RASP against OSP.'}}, {'figure': {'src': 'Figure_4.png', 'alt': 'The same outcomes within each subgroup — anaesthesia risk class, frailty, age, obesity, anaemia.', 'caption': '<b>Figure 4.</b> The same outcomes within each subgroup — anaesthesia risk class, frailty, age, obesity, anaemia.'}}, {'figure': {'src': 'Figure_5.png', 'alt': 'Thirty-day complications after simple prostatectomy, complication by complication.', 'caption': '<b>Figure 5.</b> Thirty-day complications after simple prostatectomy, complication by complication.'}}]},
+            ],
+            "people": ["Edward Wu", "Henry M. Blair", "Marino Kokolis-Lattanzio", "Ariel Schulman"],
+            "lede": "Robot-assisted simple prostatectomy (RASP) is increasingly used for large-gland benign prostatic hyperplasia, but national data on its uptake and early safety compared with open simple prostatectomy (OSP) are limited. We described national adoption of RASP and compared 30-day outcomes between approaches, overall and across patient subgroups.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Robotic simple prostatectomy has all but replaced the open operation. What did that change in transfusion and complications?",
+            "approach": ["We identified simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) - either RASP (robot used) or OSP (open, no robot).", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Robotic share was tested for linear trend.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by anesthesia risk class, frailty, age ≥70 years, obesity and anemia."],
+            "findings": ["Of 3,033 simple prostatectomies, 2,580 (85.1%) were RASP, rising from 73.2% in 2022 to 91.2% in 2024 (p-trend&lt;0.001).", "RASP had lower transfusion within 72 hours (<span data-q=\"rasp_transf\">1.8%</span> vs <span data-q=\"osp_transf\">18.3%</span>; relative risk <span data-q=\"transf_rr\">0.10 (0.07\u20130.14)</span>), any complication (<span data-q=\"rasp_anycomp\">11.2%</span> vs <span data-q=\"osp_anycomp\">28.0%</span>), readmission (<span data-q=\"rasp_readmit\">5.5%</span> vs <span data-q=\"osp_readmit\">8.2%</span>) and reoperation (<span data-q=\"rasp_reop\">1.6%</span> vs <span data-q=\"osp_reop\">4.2%</span>).", "Superficial wound infection (0.9% vs 2.6%) and kidney injury (0.7% vs 2.6%) were also less frequent; urinary infection, thromboembolism, pneumonia and sepsis did not differ.", "Lower transfusion held in every subgroup."],
+            "findings_note": "RASP now accounts for more than 90% of simple prostatectomies in NSQIP hospitals and is associated with a tenfold lower transfusion rate and less than half the complication rate of OSP, a benefit that persists in older, frail and anemic patients. Comparisons are unadjusted and OSP patients carried more comorbidity, so selection bias is likely.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-rasp-vs-osp/"}],
+            "sidefoot": "Edward Wu · Henry M. Blair · Marino Kokolis-Lattanzio<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-rasp-elderly", "tab": "RASP in the Elderly", "group": "current",
+        "title": "Too old or too frail? An analysis on robot-assisted simple prostatectomy",
+        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Robot-assisted simple prostatectomy (RASP) is an established surgical approach for the treatment of large-gland benign prostatic hyperplasia (BPH). However, perioperative outcomes following RASP among elderly and frail patients remain incompletely characterized. This study aimed to evaluate and compare 30-day postoperative complications following RASP across age and frailty subgroups.",
+        "stats": [("2,580", "men"), ("26.8%", "aged 75 or older"), ("20.5%", "frail (mFI ≥ 2)"), ("0.1%", "mortality")],
+        "tags": ["BPH", "Frailty", "Older adults", "Robotic surgery", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "sections_after": [
+                {'id': 'figures', 'title': 'Figures', 'nav': 'Figures', 'tag': '12', 'intro': "Produced by the <a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a> from this project's workbook, and recoloured onto the site's palette. Every value drawn here is a cell in that workbook.", 'blocks': [{'figure': {'src': 'Figure_1.png', 'alt': 'The cohort by age and frailty: <b>A</b> the four groups, <b>B</b> the age distribution within each frailty str', 'caption': '<b>Figure 1.</b> The cohort by age and frailty: <b>A</b> the four groups, <b>B</b> the age distribution within each frailty stratum.'}}, {'figure': {'src': 'Figure_2.png', 'alt': 'Thirty-day complications, age 75 and over against under 75.', 'caption': '<b>Figure 2.</b> Thirty-day complications, age 75 and over against under 75.'}}, {'figure': {'src': 'Figure_3.png', 'alt': 'Thirty-day complications, frail (mFI-5 ≥ 2) against not frail.', 'caption': '<b>Figure 3.</b> Thirty-day complications, frail (mFI-5 ≥ 2) against not frail.'}}, {'figure': {'src': 'Figure_4.png', 'alt': 'Thirty-day complications, men who are both old and frail against men who are neither.', 'caption': '<b>Figure 4.</b> Thirty-day complications, men who are both old and frail against men who are neither.'}}, {'figure': {'src': 'Figure_5.png', 'alt': 'Prostatectomy-specific complications by age, among cases in the procedure-targeted file.', 'caption': '<b>Figure 5.</b> Prostatectomy-specific complications by age, among cases in the procedure-targeted file.'}}, {'figure': {'src': 'Figure_6.png', 'alt': 'Prostatectomy-specific complications by frailty.', 'caption': '<b>Figure 6.</b> Prostatectomy-specific complications by frailty.'}}, {'figure': {'src': 'Figure_7.png', 'alt': 'Prostatectomy-specific complications, both against neither.', 'caption': '<b>Figure 7.</b> Prostatectomy-specific complications, both against neither.'}}, {'figure': {'src': 'Figure_8.png', 'alt': 'Thirty-day outcomes by age and frailty, as one forest plot.', 'caption': '<b>Figure 8.</b> Thirty-day outcomes by age and frailty, as one forest plot.'}}, {'figure': {'src': 'Figure_9.png', 'alt': 'Complications and resource use across the four age-and-frailty groups.', 'caption': '<b>Figure 9.</b> Complications and resource use across the four age-and-frailty groups.'}}, {'figure': {'src': 'Figure_10.png', 'alt': 'Serious complications, infection, readmission and reoperation across the same four groups.', 'caption': '<b>Figure 10.</b> Serious complications, infection, readmission and reoperation across the same four groups.'}}, {'figure': {'src': 'Figure_11.png', 'alt': 'Prostatectomy-specific complications across the four groups.', 'caption': '<b>Figure 11.</b> Prostatectomy-specific complications across the four groups.'}}, {'figure': {'src': 'Figure_12.png', 'alt': 'Thirty-day outcomes by frailty score, mFI-5 from 0 to 3 or more — frailty as a gradient rather than a threshol', 'caption': '<b>Figure 12.</b> Thirty-day outcomes by frailty score, mFI-5 from 0 to 3 or more — frailty as a gradient rather than a threshold.'}}]},
+            ],
+            "people": ["Edward Wu", "Henry M. Blair", "Ariel Schulman"],
+            "lede": "Robot-assisted simple prostatectomy (RASP) is an established surgical approach for the treatment of large-gland benign prostatic hyperplasia (BPH). However, perioperative outcomes following RASP among elderly and frail patients remain incompletely characterized. This study aimed to evaluate and compare 30-day postoperative complications following RASP across age and frailty subgroups.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Age and frailty are routinely used to steer older men away from robotic simple prostatectomy. Do the outcomes justify that?",
+            "approach": ["We identified robotic simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP).", "Serious complications were defined as wound dehiscence/infection, organ space infections, pneumonia, re-intubation, pulmonary embolism, renal failure, cerebrovascular accident, cardiac arrest, sepsis, and septic shock.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by frailty (Modified Frailty Index (mFI) ≥ 2) and elderly status (age ≥75 years)."],
+            "findings": ["Of 2,580 men, 691 (26.8%) were aged 75 or older, 519 (20.5%) were frail and 182 (7.2% were both).", "Older men had more complications overall (<span data-q=\"old_anycomp\">13.5%</span> vs <span data-q=\"young_anycomp\">10.3%</span>; RR <span data-q=\"old_anycomp_rr\">1.30 (1.03\u20131.64)</span>), transfusion (<span data-q=\"old_transf\">3.2%</span> vs <span data-q=\"young_transf\">1.3%</span>), non-home discharge (<span data-q=\"old_nonhome\">2.0%</span> vs <span data-q=\"young_nonhome\">0.6%</span>) and stays longer than one day (32.9% vs 25.8%), but similar serious complications (3.8% vs 3.4%) and readmission (5.6% vs 5.5%).", "Frail men had longer stays (36.0% vs 25.6%).", "Mortality was 0.1%."],
+            "findings_note": "In men aged 75 or older and frail men, RASP was associated with longer stays, more transfusion, and more non-home discharge. However, rates of serious complication, readmission, and mortality remained low and similar to younger, non-frail men. RASP has demonstrated safety in the frail and elderly population with comparable rates of serious complications, readmission, and mortality.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-rasp-elderly-frail/"}],
+            "sidefoot": "Edward Wu · Henry M. Blair · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
+        "slug": "nsqip-colpopexy", "tab": "Sacrocolpopexy vs SSLF", "group": "current",
+        "title": "Robotic sacrocolpopexy versus transvaginal sacrospinous ligament fixation",
+        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
+        "status": "Abstract submitted — 2027 AUA Annual Meeting",
+        "summary": "Apical pelvic organ prolapse can be repaired abdominally with robotic sacrocolpopexy (SCP) or vaginally with sacrospinous ligament fixation (SSLF), with or without a hysterectomy. While vaginal native tissue repairs are often considered a lower risk option, comparative data on postoperative complications between these remain limited. This study compared 30-day postoperative complications.",
+        "stats": [("12,623", "patients"), ("6.6% vs 8.8%", "overall complications"), ("0.70", "UTI risk ratio"), ("5.4% vs 14.0%", "stay beyond one day")],
+        "tags": ["Pelvic organ prolapse", "Reconstructive surgery", "Urinary tract infection", "NSQIP"],
+        "page": {"kind": "auto"},
+        "hub": {
+            "sections_after": [
+                {'id': 'figures', 'title': 'Figures', 'nav': 'Figures', 'tag': '7', 'intro': "Produced by the <a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a> from this project's workbook, and recoloured onto the site's palette. Every value drawn here is a cell in that workbook.", 'blocks': [{'figure': {'src': 'Figure_1.png', 'alt': 'Sacrocolpopexy and sacrospinous ligament fixation cases by year, with the robotic share of SCP.', 'caption': '<b>Figure 1.</b> Sacrocolpopexy and sacrospinous ligament fixation cases by year, with the robotic share of SCP.'}}, {'figure': {'src': 'Figure_2.png', 'alt': 'Thirty-day urinary tract infection by year and procedure.', 'caption': '<b>Figure 2.</b> Thirty-day urinary tract infection by year and procedure.'}}, {'figure': {'src': 'Figure_3.png', 'alt': 'Thirty-day outcomes, robotic sacrocolpopexy against sacrospinous ligament fixation.', 'caption': '<b>Figure 3.</b> Thirty-day outcomes, robotic sacrocolpopexy against sacrospinous ligament fixation.'}}, {'figure': {'src': 'Figure_4.png', 'alt': 'The same outcomes by subgroup — isolated procedures against those with any concurrent procedure, which is wher', 'caption': '<b>Figure 4.</b> The same outcomes by subgroup — isolated procedures against those with any concurrent procedure, which is where the UTI difference is interrogated.'}}, {'figure': {'src': 'Figure_5.png', 'alt': 'Individual 30-day complications, robotic SCP against SSLF.', 'caption': '<b>Figure 5.</b> Individual 30-day complications, robotic SCP against SSLF.'}}, {'figure': {'src': 'Figure_6.png', 'alt': 'Thirty-day outcomes under each cohort definition — how much the result depends on who is counted.', 'caption': '<b>Figure 6.</b> Thirty-day outcomes under each cohort definition — how much the result depends on who is counted.'}}, {'figure': {'src': 'Figure_7.png', 'alt': 'Thirty-day urinary tract infection by subgroup.', 'caption': '<b>Figure 7.</b> Thirty-day urinary tract infection by subgroup.'}}]},
+            ],
+            "people": ["Arsha Venkat", "Edward Wu", "Henry M. Blair", "Allison Polland"],
+            "lede": "Apical pelvic organ prolapse can be repaired abdominally with robotic sacrocolpopexy (SCP) or vaginally with sacrospinous ligament fixation (SSLF), with or without a hysterectomy. While vaginal native tissue repairs are often considered a lower risk option, comparative data on postoperative complications between these remain limited. This study compared 30-day postoperative complications.",
+            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
+                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
+            "question": "Vaginal native-tissue repair is often presented as the lower-risk option for apical prolapse. Does the national record agree?",
+            "approach": ["We identified patients who underwent SCP (CPT 57425, designated robotic) or SSLF (CPT 57282) in 2022-2024 in the National Surgical Quality Improvement Program (NSQIP).", "Serious complications were defined as wound dehiscence/infection, organ space infections, pneumonia, re-intubation, pulmonary embolism, renal failure, cerebrovascular accident, cardiac arrest, sepsis, and septic shock.", "Other complications included superficial infections, UTI, deep venous thromboses, and blood transfusions.", "Outcomes were compared with unadjusted relative risks (RR) and two-proportion or Fisher’s exact tests."],
+            "findings": ["Of 12,623 patients, 7,589 underwent robotic SCP and 5,034 SSLF; 89% and 94% had concomitant procedures.", "Robotic SCP had fewer overall complications (<span data-q=\"scp_anycomp\">6.6%</span> vs <span data-q=\"sslf_anycomp\">8.8%</span>), reoperations (<span data-q=\"scp_reop\">0.9%</span> vs <span data-q=\"sslf_reop\">1.5%</span>) and stays &gt;1 day (<span data-q=\"scp_los\">5.4%</span> vs <span data-q=\"sslf_los\">14.0%</span>).", "Serious complications (<span data-q=\"scp_serious\">1.4%</span> vs <span data-q=\"sslf_serious\">1.3%</span>) and readmission (1.9% each) were similar.", "UTI was less common after robotic SCP versus SSLF (<span data-q=\"scp_uti\">3.6%</span> vs <span data-q=\"sslf_uti\">5.1%</span>; RR <span data-q=\"uti_rr\">0.70 (0.60\u20130.83)</span>).", "On subgroup analysis of patients without concomitant procedures, UTI risk remained elevated for the SSLF group (RR 0.56 [0.41-0.77])."],
+            "findings_note": "Because SCP addresses all vaginal compartments, fewer SCP patients required concomitant procedures, potentially affecting outcomes. UTI differences suggest that the vaginal approach may influence UTI risk. However, unadjusted comparisons and differences in patient selection and prolapse severity may impact findings. Nonetheless, these results may help counsel patients hesitant about SCP.",
+            "materials": [{"label": "Read the abstract (passphrase)",
+                           "url": "/downloads/abstract-nsqip-colpopexy/"}],
+            "sidefoot": "Arsha Venkat · Edward Wu · Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
+        },
+    },
+    {
         "slug": "oab-pvr", "tab": "PVR Self-Estimation", "group": "current",
         "title": "Can women self-estimate their post-void residual?",
         "kicker": "Cross-sectional study · Department of Urogynecology, Maimonides Medical Center",
@@ -633,35 +790,247 @@ PROJECTS = [
     {
         "slug": "nocturia-goals", "tab": "Nocturia Goals", "group": "current",
         "title": "What do patients with nocturia actually want treated?",
-        "kicker": "Patient-reported outcomes · Maimonides Medical Center",
-        "status": "Manuscript V3",
-        "summary": "Nocturia trials fixate on nightly void count. This project examines patient-defined "
-                   "treatment goals and how much nighttime urination patients are willing to tolerate — "
-                   "outcomes beyond the number.",
-        "tags": ["Nocturia", "Patient-reported outcomes", "Trial design"],
+        "kicker": "EpiNP \u00b7 US population-based cross-sectional survey \u00b7 adults 30 and older",
+        "status": "Manuscript V3 \u00b7 abstract submitted to the 2027 AUA Annual Meeting",
+        "summary": "Nocturia trials judge success by one number: voids per night. We asked 7,539 adults "
+                   "what they would actually like treated. Fewer voids was the most common single answer "
+                   "\u2014 and a majority wanted something else.",
+        "stats": [("7,539", "respondents"),
+                  ("52.6%", "wanted something other than fewer voids"),
+                  ("1", "void tolerated before seeking care"),
+                  ("14.3%", "bothered enough to want treatment")],
+        "tags": ["Nocturia", "Patient-reported outcomes", "Trial design", "EpiNP", "Endpoints"],
         "paper": {"pdf": "Maimo_Work/7_Nocturia/Henry - V3 - What Do Patients with Nocturia Want Treated_ Patient-Defined Goals and Tolerance Beyond Void Count.pdf",
                   "label": "Manuscript V3", "note": "With Oliver Menken."},
         "page": {"kind": "auto"},
         "hub": {
-            "people": ["Oliver Menken", "Henry M. Blair"],
+            "people": ["Oliver B. Menken", "Benjamin H. Parker", "Henry M. Blair",
+                       "Isabel X. Guan", "Jeffrey P. Weiss, MD, PhD"],
             "lede": "Nocturia trials are built on a countable outcome: voids per night. It is easy to "
                     "measure and easy to compare, and it may not be the thing patients are trying to "
                     "change. A treatment that removes one void from three may or may not be a treatment "
-                    "that changes a life.",
-            "question": "What outcomes do patients with nocturia actually want from treatment, and how much "
-                        "nighttime urination will they tolerate before it matters to them?",
-            "approach": [
-                "Patients define their own treatment goals rather than choosing from a fixed instrument.",
-                "Tolerability thresholds are elicited directly — how many voids a night is acceptable — "
-                "instead of inferred from symptom scores.",
-                "Patient-defined goals are compared against the void-count endpoints trials use, to see "
-                "how far apart the two actually sit.",
+                    "that changes a life. So we asked.",
+            "status_detail": "Manuscript V3 complete; abstract submitted to the 2027 AUA Annual Meeting. "
+                             "Secondary analysis of the EpiNP baseline survey "
+                             "(<a href=\'https://clinicaltrials.gov/study/NCT04125186\'>NCT04125186</a>).",
+            "sections": [
+                {"id": "question", "title": "The question", "nav": "The question",
+                 "blocks": [
+                     {"prose": [
+                         "Guidelines and trials characterise nocturia treatment success almost entirely "
+                         "through two numbers: the change in mean nocturnal voids per night, and the "
+                         "proportion of patients reaching a 50% reduction. No minimal clinically "
+                         "important difference has ever been established empirically \u2014 in its "
+                         "absence, Cochrane reviewers adopted one fewer void per night as a working "
+                         "threshold.",
+                         "But bother does not rise linearly with void count. Patients with one nightly "
+                         "episode can be meaningfully bothered, and the steepest rise in bother falls "
+                         "across the second and third. A drop from four voids to three may be nothing "
+                         "like a drop from two to one. And the count says nothing at all about which "
+                         "part of the symptom \u2014 the waking, the sleep, the urgency, the leakage "
+                         "\u2014 a patient most wants addressed."]},
+                     {"callout": "How many nocturnal voids will patients tolerate before they want "
+                                 "treatment, how much reduction has to happen before they would call a "
+                                 "medication effective, and what do they want treated in the first "
+                                 "place?"},
+                 ]},
+                {"id": "design", "title": "How it was done", "nav": "How it was done",
+                 "blocks": [
+                     {"prose":
+                         "The Epidemiology of Nocturnal Polyuria study (EpiNP) is a US population-based "
+                         "cross-sectional survey of community-dwelling adults aged 30 and over, recruited "
+                         "to approximate the general population by age, sex and race. This is a secondary "
+                         "analysis of its baseline web survey \u2014 specifically the nocturia "
+                         "treatment-preference and medication items \u2014 and does not use the "
+                         "three-day bladder diary component."},
+                     {"h3": "What was asked"},
+                     {"bullets": [
+                         "<b>Desire for treatment.</b> Whether the respondent was bothered by nighttime "
+                         "urination enough to want to reduce it. Yes or no.",
+                         "<b>Tolerance threshold.</b> How many nighttime urinations they were willing to "
+                         "live with without pursuing treatment.",
+                         "<b>Primary treatment goal.</b> One of five mutually exclusive options: fewer "
+                         "nighttime urinations, better sleep, less nighttime urgency, no nighttime "
+                         "leakage, or other.",
+                         "<b>Meaningful-improvement threshold.</b> How many fewer voids a night it would "
+                         "take to recognise that a medication was working. Secondary endpoint.",
+                     ]},
+                     {"h3": "Cohort and analysis"},
+                     {"prose":
+                         "Of the 10,190 EpiNP baseline respondents, 7,539 had complete data on every core "
+                         "preference variable and formed the primary complete-case cohort; records routed "
+                         "past the preference items by skip logic, or carrying placeholder or "
+                         "out-of-range values, were excluded before analysis. Counts are reported as "
+                         "median [IQR] and proportions with Wilson score intervals. Goal distributions "
+                         "were compared with Pearson chi-square tests, and two logistic models were "
+                         "fitted \u2014 one for wanting treatment, one for choosing a goal other than "
+                         "fewer voids. Analyses were run and independently validated in SPSS."},
+                 ]},
+                {"id": "cohort", "title": "Who answered", "nav": "Who answered",
+                 "tag": "Table 1",
+                 "blocks": [
+                     {"table": {
+                         "head": ["Characteristic", "Value"],
+                         "rows": [
+                             ["Primary complete-case cohort, n", "7,539"],
+                             ["Age, years \u2014 median [IQR]", "57 [43\u201366]"],
+                             ["Male sex, n (%)", "3,480 (46.2%)"],
+                             ["Female sex, n (%)", "4,059 (53.8%)"],
+                             ["Nocturnal voids tolerated without treatment \u2014 median [IQR]",
+                              "1 [1\u20132]"],
+                             ["Wanted treatment or reduction, n (%; 95% CI)",
+                              "1,081 (14.3%; 13.6\u201315.2)"],
+                             ["Secondary cohort with a valid meaningful-improvement answer, n", "1,082"],
+                             ["Voids of reduction needed to perceive benefit \u2014 median [IQR]",
+                              "1 [0\u20132]"],
+                         ],
+                         "note": "<b>Table 1.</b> Counts as median [interquartile range]; proportions "
+                                 "with Wilson score 95% confidence intervals."}},
+                     {"callout": "Most people were not asking for help. Only one in seven was bothered "
+                                 "enough to want treatment at all, and the median respondent was "
+                                 "prepared to live with one void a night. That is the backdrop against "
+                                 "which a one-void reduction has to be judged."},
+                 ]},
+                {"id": "goals", "title": "What they want treated", "nav": "What they want",
+                 "tag": "Table 2",
+                 "blocks": [
+                     {"prose":
+                         "Fewer nighttime urinations was the most common single answer. It was also a "
+                         "minority answer: 3,969 of 7,539 respondents \u2014 52.6% \u2014 named "
+                         "something else as the thing they most wanted treated."},
+                     {"table": {
+                         "head": ["Primary treatment goal", "n / N", "% (95% CI)"],
+                         "rows": [
+                             ["Fewer nighttime urinations", "3,570 / 7,539", "47.4% (46.2\u201348.5)"],
+                             ["Better or improved sleep", "2,185 / 7,539", "29.0% (28.0\u201330.0)"],
+                             ["Less nighttime urgency", "1,003 / 7,539", "13.3% (12.6\u201314.1)"],
+                             ["No nighttime leakage", "511 / 7,539", "6.8% (6.2\u20137.4)"],
+                             ["Other", "270 / 7,539", "3.6% (3.2\u20134.0)"],
+                             {"cls": "up", "cells": ["<b>Any non-void-count goal, combined</b>",
+                                                     "<b>3,969 / 7,539</b>",
+                                                     "<b>52.6% (51.5\u201353.8)</b>"]},
+                         ],
+                         "note": "<b>Table 2.</b> Wilson score 95% confidence intervals. The five goals "
+                                 "were not chosen with equal frequency (chi-square goodness-of-fit, "
+                                 "p &lt; 0.001)."}},
+                     {"callout": "Sleep alone \u2014 29.0% \u2014 is chosen nearly twice as often as "
+                                 "urgency and leakage combined. An endpoint that counts voids records "
+                                 "none of it."},
+                 ]},
+                {"id": "threshold", "title": "What counts as better",
+                 "nav": "What counts as better",
+                 "blocks": [
+                     {"prose":
+                         "Among the 1,082 respondents who answered the secondary item, the median "
+                         "reduction needed to recognise that a medication was working was one fewer void "
+                         "per night [IQR 0\u20132]. That is the one number in this study that agrees "
+                         "with current practice: Cochrane\u2019s working threshold of one void, adopted "
+                         "for want of an empirical anchor, turns out to be roughly where patients put "
+                         "it too."},
+                     {"callout": "So the magnitude trials use is about right. What they measure is not."},
+                 ]},
+                {"id": "subgroups", "title": "Who wants what", "nav": "Who wants what",
+                 "tag": "Table 3",
+                 "blocks": [
+                     {"table": {
+                         "head": ["Comparison", "Goal emphasised", "Subgroup vs referent", "p"],
+                         "rows": [
+                             ["Female vs male", "Better or improved sleep", "31.1% vs 26.5%",
+                              "&lt; 0.001"],
+                             ["Female vs male", "Fewer nighttime urinations", "42.5% vs 53.0%",
+                              "&lt; 0.001"],
+                             ["Age &gt; 65 vs \u2264 65 years", "Better or improved sleep",
+                              "32.2% vs 27.8%", "&lt; 0.001"],
+                             ["Overactive bladder vs none", "Less nighttime urgency", "20.5% vs 12.9%",
+                              "&lt; 0.001"],
+                         ],
+                         "note": "<b>Table 3.</b> Proportion within each subgroup selecting the "
+                                 "indicated goal; p values are Pearson chi-square tests of the overall "
+                                 "goal distribution within each comparison. Exploratory and "
+                                 "hypothesis-generating."}},
+                     {"prose":
+                         "Men chose void count; women chose sleep. Older respondents chose sleep more "
+                         "often than younger ones. Respondents with overactive bladder chose urgency "
+                         "relief at nearly twice the rate of those without. A single endpoint applied "
+                         "across all of them measures each group\u2019s priority with different "
+                         "fidelity."},
+                 ]},
+                {"id": "models", "title": "What predicts each", "nav": "What predicts each",
+                 "tag": "Tables 4\u20135",
+                 "blocks": [
+                     {"h3": "Who wants treatment at all"},
+                     {"table": {
+                         "head": ["Predictor", "aOR", "95% CI", "p"],
+                         "rows": [
+                             {"cls": "up", "cells": ["Overactive bladder", "4.95",
+                                                     "3.93\u20136.22", "&lt; 0.001"]},
+                             ["Insomnia or sleep difficulty", "1.68", "1.41\u20132.00", "&lt; 0.001"],
+                             ["Mobility limitation", "1.58", "1.30\u20131.91", "&lt; 0.001"],
+                             ["Diabetes", "1.40", "1.18\u20131.67", "&lt; 0.001"],
+                             ["Diuretic use", "1.38", "1.15\u20131.66", "&lt; 0.001"],
+                             ["Male sex", "1.24", "1.08\u20131.43", "0.002"],
+                             ["Age, per year", "0.99", "0.98\u20130.99", "&lt; 0.001"],
+                             ["Hypertension", "1.14", "0.97\u20131.32", "0.102"],
+                             ["Sleep apnea requiring CPAP or device", "1.05", "0.86\u20131.29", "0.614"],
+                             ["Heart disease or condition", "0.94", "0.74\u20131.19", "0.617"],
+                         ],
+                         "note": "<b>Table 4.</b> Outcome: bothered enough to want treatment or "
+                                 "reduction (1,081 events among 7,539). All predictors mutually "
+                                 "adjusted."}},
+                     {"h3": "Who wants something other than fewer voids"},
+                     {"table": {
+                         "head": ["Predictor", "aOR", "95% CI", "p"],
+                         "rows": [
+                             {"cls": "up", "cells": ["Overactive bladder", "1.30",
+                                                     "1.04\u20131.62", "0.023"]},
+                             ["Insomnia or sleep difficulty", "1.29", "1.13\u20131.48", "&lt; 0.001"],
+                             ["Age, per year", "1.01", "1.00\u20131.01", "0.002"],
+                             ["Hypertension", "0.89", "0.81\u20130.99", "0.038"],
+                             {"cls": "down", "cells": ["Male sex", "0.67", "0.61\u20130.73",
+                                                       "&lt; 0.001"]},
+                             ["Diuretic use", "1.12", "0.98\u20131.29", "0.107"],
+                             ["Heart disease or condition", "1.12", "0.94\u20131.33", "0.197"],
+                             ["Mobility limitation", "1.09", "0.94\u20131.28", "0.260"],
+                             ["Sleep apnea requiring CPAP or device", "1.07", "0.92\u20131.25", "0.364"],
+                             ["Diabetes", "1.01", "0.88\u20131.15", "0.924"],
+                         ],
+                         "note": "<b>Table 5.</b> Outcome: selecting any goal other than fewer "
+                                 "nighttime urinations (3,969 events among 7,539). All predictors "
+                                 "mutually adjusted."}},
+                     {"callout": "The two models point the same way. Overactive bladder and insomnia "
+                                 "\u2014 the phenotypes most likely to want treatment at all \u2014 "
+                                 "are also the ones most likely to want something other than a lower "
+                                 "count. The patients a trial is most likely to enrol are the patients "
+                                 "its endpoint serves worst."},
+                 ]},
+                {"id": "limitations", "title": "What this cannot tell you",
+                 "nav": "Limitations",
+                 "blocks": [
+                     {"bullets": [
+                         "Cross-sectional and self-reported throughout, including every comorbidity: "
+                         "these are conditions respondents say they were diagnosed with, not chart "
+                         "diagnoses.",
+                         "Respondents came from an online research panel, so internet access and panel "
+                         "membership are built into the sample even though recruitment targeted the "
+                         "general population by age, sex and race.",
+                         "A single most-important goal was forced from five fixed options. Someone who "
+                         "wants both fewer voids and better sleep had to discard one.",
+                         "The complete-case restriction drops 2,651 of 10,190 respondents. Those routed "
+                         "past the preference items by skip logic are not missing at random.",
+                         "The subgroup comparisons are exploratory and were not corrected for multiple "
+                         "testing.",
+                         "Preferences stated on a survey are not the same as choices made in a clinic "
+                         "with a prescription in front of you.",
+                     ]},
+                 ]},
             ],
-            "status_detail": "Manuscript V3.",
-            "next": "If patient-defined goals diverge from void count, the argument follows for a "
-                    "goal-attainment endpoint in nocturia trials.",
-            "sidefoot": "Oliver Menken · Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
-            "in_progress": True,
+            "next": "If what patients want treated is not what trials measure, the argument follows for "
+                    "a goal-attainment endpoint \u2014 one that asks whether the outcome a patient "
+                    "named actually improved \u2014 reported alongside void count rather than instead "
+                    "of it.",
+            "sidefoot": "Oliver B. Menken \u00b7 Henry M. Blair \u00b7 Jeffrey P. Weiss, MD, PhD<br>"
+                        "Department of Urology, SUNY Downstate Health Sciences University",
+            "footnote": "Every number on this page is read from the V3 manuscript tables.",
         },
     },
 
@@ -1823,145 +2192,6 @@ PROJECTS = [
         },
     },
         {
-        "slug": "nsqip-opioids", "tab": "Opioids at Discharge", "group": "current",
-        "title": "Half leave with opioids after urologic surgery",
-        "kicker": "ACS NSQIP Participant Use File · 2024",
-        "status": "Abstract submitted — 2027 AUA Annual Meeting",
-        "summary": "Opioids prescribed at discharge are a modifiable source of persistent use and diversion. Using national data on discharge prescriptions, we described how often patients leave with an opioid after urologic surgery and how prescribing varies by procedure, surgical approach and patient characteristics.",
-        "stats": [("55.4%", "discharged with an opioid"), ("59,773", "patients"), ("26–79%", "range across procedures"), ("2024", "PUF year")],
-        "tags": ["Opioid prescribing", "NSQIP", "Quality improvement", "Urologic surgery"],
-        "page": {"kind": "auto"},
-        "hub": {
-            "people": ["Henry M. Blair", "Edward Wu", "Ariel Schulman"],
-            "lede": "Opioids prescribed at discharge are a modifiable source of persistent use and diversion. Using national data on discharge prescriptions, we described how often patients leave with an opioid after urologic surgery and how prescribing varies by procedure, surgical approach and patient characteristics.",
-            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
-                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
-            "question": "How often does a patient leave the hospital with an opioid after urologic surgery, and is that decided by the operation or by the patient?",
-            "approach": ["We identified urologic procedures in the 2024 American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "The primary outcome was any opioid prescription at discharge; the secondary outcome was a prescription above 200 oral morphine milligram equivalents.", "Rates were compared across procedures, approaches and patient groups with unadjusted two-proportion tests."],
-            "findings": ["Of 59,773 patients, 33,110 (55.4%) were discharged with an opioid.", "Prescribing ranged from 26.0% after bladder tumor resection to 79.1% after kidney surgery and varied by approach (endoscopic 26.9%, open 65.7%, minimally invasive 75.1%).", "Opioids were prescribed less to patients aged ≥ 70 (45.3% vs 62.2%), and more often to women (62.4% vs 53.8%) and inpatients (61.3% vs 51.5%; all p&lt;0.001).", "Readmission rates were similar in those with vs without an opioid (overall <span data-q=\"readmit_rx\">5.8%</span> vs <span data-q=\"readmit_norx\">6.2%</span>) but also varied by procedure (TURBT 5.7% vs 5.6%; Radical prostatectomy 4.1% vs 5.2%)."],
-            "findings_note": "More than half of patients leave the hospital with an opioid after urologic surgery. Procedure type explains far more of the variation (26% to 79%) than any patient factor (45% to 62%). Low prescribing after endoscopic procedures suggests opioid-free discharge is feasible for many patients.",
-            "materials": [{"label": "Read the abstract (passphrase)",
-                           "url": "/downloads/abstract-nsqip-opioids-at-discharge/"}],
-            "sidefoot": "Henry M. Blair · Edward Wu · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
-        },
-    },
-    {
-        "slug": "nsqip-bph-bleeding", "tab": "BPH Bleeding", "group": "current",
-        "title": "Bleeding after TURP, photoselective vaporization and HoLEP",
-        "kicker": "ACS NSQIP Participant Use File · 2012–2024",
-        "status": "Abstract submitted — 2027 AUA Annual Meeting",
-        "summary": "Laser procedures for benign prostatic hyperplasia are often chosen to limit bleeding, particularly in anticoagulated men. We compared 30-day bleeding after transurethral resection of the prostate (TURP), photoselective vaporization (PVP) and holmium laser enucleation (HoLEP), and described changes in procedure mix and transfusion over 13 years.",
-        "stats": [("123,020", "procedures"), ("0.28", "PVP vs TURP transfusion RR"), ("5.8→14.8%", "HoLEP share"), ("13", "years")],
-        "tags": ["BPH", "Surgical therapy", "Bleeding", "NSQIP"],
-        "page": {"kind": "auto"},
-        "hub": {
-            "people": ["Henry M. Blair", "Edward Wu", "Michael Lee", "Payam Hakimian"],
-            "lede": "Laser procedures for benign prostatic hyperplasia are often chosen to limit bleeding, particularly in anticoagulated men. We compared 30-day bleeding after transurethral resection of the prostate (TURP), photoselective vaporization (PVP) and holmium laser enucleation (HoLEP), and described changes in procedure mix and transfusion over 13 years.",
-            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
-                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
-            "question": "Laser procedures are chosen to limit bleeding. Across thirteen years of national data, does that hold — and has bleeding fallen for every approach?",
-            "approach": ["We identified TURP, PVP and HoLEP cases in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Outcomes were transfusion within 72 hours, reoperation and readmission for bleeding, a composite of the three, complications and readmission.", "PVP and HoLEP were compared with TURP using unadjusted relative risks, and yearly transfusion was tested for linear trend."],
-            "findings": ["Of 123,020 procedures, 82,020 were TURP, 31,087 PVP and 9,913 HoLEP; HoLEP’s share rose from 5.8% to 14.8%.", "Compared with TURP, PVP had lower transfusion (<span data-q=\"pvp_transf\">0.25%</span> vs <span data-q=\"turp_transf\">0.90%</span>; relative risk <span data-q=\"pvp_transf_rr\">0.28 (0.22\u20130.35)</span>) and half the bleeding composite (<span data-q=\"pvp_bleed\">1.4%</span> vs <span data-q=\"turp_bleed\">2.6%</span>).", "HoLEP had similar bleeding (<span data-q=\"holep_bleed\">2.5%</span> vs <span data-q=\"turp_bleed\">2.6%</span>) but fewer serious complications (<span data-q=\"holep_serious\">1.4%</span> vs <span data-q=\"turp_serious\">1.7%</span>) and readmissions (<span data-q=\"holep_readmit\">4.1%</span> vs <span data-q=\"turp_readmit\">5.3%</span>).", "Transfusion fell after all three: TURP 1.7% to 0.6%, PVP 0.5% to 0.0% (both p&lt;0.001), HoLEP 2.5% to 0.5% (p=0.049)."],
-            "findings_note": "PVP carried the lowest bleeding risk, while HoLEP matched TURP on bleeding with fewer complications and readmissions. Transfusion after surgery for benign prostatic hyperplasia has become rare nationally, declining for every procedure. It is likely that improved techniques, technology, and experience have contributed to this trend. Comparisons are unadjusted and do not account for prostate size.",
-            "materials": [{"label": "Read the abstract (passphrase)",
-                           "url": "/downloads/abstract-nsqip-bph-bleeding/"}],
-            "sidefoot": "Henry M. Blair · Edward Wu · Michael Lee<br>Department of Urology, Maimonides Medical Center",
-        },
-    },
-    {
-        "slug": "nsqip-same-day-discharge", "tab": "Same-Day Discharge", "group": "current",
-        "title": "The national shift to same-day discharge after robotic prostatectomy",
-        "kicker": "ACS NSQIP Participant Use File · 2012–2024",
-        "status": "Abstract submitted — 2027 AUA Annual Meeting",
-        "summary": "Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge after robot-assisted radical prostatectomy (RARP) and asked whether its growth has been accompanied by more readmissions or complications.",
-        "stats": [("119,220", "patients"), ("&lt;1→15.6%", "same-day discharge"),
-                  ("0.78", "readmission risk ratio", "", "readmit_rr0"), ("16×", "growth after 2018")],
-        "tags": ["Prostate cancer", "Same-day discharge", "Health policy", "NSQIP"],
-        "page": {"kind": "auto"},
-        "hub": {
-            "people": ["Edward Wu", "Henry M. Blair", "Ariel Schulman"],
-            "lede": "Medicare removed laparoscopic radical prostatectomy from its Inpatient-Only List in January 2018, allowing same-day discharge. We described national uptake of same-day discharge after robot-assisted radical prostatectomy (RARP) and asked whether its growth has been accompanied by more readmissions or complications.",
-            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
-                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
-            "question": "Medicare opened the door to same-day discharge after prostatectomy in 2018. Did surgeons walk through it, and did readmissions rise when they did?",
-            "approach": ["We identified RARP cases (laparoscopic or robotic; 94% robotic where recorded) in the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) Participant Use File, 2012-2024.", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Yearly same-day discharge rates were tested for linear trend.", "Thirty-day outcomes were compared with overnight stay, and readmission between 2012-2018 and 2019-2024, using unadjusted relative risks."],
-            "findings": ["Of 119,220 patients, <span data-q=\"n_sdd\">7,088</span> (5.9%) went home the same day.", "The rate stayed below 1% through 2018, then rose to 1.9% in 2019 and 15.6% in 2024 (p&lt;0.001 for trend), including patients aged 70 or older (0.6% to 8.2%).", "Compared with overnight stay, same-day discharge was associated with lower readmission (<span data-q=\"readmit_sdd\">3.3%</span> vs <span data-q=\"readmit_on\">4.2%</span>; relative risk <span data-q=\"readmit_rr\">0.78 (0.69\u20130.89)</span>), complications (<span data-q=\"anycomp_sdd\">5.0%</span> vs <span data-q=\"anycomp_on\">6.4%</span>; <span data-q=\"anycomp_rr\">0.78 (0.71\u20130.87)</span>) and reoperation (<span data-q=\"reop_sdd\">0.5%</span> vs <span data-q=\"reop_on\">1.1%</span>; <span data-q=\"reop_rr\">0.50 (0.36\u20130.68)</span>).", "Overall readmission did not change between eras (4.1% vs 4.2%; relative risk 1.02, 0.97-1.08)."],
-            "findings_note": "Same-day discharge after RARP grew sixteenfold after 2018 and now applies to about one in six patients, without a rise in national readmission rates. Lower complication rates after same-day discharge likely reflect selection of healthier patients, and comparisons are unadjusted.",
-            "materials": [{"label": "Read the abstract (passphrase)",
-                           "url": "/downloads/abstract-nsqip-same-day-discharge/"}],
-            "sidefoot": "Edward Wu · Henry M. Blair · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
-        },
-    },
-    {
-        "slug": "nsqip-rasp-vs-osp", "tab": "RASP vs OSP", "group": "current",
-        "title": "The rapid rise of robot-assisted simple prostatectomy",
-        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
-        "status": "Abstract submitted — 2027 AUA Annual Meeting",
-        "summary": "Robot-assisted simple prostatectomy (RASP) is increasingly used for large-gland benign prostatic hyperplasia, but national data on its uptake and early safety compared with open simple prostatectomy (OSP) are limited. We described national adoption of RASP and compared 30-day outcomes between approaches, overall and across patient subgroups.",
-        "stats": [("3,033", "simple prostatectomies"), ("73→91%", "robotic share"), ("0.10", "transfusion risk ratio"), ("11.2% vs 28.0%", "any complication")],
-        "tags": ["BPH", "Simple prostatectomy", "Robotic surgery", "NSQIP"],
-        "page": {"kind": "auto"},
-        "hub": {
-            "people": ["Edward Wu", "Henry M. Blair", "Marino Kokolis-Lattanzio", "Ariel Schulman"],
-            "lede": "Robot-assisted simple prostatectomy (RASP) is increasingly used for large-gland benign prostatic hyperplasia, but national data on its uptake and early safety compared with open simple prostatectomy (OSP) are limited. We described national adoption of RASP and compared 30-day outcomes between approaches, overall and across patient subgroups.",
-            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
-                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
-            "question": "Robotic simple prostatectomy has all but replaced the open operation. What did that change in transfusion and complications?",
-            "approach": ["We identified simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP) - either RASP (robot used) or OSP (open, no robot).", "Emergent cases, preoperative admission, moribund status, preoperative sepsis or ventilator dependence, and missing length of stay were excluded.", "Robotic share was tested for linear trend.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by anesthesia risk class, frailty, age ≥70 years, obesity and anemia."],
-            "findings": ["Of 3,033 simple prostatectomies, 2,580 (85.1%) were RASP, rising from 73.2% in 2022 to 91.2% in 2024 (p-trend&lt;0.001).", "RASP had lower transfusion within 72 hours (<span data-q=\"rasp_transf\">1.8%</span> vs <span data-q=\"osp_transf\">18.3%</span>; relative risk <span data-q=\"transf_rr\">0.10 (0.07\u20130.14)</span>), any complication (<span data-q=\"rasp_anycomp\">11.2%</span> vs <span data-q=\"osp_anycomp\">28.0%</span>), readmission (<span data-q=\"rasp_readmit\">5.5%</span> vs <span data-q=\"osp_readmit\">8.2%</span>) and reoperation (<span data-q=\"rasp_reop\">1.6%</span> vs <span data-q=\"osp_reop\">4.2%</span>).", "Superficial wound infection (0.9% vs 2.6%) and kidney injury (0.7% vs 2.6%) were also less frequent; urinary infection, thromboembolism, pneumonia and sepsis did not differ.", "Lower transfusion held in every subgroup."],
-            "findings_note": "RASP now accounts for more than 90% of simple prostatectomies in NSQIP hospitals and is associated with a tenfold lower transfusion rate and less than half the complication rate of OSP, a benefit that persists in older, frail and anemic patients. Comparisons are unadjusted and OSP patients carried more comorbidity, so selection bias is likely.",
-            "materials": [{"label": "Read the abstract (passphrase)",
-                           "url": "/downloads/abstract-nsqip-rasp-vs-osp/"}],
-            "sidefoot": "Edward Wu · Henry M. Blair · Marino Kokolis-Lattanzio<br>Department of Urology, Maimonides Medical Center",
-        },
-    },
-    {
-        "slug": "nsqip-rasp-elderly", "tab": "RASP in the Elderly", "group": "current",
-        "title": "Too old or too frail? An analysis on robot-assisted simple prostatectomy",
-        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
-        "status": "Abstract submitted — 2027 AUA Annual Meeting",
-        "summary": "Robot-assisted simple prostatectomy (RASP) is an established surgical approach for the treatment of large-gland benign prostatic hyperplasia (BPH). However, perioperative outcomes following RASP among elderly and frail patients remain incompletely characterized. This study aimed to evaluate and compare 30-day postoperative complications following RASP across age and frailty subgroups.",
-        "stats": [("2,580", "men"), ("26.8%", "aged 75 or older"), ("20.5%", "frail (mFI ≥ 2)"), ("0.1%", "mortality")],
-        "tags": ["BPH", "Frailty", "Older adults", "Robotic surgery", "NSQIP"],
-        "page": {"kind": "auto"},
-        "hub": {
-            "people": ["Edward Wu", "Henry M. Blair", "Ariel Schulman"],
-            "lede": "Robot-assisted simple prostatectomy (RASP) is an established surgical approach for the treatment of large-gland benign prostatic hyperplasia (BPH). However, perioperative outcomes following RASP among elderly and frail patients remain incompletely characterized. This study aimed to evaluate and compare 30-day postoperative complications following RASP across age and frailty subgroups.",
-            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
-                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
-            "question": "Age and frailty are routinely used to steer older men away from robotic simple prostatectomy. Do the outcomes justify that?",
-            "approach": ["We identified robotic simple prostatectomies in 2022-2024 within the American College of Surgeons National Surgical Quality Improvement Program (ACS NSQIP).", "Serious complications were defined as wound dehiscence/infection, organ space infections, pneumonia, re-intubation, pulmonary embolism, renal failure, cerebrovascular accident, cardiac arrest, sepsis, and septic shock.", "Outcomes were compared with unadjusted relative risks and two-proportion or Fisher’s exact tests.", "Subgroups were defined by frailty (Modified Frailty Index (mFI) ≥ 2) and elderly status (age ≥75 years)."],
-            "findings": ["Of 2,580 men, 691 (26.8%) were aged 75 or older, 519 (20.5%) were frail and 182 (7.2% were both).", "Older men had more complications overall (<span data-q=\"old_anycomp\">13.5%</span> vs <span data-q=\"young_anycomp\">10.3%</span>; RR <span data-q=\"old_anycomp_rr\">1.30 (1.03\u20131.64)</span>), transfusion (<span data-q=\"old_transf\">3.2%</span> vs <span data-q=\"young_transf\">1.3%</span>), non-home discharge (<span data-q=\"old_nonhome\">2.0%</span> vs <span data-q=\"young_nonhome\">0.6%</span>) and stays longer than one day (32.9% vs 25.8%), but similar serious complications (3.8% vs 3.4%) and readmission (5.6% vs 5.5%).", "Frail men had longer stays (36.0% vs 25.6%).", "Mortality was 0.1%."],
-            "findings_note": "In men aged 75 or older and frail men, RASP was associated with longer stays, more transfusion, and more non-home discharge. However, rates of serious complication, readmission, and mortality remained low and similar to younger, non-frail men. RASP has demonstrated safety in the frail and elderly population with comparable rates of serious complications, readmission, and mortality.",
-            "materials": [{"label": "Read the abstract (passphrase)",
-                           "url": "/downloads/abstract-nsqip-rasp-elderly-frail/"}],
-            "sidefoot": "Edward Wu · Henry M. Blair · Ariel Schulman<br>Department of Urology, Maimonides Medical Center",
-        },
-    },
-    {
-        "slug": "nsqip-colpopexy", "tab": "Sacrocolpopexy vs SSLF", "group": "current",
-        "title": "Robotic sacrocolpopexy versus transvaginal sacrospinous ligament fixation",
-        "kicker": "ACS NSQIP Participant Use File · 2022–2024",
-        "status": "Abstract submitted — 2027 AUA Annual Meeting",
-        "summary": "Apical pelvic organ prolapse can be repaired abdominally with robotic sacrocolpopexy (SCP) or vaginally with sacrospinous ligament fixation (SSLF), with or without a hysterectomy. While vaginal native tissue repairs are often considered a lower risk option, comparative data on postoperative complications between these remain limited. This study compared 30-day postoperative complications.",
-        "stats": [("12,623", "patients"), ("6.6% vs 8.8%", "overall complications"), ("0.70", "UTI risk ratio"), ("5.4% vs 14.0%", "stay beyond one day")],
-        "tags": ["Pelvic organ prolapse", "Reconstructive surgery", "Urinary tract infection", "NSQIP"],
-        "page": {"kind": "auto"},
-        "hub": {
-            "people": ["Arsha Venkat", "Edward Wu", "Henry M. Blair", "Allison Polland"],
-            "lede": "Apical pelvic organ prolapse can be repaired abdominally with robotic sacrocolpopexy (SCP) or vaginally with sacrospinous ligament fixation (SSLF), with or without a hysterectomy. While vaginal native tissue repairs are often considered a lower risk option, comparative data on postoperative complications between these remain limited. This study compared 30-day postoperative complications.",
-            "status_detail": "Abstract submitted to the 2027 AUA Annual Meeting. Built with the "
-                             "<a href='/projects/nsqip-pipeline/'>NSQIP pipeline</a>.",
-            "question": "Vaginal native-tissue repair is often presented as the lower-risk option for apical prolapse. Does the national record agree?",
-            "approach": ["We identified patients who underwent SCP (CPT 57425, designated robotic) or SSLF (CPT 57282) in 2022-2024 in the National Surgical Quality Improvement Program (NSQIP).", "Serious complications were defined as wound dehiscence/infection, organ space infections, pneumonia, re-intubation, pulmonary embolism, renal failure, cerebrovascular accident, cardiac arrest, sepsis, and septic shock.", "Other complications included superficial infections, UTI, deep venous thromboses, and blood transfusions.", "Outcomes were compared with unadjusted relative risks (RR) and two-proportion or Fisher’s exact tests."],
-            "findings": ["Of 12,623 patients, 7,589 underwent robotic SCP and 5,034 SSLF; 89% and 94% had concomitant procedures.", "Robotic SCP had fewer overall complications (<span data-q=\"scp_anycomp\">6.6%</span> vs <span data-q=\"sslf_anycomp\">8.8%</span>), reoperations (<span data-q=\"scp_reop\">0.9%</span> vs <span data-q=\"sslf_reop\">1.5%</span>) and stays &gt;1 day (<span data-q=\"scp_los\">5.4%</span> vs <span data-q=\"sslf_los\">14.0%</span>).", "Serious complications (<span data-q=\"scp_serious\">1.4%</span> vs <span data-q=\"sslf_serious\">1.3%</span>) and readmission (1.9% each) were similar.", "UTI was less common after robotic SCP versus SSLF (<span data-q=\"scp_uti\">3.6%</span> vs <span data-q=\"sslf_uti\">5.1%</span>; RR <span data-q=\"uti_rr\">0.70 (0.60\u20130.83)</span>).", "On subgroup analysis of patients without concomitant procedures, UTI risk remained elevated for the SSLF group (RR 0.56 [0.41-0.77])."],
-            "findings_note": "Because SCP addresses all vaginal compartments, fewer SCP patients required concomitant procedures, potentially affecting outcomes. UTI differences suggest that the vaginal approach may influence UTI risk. However, unadjusted comparisons and differences in patient selection and prolapse severity may impact findings. Nonetheless, these results may help counsel patients hesitant about SCP.",
-            "materials": [{"label": "Read the abstract (passphrase)",
-                           "url": "/downloads/abstract-nsqip-colpopexy/"}],
-            "sidefoot": "Arsha Venkat · Edward Wu · Henry M. Blair<br>Department of Urology, Maimonides Medical Center",
-        },
-    },
-    {
         "slug": "trinetx-query-console", "tab": None, "group": "other",
         "title": "A command line interface for the TriNetX query browser",
         "kicker": "Research tooling \u00b7 TriNetX US Collaborative Network",
