@@ -45,6 +45,12 @@
   <a href="#privacy">Where it runs</a>
   <a href="#question">The question</a>
   <a href="#approach">How it is done</a>
+  <a href="#speech">Speaking</a>
+  <a href="#walkthrough">A lesson</a>
+  <a href="#profiles">Progress</a>
+  <a href="#reversals">Reversals</a>
+  <a href="#pitfalls">Problems</a>
+  <a href="#learned">What I learned</a>
   <a href="#next">What comes next</a>
   <div class="sidefoot">Henry M. Blair</div>
 </nav>
@@ -57,7 +63,7 @@
     <p class="authors">Henry M. Blair</p>
     <p class="lede">Language apps are good at vocabulary and bad at the mouth. The drills that matter most — hearing a sentence and producing it out loud — are the ones most apps skip, because grading speech is harder than grading a tap.</p>
   </div>
-  <div class="statrow"><div class="stat"><div class="statv">10</div><div class="statl">levels, pre-A1 to C2</div></div><div class="stat"><div class="statv">8</div><div class="statl">exercise types</div></div><div class="stat"><div class="statv">2,801</div><div class="statl">lines of JavaScript</div></div><div class="stat"><div class="statv">0</div><div class="statl">servers</div></div></div>
+  <div class="statrow"><div class="stat"><div class="statv">10</div><div class="statl">levels, pre-A1 to C2</div></div><div class="stat"><div class="statv">8</div><div class="statl">exercise types</div></div><div class="stat"><div class="statv">2,801</div><div class="statl">lines of source, no dependencies</div></div><div class="stat"><div class="statv">0</div><div class="statl">servers</div></div></div>
   <div class="callout"><b>Status.</b> Working app, used by its author to learn German.</div>
   <div class="wip"><b>This hub is still being built.</b> The analysis is underway; the derivation, tables and figures will be posted here as they are finished, the way the completed projects on this site are. What is below is the design and the current state, written up as it stands.</div>
 </section>
@@ -81,6 +87,57 @@
     <li><b>Pictures where they help, never where they give the answer.</b> Vocabulary can carry a small icon on flashcards and speaking cards, and it is deliberately withheld on graded questions.</li>
     <li><b>Streaks, XP and badges,</b> because the hard problem in self-teaching is the fourteenth day, not the first.</li>
   </ul>
+</section>
+
+<section id="speech" class="sec">
+  <h2>Grading the half that is hard to grade</h2>
+  <p>Tapping the right word out of four is easy to grade, so that is what most apps drill. Hearing a sentence, holding it, and producing it aloud is hard to grade, so it gets skipped — and it is the part that decides whether you can hold a conversation. Every new word here is shown, heard, and then said back by the learner before any quizzing starts; speaking is front-loaded rather than saved for the end of a unit.</p>
+  <p>German prompts are spoken by the browser’s own speech synthesis, with the available voices ranked so the most natural German voice is picked first. Replies go through the browser’s speech recognition; what it heard is compared to the target with a Levenshtein similarity score and aligned word by word, so the feedback names the word that was off instead of returning a single pass or fail.</p>
+  <figure><img src="figures/dm-04-speaking-pronunciation-colors.jpg" alt="Pronunciation feedback colouring each word by accuracy">
+  <figcaption><b>Pronunciation feedback.</b> Each word you said is shaded by how close it was, with the legend beneath it.</figcaption></figure>
+  <div class="tblwrap"><table><thead><tr><th>Similarity to the target</th><th class="n">Shown as</th><th class="n">Reading</th></tr></thead><tbody><tr><td>95–100%</td><td class="n">dark green</td><td class="n">Perfect</td></tr><tr><td>85–95%</td><td class="n">light green</td><td class="n">Good</td></tr><tr><td>65–85%</td><td class="n">yellow</td><td class="n">Fair</td></tr><tr><td>50–65%</td><td class="n">orange</td><td class="n">Poor</td></tr><tr><td>below 50%</td><td class="n">red</td><td class="n">Very poor</td></tr></tbody></table></div>
+  <p class="tblnote">Browser speech recognition is imperfect, so the pass threshold is set generously and the per-word colours carry the detail. The point is to turn “try again” into something you can act on: you can see which word to fix.</p>
+</section>
+
+<section id="walkthrough" class="sec">
+  <h2>What a lesson looks like</h2>
+  <p>Each unit is written once as data — words, phrases, grammar examples, dialogue — and a small exercise engine turns that into all eight drill types. Adding a unit adds every drill for it, which is what made a thirty-unit curriculum practical to write by hand.</p>
+  <figure><img src="figures/dm-03-flashcard-highlighted-word.jpg" alt="Flashcard with the taught word highlighted in German and English">
+  <figcaption><b>A new word.</b> The word being taught is highlighted in both languages and the whole phrase is translated beneath, so a beginner is never left wondering what <em>wie</em> means.</figcaption></figure>
+  <figure><img src="figures/dm-05-matching-pairs.jpg" alt="Matching exercise pairing German words with English">
+  <figcaption><b>Matching.</b> One pair matched, one selected; English labels kept short so each row reads at a glance.</figcaption></figure>
+  <figure><img src="figures/dm-07-word-order.jpg" alt="Word-order exercise built from shuffled chips">
+  <figcaption><b>Word order.</b> The sentence is built from a shuffled word bank — the drill that teaches German word order rather than vocabulary.</figcaption></figure>
+  <figure><img src="figures/dm-06-correct-answer-feedback.jpg" alt="Correct-answer banner with the Continue button and owl mascot">
+  <figcaption><b>Feedback.</b> Answers never auto-advance: you press Continue, or the right arrow, so a correction can be read at your own pace.</figcaption></figure>
+  <figure><img src="figures/dm-08-lesson-results-confetti.jpg" alt="Lesson results with stars, accuracy, XP and best combo">
+  <figcaption><b>Results.</b> Stars, accuracy, XP earned, best combo and the running streak.</figcaption></figure>
+</section>
+
+<section id="profiles" class="sec">
+  <h2>Profiles, streaks and getting to day fourteen</h2>
+  <figure><img src="figures/dm-01-sign-in.jpg" alt="Sign-in screen with learner profiles and an avatar picker">
+  <figcaption><b>Sign-in.</b> Learners are local profiles with an avatar, not accounts — nothing is registered anywhere.</figcaption></figure>
+  <figure><img src="figures/dm-02-dashboard-level-path.jpg" alt="Level path with stars, XP, streak and badges">
+  <figcaption><b>The path.</b> A winding level path, XP and streak pills, the badge shelf and a daily speaking review. Shown with a seeded demo learner.</figcaption></figure>
+  <p>Profiles, XP, streaks and badges live in the browser’s local storage, and an in-lesson autosave means a tab closed mid-lesson picks up where it left off. The hard problem in teaching yourself a language is the fourteenth day, not the first, so the game furniture is there to make returning cheap.</p>
+</section>
+
+<section id="reversals" class="sec">
+  <h2>Two decisions I reversed</h2>
+  <div class="callout"><b>The hearts had to go.</b> I built a lives system, used it, and removed it. Losing lives punishes mistakes, and mistakes are how you learn a language — the mechanic was working against the thing the app is for.</div>
+  <p>The other reversal was the alphabet. Read as bare letters, the synthesised German was odd and taught nothing, so every letter became a full phrase — <em>A wie Apfel</em> — printed with its English underneath. The learner gets a word, not a sound.</p>
+</section>
+
+<section id="pitfalls" class="sec">
+  <h2>Problems I ran into</h2>
+  <ul class="pitfalls"><li><b>The microphone permission kept re-prompting.</b> A browser treats a page opened from a file as a new origin every time, so the grant never stuck. The fix was a small launcher that serves the folder on localhost; the permission is then asked once and remembered.</li><li><b>Unreadable text on the matching cards.</b> Buttons inherit a dark default colour, which disappears on a dark theme. Explicit colours, and shorter English labels, made the pairs readable.</li><li><b>Buttons that behaved differently on hover.</b> Hover, focus and press were defined per component and drifted apart; they are now one shared rule.</li></ul>
+</section>
+
+<section id="learned" class="sec">
+  <h2>What I learned</h2>
+  <p>Grading speech is the hard part, and it is also the reason to build the thing: the drill nobody ships is the drill I wanted. Imperfect recognition is workable if you are honest about it — a generous threshold and per-word scores beat a harsh verdict from a model that mishears.</p>
+  <p>The constraints helped. No server and no account forced simple, durable choices, and a project with no build step is one I can still open in two years. Building it in conversation with an AI assistant let me iterate on feel — hover states, colours, pacing — in minutes, deciding each change myself.</p>
 </section>
 
 <section id="next" class="sec">

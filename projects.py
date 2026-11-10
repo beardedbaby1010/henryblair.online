@@ -2484,7 +2484,7 @@ PROJECTS = [
                    "server and no account. It speaks each phrase, listens to you say it back, and keeps "
                    "the streaks, XP and badges that make a person actually return the next day.",
         "stats": [("10", "levels, pre-A1 to C2"), ("8", "exercise types"),
-                  ("2,801", "lines of JavaScript"), ("0", "servers")],
+                  ("2,801", "lines of source, no dependencies"), ("0", "servers")],
         "tags": ["Language learning", "Speech recognition", "Spaced practice", "JavaScript"],
         "page": {"kind": "auto"},
         "hub": {
@@ -2515,6 +2515,122 @@ PROJECTS = [
                                "is no backend to sign in to and nothing leaves the machine, which also "
                                "means progress is per-browser rather than per-person \u2014 the honest "
                                "trade for not asking anyone to create an account."},
+                 ]},
+            ],
+            "sections_after": [
+                {"id": "speech", "title": "Grading the half that is hard to grade", "nav": "Speaking",
+                 "blocks": [
+                     {"prose": "Tapping the right word out of four is easy to grade, so that is what "
+                               "most apps drill. Hearing a sentence, holding it, and producing it aloud "
+                               "is hard to grade, so it gets skipped \u2014 and it is the part that "
+                               "decides whether you can hold a conversation. Every new word here is "
+                               "shown, heard, and then said back by the learner before any quizzing "
+                               "starts; speaking is front-loaded rather than saved for the end of a unit."},
+                     {"prose": "German prompts are spoken by the browser\u2019s own speech synthesis, with "
+                               "the available voices ranked so the most natural German voice is picked "
+                               "first. Replies go through the browser\u2019s speech recognition; what it "
+                               "heard is compared to the target with a Levenshtein similarity score and "
+                               "aligned word by word, so the feedback names the word that was off instead "
+                               "of returning a single pass or fail."},
+                     {"figure": {"src": "dm-04-speaking-pronunciation-colors.jpg",
+                                 "alt": "Pronunciation feedback colouring each word by accuracy",
+                                 "caption": "<b>Pronunciation feedback.</b> Each word you said is shaded "
+                                            "by how close it was, with the legend beneath it."}},
+                     {"table": {
+                         "head": ["Similarity to the target", "Shown as", "Reading"],
+                         "rows": [["95\u2013100%", "dark green", "Perfect"],
+                                  ["85\u201395%", "light green", "Good"],
+                                  ["65\u201385%", "yellow", "Fair"],
+                                  ["50\u201365%", "orange", "Poor"],
+                                  ["below 50%", "red", "Very poor"]],
+                         "note": "Browser speech recognition is imperfect, so the pass threshold is set "
+                                 "generously and the per-word colours carry the detail. The point is to "
+                                 "turn \u201ctry again\u201d into something you can act on: you can see "
+                                 "which word to fix."}},
+                 ]},
+                {"id": "walkthrough", "title": "What a lesson looks like", "nav": "A lesson",
+                 "blocks": [
+                     {"prose": "Each unit is written once as data \u2014 words, phrases, grammar examples, "
+                               "dialogue \u2014 and a small exercise engine turns that into all eight drill "
+                               "types. Adding a unit adds every drill for it, which is what made a "
+                               "thirty-unit curriculum practical to write by hand."},
+                     {"figure": {"src": "dm-03-flashcard-highlighted-word.jpg",
+                                 "alt": "Flashcard with the taught word highlighted in German and English",
+                                 "caption": "<b>A new word.</b> The word being taught is highlighted in "
+                                            "both languages and the whole phrase is translated beneath, so "
+                                            "a beginner is never left wondering what <em>wie</em> means."}},
+                     {"figure": {"src": "dm-05-matching-pairs.jpg",
+                                 "alt": "Matching exercise pairing German words with English",
+                                 "caption": "<b>Matching.</b> One pair matched, one selected; English "
+                                            "labels kept short so each row reads at a glance."}},
+                     {"figure": {"src": "dm-07-word-order.jpg",
+                                 "alt": "Word-order exercise built from shuffled chips",
+                                 "caption": "<b>Word order.</b> The sentence is built from a shuffled word "
+                                            "bank \u2014 the drill that teaches German word order rather "
+                                            "than vocabulary."}},
+                     {"figure": {"src": "dm-06-correct-answer-feedback.jpg",
+                                 "alt": "Correct-answer banner with the Continue button and owl mascot",
+                                 "caption": "<b>Feedback.</b> Answers never auto-advance: you press "
+                                            "Continue, or the right arrow, so a correction can be read at "
+                                            "your own pace."}},
+                     {"figure": {"src": "dm-08-lesson-results-confetti.jpg",
+                                 "alt": "Lesson results with stars, accuracy, XP and best combo",
+                                 "caption": "<b>Results.</b> Stars, accuracy, XP earned, best combo and the "
+                                            "running streak."}},
+                 ]},
+                {"id": "profiles", "title": "Profiles, streaks and getting to day fourteen", "nav": "Progress",
+                 "blocks": [
+                     {"figure": {"src": "dm-01-sign-in.jpg",
+                                 "alt": "Sign-in screen with learner profiles and an avatar picker",
+                                 "caption": "<b>Sign-in.</b> Learners are local profiles with an avatar, "
+                                            "not accounts \u2014 nothing is registered anywhere."}},
+                     {"figure": {"src": "dm-02-dashboard-level-path.jpg",
+                                 "alt": "Level path with stars, XP, streak and badges",
+                                 "caption": "<b>The path.</b> A winding level path, XP and streak pills, "
+                                            "the badge shelf and a daily speaking review. Shown with a "
+                                            "seeded demo learner."}},
+                     {"prose": "Profiles, XP, streaks and badges live in the browser\u2019s local storage, "
+                               "and an in-lesson autosave means a tab closed mid-lesson picks up where it "
+                               "left off. The hard problem in teaching yourself a language is the "
+                               "fourteenth day, not the first, so the game furniture is there to make "
+                               "returning cheap."},
+                 ]},
+                {"id": "reversals", "title": "Two decisions I reversed", "nav": "Reversals",
+                 "blocks": [
+                     {"callout": "<b>The hearts had to go.</b> I built a lives system, used it, and "
+                                 "removed it. Losing lives punishes mistakes, and mistakes are how you "
+                                 "learn a language \u2014 the mechanic was working against the thing the "
+                                 "app is for."},
+                     {"prose": "The other reversal was the alphabet. Read as bare letters, the synthesised "
+                               "German was odd and taught nothing, so every letter became a full phrase "
+                               "\u2014 <em>A wie Apfel</em> \u2014 printed with its English underneath. "
+                               "The learner gets a word, not a sound."},
+                 ]},
+                {"id": "pitfalls", "title": "Problems I ran into", "nav": "Problems",
+                 "blocks": [
+                     {"bullets": [
+                         "<b>The microphone permission kept re-prompting.</b> A browser treats a page "
+                         "opened from a file as a new origin every time, so the grant never stuck. The fix "
+                         "was a small launcher that serves the folder on localhost; the permission is then "
+                         "asked once and remembered.",
+                         "<b>Unreadable text on the matching cards.</b> Buttons inherit a dark default "
+                         "colour, which disappears on a dark theme. Explicit colours, and shorter English "
+                         "labels, made the pairs readable.",
+                         "<b>Buttons that behaved differently on hover.</b> Hover, focus and press were "
+                         "defined per component and drifted apart; they are now one shared rule.",
+                     ]},
+                 ]},
+                {"id": "learned", "title": "What I learned", "nav": "What I learned",
+                 "blocks": [
+                     {"prose": "Grading speech is the hard part, and it is also the reason to build the "
+                               "thing: the drill nobody ships is the drill I wanted. Imperfect recognition "
+                               "is workable if you are honest about it \u2014 a generous threshold and "
+                               "per-word scores beat a harsh verdict from a model that mishears."},
+                     {"prose": "The constraints helped. No server and no account forced simple, durable "
+                               "choices, and a project with no build step is one I can still open in two "
+                               "years. Building it in conversation with an AI assistant let me iterate on "
+                               "feel \u2014 hover states, colours, pacing \u2014 in minutes, deciding each "
+                               "change myself."},
                  ]},
             ],
             "status_detail": "Working app, used by its author to learn German.",
