@@ -196,6 +196,25 @@ td.tiles{padding:6px 0 18px 0}
 .plr .pv{font-variant-numeric:tabular-nums;font-size:11.5px;white-space:nowrap}
 .plr .pv em{font-style:normal;color:var(--muted);font-size:11px;margin-left:3px}
 .vhit{position:absolute;opacity:0}
+.cpy{background:var(--bg);color:var(--muted);border:1px solid var(--line);border-radius:6px;
+ padding:2px 8px;font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;
+ letter-spacing:.02em;white-space:nowrap}
+.cpy:hover{border-color:var(--accent);color:var(--accent)}
+.cpy.done{border-color:var(--ok);color:var(--ok)}
+.cpy.big{background:var(--accent);color:#fff;border-color:var(--accent);font-size:12px;
+ padding:6px 12px;font-family:var(--sans)}
+.cpy.big:hover{filter:brightness(1.08);color:#fff}
+.cpy.big.done{background:var(--ok);border-color:var(--ok)}
+td.act{text-align:right;white-space:nowrap;padding-right:0}
+.fixbox{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.fixh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.fixh h5{margin:0;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+ font-weight:600}
+.fixh .cpy{margin-left:auto}
+.fixsh{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 13px;
+ font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--ink);overflow-x:auto;
+ white-space:pre;tab-size:2}
+.fixsh .c{color:var(--muted)}
 </style>
 <div class="wrap" style="max-width:1200px">
 <header><h1>VE Query Logic Check</h1>
@@ -628,6 +647,79 @@ function devList(r){
   if(!out.length)return esc((r.problems||[]).join("; "));
   return '<span class="devs">'+out.join("")+'</span>';}
 
+/* ---------------------------------------------------------------------------
+   A FIX SCRIPT PER QUERY.  The checker already knows exactly which group
+   deviated and what it should say, so it can hand over the shell block that
+   finds the query and then blocks on a read until you have fixed it - the
+   instructions sit in the read prompt, so they stay on screen while you work
+   inside TriNetX. A terminal prompt cannot carry a double quote, so every
+   value is sanitised before it goes in.
+--------------------------------------------------------------------------- */
+function shp(t){ // safe inside a double-quoted zsh read prompt
+  return String(t).replace(/\\/g,"\\\\").replace(/"/g,"'")
+    .replace(/[$`]/g,m=>"\\"+m).replace(/\n/g," ");}
+function fixSteps(r){
+  const out=[];
+  if(r.kind==="dump truncated")
+    out.push("the pasted dump is short - re-copy the whole query text before judging it");
+  (r.groups||[]).forEach(g=>(g.issues||[]).forEach(i=>{
+    const w=(i.f==="title"||i.f==="group")?"group "+g.n
+      :"group "+g.n+" ("+(g.title||"?")+")";
+    if(i.f==="group"&&i.exp!=="no group here")
+      out.push(w+": missing - add "+i.exp);
+    else if(i.f==="group")
+      out.push(w+": "+i.act+" does not belong here - delete it");
+    else if(i.f==="title")
+      out.push(w+": is "+i.act+", should be "+i.exp+" (groups are out of order)");
+    else if(i.f==="must")
+      out.push(w+": must-have is "+i.act+", should be "+i.exp);
+    else if(i.f==="cannot")
+      out.push(w+": cannot-have is "+i.act+", should be "+i.exp);
+    else if(i.f==="operator")
+      out.push(w+": operator is "+i.act+", should be "+i.exp);
+    else if(i.f==="window")
+      out.push(w+": window is "+i.act+", should be "+i.exp);}));
+  if(!out.length)(r.problems||[]).forEach(x=>out.push(x));
+  return out;}
+function fixBlock(r,idx,tot,pad){
+  const p=pad||"", tag=tot>1?"["+idx+"/"+tot+"] ":"";
+  const steps=fixSteps(r);
+  return p+"# "+tag+r.name+"  -  "+(r.kind||"fails the spec")+"\n"
+    +p+'q="'+r.name+'"; _rr ${q} && tnx -find_query -e ${q} -main -n 1 -go\n'
+    +p+'read ignore"?\n'
+    +p+shp(tag+r.name)+"\n"
+    +p+shp(r.kind||"fails the spec")+"\n"
+    +steps.map(x=>p+"  \u2022 "+shp(x)).join("\n")+"\n"
+    +p+'Press enter once you have fixed the query. "\n';}
+/* One query copies as a bare block you can paste straight in. Several wrap in
+   a function, so the paste defines it and you start the walk when you are
+   ready rather than the moment the terminal sees the text. */
+function fixScript(list,label){
+  const tot=list.length, when=new Date().toISOString().slice(0,16).replace("T"," ");
+  if(tot===1)return fixBlock(list[0],1,1,"");
+  return "# VE query fix run \u2014 "+tot+" queries  ("+label+", "+when+")\n"
+    +"# Each block finds the query, prints what is wrong, then waits on a read.\n"
+    +"vefix(){\n"
+    +list.map((r,i)=>fixBlock(r,i+1,tot,"  ")).join("\n")
+    +'  print "\u2713 '+tot+' queries walked."\n'
+    +"}\n# paste the above, then run:  vefix\n";}
+
+/* Clipboard: the page is often opened from a file:// URL, where the async
+   clipboard API is not available, so there is a textarea fallback. */
+function copyText(t,btn){
+  const mark=ok=>{if(!btn)return;const o=btn.dataset.lab||btn.textContent;
+    btn.dataset.lab=o; btn.textContent=ok?"copied":"press \u2318C";
+    btn.classList.toggle("done",ok);
+    setTimeout(()=>{btn.textContent=o;btn.classList.remove("done");},1500);};
+  const fb=()=>{const ta=document.createElement("textarea");ta.value=t;
+    ta.setAttribute("readonly","");ta.style.cssText="position:fixed;top:0;left:0;opacity:0";
+    document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);
+    let ok=false; try{ok=document.execCommand("copy");}catch(e){}
+    document.body.removeChild(ta); mark(ok);};
+  if(navigator.clipboard&&window.isSecureContext)
+    navigator.clipboard.writeText(t).then(()=>mark(true),fb);
+  else fb();}
+
 /* group tiles for an expanded row: every group the query should have, in order,
    green when it matches and red when it does not. */
 function tiles(r){
@@ -752,7 +844,7 @@ function render(){
   else if(S.group==="none"){
     body='<div class="scroll"><table><thead><tr><th></th>'
       +th("row","Row")+th("name","Query")+th("snap","Snapshot n")+th("kind","Problem")
-      +'<th>What\u2019s wrong</th></tr></thead><tbody>'
+      +'<th>What\u2019s wrong</th><th></th></tr></thead><tbody>'
       +rows.map(tr).join("")+'</tbody></table></div>';
   }else{
     const buckets=new Map();
@@ -799,7 +891,14 @@ function render(){
       +'</select></label>'
     +'<input id="q" placeholder="filter by name or problem\u2026" value="'+esc(S.q)+'">'
     +'<span class="note">'+rows.length+' shown</span>'
+    +(rows.filter(r=>r.status==="bad").length
+      ?'<button class="cpy big" data-cp="all">\u29c9 Copy fix script \u2014 '
+        +rows.filter(r=>r.status==="bad").length+' failing</button>':"")
     +'</div>'+body+'</div>';
+
+  // the "all" button copies exactly what is on screen, in the order shown
+  const failing=rows.filter(r=>r.status==="bad");
+  S.fixAll=failing.length?fixScript(failing,"as filtered"):"";
 
   out.querySelectorAll(".tile[data-f]").forEach(b=>b.onclick=()=>{
     S.filter=(S.filter===b.dataset.f?"all":b.dataset.f);render();});
@@ -825,6 +924,12 @@ function render(){
     const d=out.querySelector('tr.det[data-det="'+row.dataset.row+'"]');
     if(!d)return;
     const open=!d.hidden; d.hidden=open; row.classList.toggle("open",!open);});
+  out.querySelectorAll("[data-cp]").forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const k=b.dataset.cp;
+    if(k==="all")return copyText(S.fixAll,b);
+    const r=S.res.find(x=>String(x.i)===k);
+    if(r)copyText(fixScript([r],r.name),b);});
   out.querySelectorAll(".hbr.hit[data-rg]").forEach(b=>b.onclick=()=>{
     const k=b.dataset.rg; if(!k)return;
     S.region=(S.region===k?"":k); S.filter="bad"; render();});
@@ -842,9 +947,16 @@ function tr(r){
      +(r.snap?fmt(r.snap):"\u2014")+(r.snap&&!r.full?" \u26a0":"")+'</td>'
    +'<td class="kind">'+esc(r.kind||"")+'</td>'
    +'<td class="why">'+(r.status==="bad"?devList(r):esc((r.problems||[]).join("; ")))
-   +'</td></tr>'
+   +'</td>'
+   +'<td class="act">'+(r.status==="bad"
+      ?'<button class="cpy" data-cp="'+r.i+'" title="copy the fix block for this query">'
+        +'\u29c9 fix</button>':"")+'</td></tr>'
    +(r.status==="bad"?'<tr class="det" data-det="'+r.i+'" hidden>'
-      +'<td class="tiles" colspan="5">'+tiles(r)+'</td></tr>':"");}
+      +'<td class="tiles" colspan="6">'+tiles(r)
+      +'<div class="fixbox"><div class="fixh"><h5>Fix script</h5>'
+      +'<button class="cpy" data-cp="'+r.i+'">\u29c9 copy</button></div>'
+      +'<pre class="fixsh">'+esc(fixScript([r],r.name))+'</pre></div>'
+      +'</td></tr>':"");}
 
 function keyOf2(){}
 async function run(){
