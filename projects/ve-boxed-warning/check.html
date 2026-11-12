@@ -48,6 +48,36 @@ code{font-family:var(--mono);font-size:12.5px}
 .tile.on{border-color:var(--accent);background:var(--bg)}
 .tile b{font-size:21px;display:block;line-height:1.2;font-weight:700}
 .tile span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.viz{display:flex;flex-direction:column;gap:22px;margin:4px 0 20px;
+ padding-bottom:18px;border-bottom:1px solid var(--line)}
+.viz section h3{font-size:14px;margin:0 0 4px;letter-spacing:-.01em}
+.viz h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+ margin:0 0 7px;font-weight:600}
+.vn{color:var(--muted);font-size:12.5px;margin:0 0 10px;max-width:78ch}
+.sb{width:100%;display:block;border-radius:3px;overflow:hidden}
+.sb rect{cursor:pointer}
+.sb rect:hover{opacity:.82}
+.lgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.lg{display:inline-flex;align-items:center;gap:6px;background:var(--bg);color:var(--ink);
+ border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer}
+.lg:hover{border-color:var(--accent)}
+.lg i{width:9px;height:9px;border-radius:2px;display:inline-block;flex:none}
+.lg b{font-variant-numeric:tabular-nums}
+.lg em{font-style:normal;color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.hb{display:flex;flex-direction:column;gap:3px}
+.hbr{display:grid;grid-template-columns:minmax(74px,auto) 1fr auto;gap:9px;align-items:center;
+ font-size:12px;padding:1px 0;cursor:default}
+.hbr.hit[data-q]:not([data-q=""]){cursor:pointer}
+.hbr.hit[data-q]:not([data-q=""]):hover .hbl{color:var(--accent)}
+.hbl{font-family:var(--mono);font-size:11.5px;color:var(--ink);white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis}
+.hbt{background:var(--bg);border-radius:3px;height:13px;min-width:30px;overflow:hidden}
+.hbt i{display:block;height:13px;border-radius:0 3px 3px 0;min-width:2px}
+.hbv{font-variant-numeric:tabular-nums;color:var(--ink);font-size:11.5px;white-space:nowrap}
+.hbv em{font-style:normal;color:var(--muted);font-size:11px}
+.fxs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px 24px}
+@media (max-width:640px){.viz section h3{font-size:13px}.hbl{max-width:92px}}
 .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:4px 0 14px}
 .clab{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:2px}
 .chip{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:999px;
@@ -78,6 +108,29 @@ summary::marker{color:var(--muted)}
 .gc em{font-style:normal;font-weight:600}
 .gc em.ok{color:var(--ok)}.gc em.bad{color:var(--bad)}.gc em.warn{color:var(--warn)}
 details table{margin-bottom:12px}
+/* snapshot + log-provenance additions, same tokens as everything above */
+.kv{display:flex;gap:20px;flex-wrap:wrap;margin:2px 0 14px;font-variant-numeric:tabular-nums}
+.kv div{min-width:86px}
+.kv b{display:block;font-size:20px;line-height:1.25;font-weight:700}
+.kv span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.snaptab{border-collapse:collapse;width:100%;font-size:13px}
+.snaptab th{padding:0 12px 7px 0}
+.snaptab td{padding:6px 12px 6px 0;border-bottom:1px solid var(--line)}
+.snaptab td.n{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.snaptab tr.dom td{font-weight:600}
+.snaptab tr.hit{cursor:pointer}
+.snaptab tr.hit:hover td{color:var(--accent)}
+.snaptab tr.on td{color:var(--accent)}
+.sw{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:7px;
+ vertical-align:1px;flex:none}
+.chip i.sw{opacity:1;margin-left:0;margin-right:6px}
+.flag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:999px;margin-left:4px;
+ background:var(--warn-soft);color:var(--warn);font-weight:600;letter-spacing:.02em}
+.tile.stat{cursor:default}
+.tile.stat:hover{background:transparent}
+td.snapc{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right;
+ font-variant-numeric:tabular-nums;white-space:nowrap}
+td.snapc.off{color:var(--warn)}
 </style>
 <div class="wrap" style="max-width:1200px">
 <header><h1>VE Query Logic Check</h1>
@@ -183,6 +236,16 @@ function announcesMore(cells,n){
   const want=n+" vs "+(n+1)+": ";
   return cells.some(x=>{const t=clean(x);
     const i=t.indexOf(want);return i>=0&&/^(AND|OR)\b/.test(t.slice(i+want.length).trim());});}
+// A row can carry several defects at once. `kind` is the headline (first match);
+// `axes` keeps every one, which is what the co-occurrence figure reads.
+function axesOf(probs,trunc){
+  const a=[];
+  if(trunc)a.push("truncated");
+  if(probs.some(p=>/ titled /.test(p)))a.push("order");
+  if(probs.some(p=>/: window /.test(p)))a.push("window");
+  if(probs.some(p=>/wrong (?:must-have|cannot-have|AND)/.test(p)))a.push("terms");
+  if(probs.some(p=>/missing:|unexpected:|groups, expected/.test(p)))a.push("count");
+  return a;}
 function kindOf(probs,trunc){
   if(trunc)return "dump truncated";
   if(probs.some(p=>/ titled /.test(p)))return "groups out of order";
@@ -192,7 +255,7 @@ function kindOf(probs,trunc){
   return "other";}
 function check(cells){
   const name=clean(cells[0]).trim(),exp=expected(name);
-  if(!exp)return{name,status:"skip",kind:"not in grammar",problems:["name is not in the BCa grammar"]};
+  if(!exp)return{name,status:"skip",kind:"not in grammar",axes:[],problems:["name is not in the BCa grammar"]};
   const act=actual(cells),probs=[];
   if(act.length!==exp.length)
     probs.push(`${act.length} groups, expected ${exp.length} (${exp.map(e=>e.title).join(" → ")})`);
@@ -211,6 +274,7 @@ function check(cells){
   const p=parseName(name);
   return{name,status:probs.length?"bad":"ok",problems:probs,
     kind:probs.length?kindOf(probs,trunc):"",
+    axes:probs.length?axesOf(probs,trunc):[],
     cohort:p.cohort,stratum:p.stratum||"(none)",metric:p.metric,window:p.yy+"_"+p.mon};}
 
 
@@ -226,9 +290,230 @@ function parseCSV(t){const rows=[];let row=[],f="",q=false;
   return rows;}
 function keyOf(s){const m=/\/spreadsheets\/d\/([A-Za-z0-9_-]+)/.exec(s);return m?m[1]:s.trim();}
 let STATE=null;
+const LOGS={"files":481,"span":"11/11 11:18 → 11/12 01:04","modes":{"search":151,"main":232,"replace_rename":18,"?":14,"fork":17,"shift_dates":25,"print_qn":9,"del":5,"refresh":1,"remove_group":5,"paste":4},"legend":{"m":"main","s":"search","f":"fork","r":"replace_rename","t":"shift_dates","g":"remove_group","d":"del","p":"paste","n":"print_qn","h":"refresh","u":"?"},"mut":"frtgdp","q":{"C50_∩_denom_24_Nov":[17,2,"s11 n3 d2 m1"],"Hx_∩_denom_24_Nov":[13,2,"s8 n2 d2 m1"],"Unstrat_prev_denom_24_Nov":[2,0,"s2"],"HA_∩_prev_denom_24_Nov":[8,2,"s3 n2 d2 m1"],"C50_∩_prev_denom_24_Nov":[8,2,"s3 n2 d2 m1"],"Hx_∩_prev_denom_24_Nov":[8,0,"s3 m3 n2"],"No_HA_∩_prev_denom_24_Nov":[8,2,"s3 n2 d2 m1"],"No_C50_∩_prev_denom_24_Nov":[8,2,"s3 n2 d2 m1"],"No_Hx_∩_prev_denom_24_Nov":[14,2,"s9 n2 d2 m1"],"Unstrat_∩_ERPos_prev_num_24_Nov":[13,1,"s6 m3 n3 r1"],"HA_∩_ERPos_prev_num_24_Nov":[25,12,"s8 t6 m4 f3 r2 d1 h1"],"No_Hx_∩_ERN_Old_num_24_Nov":[5,1,"n2 s1 d1 m1"],"C50_∩_ERPos_prev_num_24_Nov":[17,11,"t6 m3 s2 r2 f2 d1 h1"],"Hx_∩_ERPos_prev_num_24_Nov":[17,11,"t6 m3 s2 r2 f2 d1 h1"],"HA_∩_ERPos_num_24_Nov":[19,13,"t7 m4 f3 r2 s1 d1 h1"],"No_HA_∩_ERPos_prev_num_24_Nov":[6,2,"m2 n2 r1 d1"],"No_C50_∩_ERPos_prev_num_24_Nov":[6,2,"m2 n2 r1 d1"],"No_Hx_∩_ERPos_prev_num_24_Nov":[6,2,"m2 n2 r1 d1"],"C50_∩_ERPos_num_24_Nov":[16,12,"t7 m3 r2 f2 d1 h1"],"No_HA_∩_ERPos_num_24_Nov":[7,2,"n3 m2 r1 d1"],"No_C50_∩_ERPos_num_24_Nov":[7,2,"n3 m2 r1 d1"],"Hx_∩_ERPos_num_24_Nov":[16,12,"t7 m3 r2 f2 d1 h1"],"Unstrat_∩_ERPos_denom_24_Nov":[7,2,"n3 m2 r1 d1"],"HA_∩_ERPos_denom_24_Nov":[19,12,"t6 m3 f3 s3 r2 d1 h1"],"C50_∩_ERPos_denom_24_Nov":[24,17,"t12 m3 s3 r2 f2 d1 h1"],"Hx_∩_ERPos_denom_24_Nov":[16,10,"m6 t6 r2 f2"],"No_HA_∩_ERPos_denom_24_Nov":[6,2,"m2 n2 r1 d1"],"No_C50_∩_ERPos_denom_24_Nov":[6,2,"m2 n2 r1 d1"],"No_Hx_∩_ERPos_denom_24_Nov":[7,1,"m4 n2 r1"],"Unstrat_∩_ERPos_prev_denom_24_Nov":[11,2,"m4 n3 s2 r1 f1"],"HA_∩_ERPos_prev_denom_24_Nov":[16,12,"t5 f4 m3 r2 d1 h1"],"C50_∩_ERPos_prev_denom_24_Nov":[15,11,"t5 m3 f3 r2 d1 h1"],"Hx_∩_ERPos_prev_denom_24_Nov":[19,12,"m7 t5 f4 r3"],"No_HA_∩_ERPos_prev_denom_24_Nov":[7,3,"m2 n2 r1 f1 d1"],"No_C50_∩_ERPos_prev_denom_24_Nov":[7,3,"m2 n2 r1 f1 d1"],"No_Hx_∩_ERPos_prev_denom_24_Nov":[10,2,"m6 n2 r1 f1"],"No_Hx_∩_ERPos_num_24_Nov":[6,2,"m2 n2 r1 d1"],"Unstrat_∩_ERPos_num_24_Nov":[6,2,"m2 n2 r1 d1"],"No_Hx_∩_ERNeg_num_24_Nov":[5,0,"n3 m2"],"No_Hx_∩_ERNeg_prev_denom_24_Nov":[5,0,"n3 m2"],"No_C50_∩_ERNeg_prev_denom_24_Nov":[5,0,"n3 m2"],"Unstrat_∩_prev_num_24_Nov":[9,3,"n4 d3 m2"],"HA_∩_prev_num_24_Nov":[7,3,"n3 d3 m1"],"C50_∩_prev_num_24_Nov":[8,3,"n4 d3 m1"],"Hx_∩_prev_num_24_Nov":[8,3,"n4 d3 m1"],"No_HA_∩_prev_num_24_Nov":[8,3,"n4 d3 m1"],"No_C50_∩_prev_num_24_Nov":[7,3,"n3 d3 m1"],"No_Hx_∩_prev_num_24_Nov":[7,3,"n3 d3 m1"],"Unstrat_∩_num_24_Nov":[8,3,"n3 d3 m2"],"HA_∩_num_24_Nov":[7,3,"n3 d3 m1"],"C50_∩_num_24_Nov":[8,3,"n4 d3 m1"],"No_HA_∩_num_24_Nov":[7,3,"n3 d3 m1"],"Hx_∩_num_24_Nov":[7,3,"n3 d3 m1"],"Unstrat_∩_denom_24_Nov":[9,3,"n4 d3 s1 m1"],"HA_∩_denom_24_Nov":[7,3,"n3 d3 m1"],"No_HA_∩_denom_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_denom_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_denom_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_prev_denom_24_Nov":[6,2,"n2 d2 m2"],"No_Hx_∩_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERNeg_prev_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERNeg_num_24_Nov":[29,2,"m13 s12 n2 d2"],"Unstrat_∩_ERNeg_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERNeg_prev_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERAmbig_prev_num_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERAmbig_num_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERAmbig_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERAmbig_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERUnrec_prev_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERUnrec_num_24_Nov":[59,2,"s30 m24 n3 d2"],"Unstrat_∩_ERUnrec_denom_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERUnrec_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERP_Old_prev_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERP_Old_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERP_Old_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERP_Old_prev_denom_24_Nov":[37,2,"m21 s12 n2 d2"],"Unstrat_∩_ERN_Old_prev_num_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERN_Old_num_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERN_Old_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERN_Old_prev_denom_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERNeg_prev_num_24_Nov":[18,2,"m7 s6 n3 d2"],"No_C50_∩_ERNeg_prev_num_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_ERNeg_prev_num_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERNeg_num_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERNeg_num_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERNeg_denom_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERNeg_denom_24_Nov":[5,2,"n2 d2 m1"],"No_Hx_∩_ERNeg_denom_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERNeg_prev_denom_24_Nov":[18,2,"m7 s6 n3 d2"],"No_HA_∩_ERAmbig_prev_num_24_Nov":[6,2,"n3 d2 m1"],"No_C50_∩_ERAmbig_prev_num_24_Nov":[17,2,"m7 s6 n2 d2"],"No_Hx_∩_ERAmbig_prev_num_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERAmbig_num_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERAmbig_num_24_Nov":[17,2,"m7 s6 n2 d2"],"No_HA_∩_ERAmbig_denom_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERAmbig_denom_24_Nov":[5,2,"n2 d2 m1"],"No_Hx_∩_ERAmbig_denom_24_Nov":[6,2,"n3 d2 m1"],"No_HA_∩_ERAmbig_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_C50_∩_ERAmbig_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_ERAmbig_prev_denom_24_Nov":[18,2,"m7 s6 n3 d2"],"No_Hx_∩_ERAmbig_num_24_Nov":[6,2,"n3 d2 m1"],"No_HA_∩_ERUnrec_prev_num_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERUnrec_prev_num_24_Nov":[5,2,"n2 d2 m1"],"No_Hx_∩_ERUnrec_prev_num_24_Nov":[17,2,"m7 s6 n2 d2"],"No_HA_∩_ERUnrec_num_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERUnrec_num_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERUnrec_denom_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERUnrec_denom_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_ERUnrec_denom_24_Nov":[6,2,"n3 d2 m1"],"No_HA_∩_ERUnrec_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_C50_∩_ERUnrec_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_ERUnrec_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_HA_∩_ERP_Old_prev_num_24_Nov":[5,1,"n3 d1 m1"],"No_C50_∩_ERP_Old_prev_num_24_Nov":[5,1,"n3 d1 m1"],"No_Hx_∩_ERP_Old_prev_num_24_Nov":[5,1,"n3 d1 m1"],"No_HA_∩_ERP_Old_num_24_Nov":[5,1,"n3 d1 m1"],"No_C50_∩_ERP_Old_num_24_Nov":[5,1,"n3 d1 m1"],"No_HA_∩_ERP_Old_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_C50_∩_ERP_Old_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_Hx_∩_ERP_Old_denom_24_Nov":[5,1,"n3 d1 m1"],"No_HA_∩_ERP_Old_prev_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_C50_∩_ERP_Old_prev_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_Hx_∩_ERP_Old_prev_denom_24_Nov":[5,1,"n3 d1 m1"],"No_Hx_∩_ERP_Old_num_24_Nov":[4,1,"n2 d1 m1"],"No_HA_∩_ERN_Old_prev_num_24_Nov":[4,1,"n2 d1 m1"],"No_C50_∩_ERN_Old_prev_num_24_Nov":[4,1,"n2 d1 m1"],"No_Hx_∩_ERN_Old_prev_num_24_Nov":[4,1,"n2 d1 m1"],"No_HA_∩_ERN_Old_num_24_Nov":[4,1,"n2 d1 m1"],"No_C50_∩_ERN_Old_num_24_Nov":[4,1,"n2 d1 m1"],"No_HA_∩_ERN_Old_denom_24_Nov":[5,1,"n3 d1 m1"],"No_C50_∩_ERN_Old_denom_24_Nov":[5,1,"n3 d1 m1"],"No_Hx_∩_ERN_Old_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_HA_∩_ERN_Old_prev_denom_24_Nov":[5,0,"m3 n2"],"No_C50_∩_ERN_Old_prev_denom_24_Nov":[4,1,"n2 d1 m1"],"No_Hx_∩_ERN_Old_prev_denom_24_Nov":[4,1,"n2 d1 m1"],"HA_∩_ERNeg_prev_num_24_Nov":[19,12,"t7 s4 f3 m2 r1 d1 h1"],"HA_∩_ERUnrec_prev_num_24_Nov":[10,6,"f3 m2 r1 s1 d1 h1 t1"],"HA_∩_ERUnrec_prev_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERUnrec_num_24_Nov":[18,11,"t7 m4 f3 s3 r1"],"HA_∩_ERUnrec_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERP_Old_prev_num_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERP_Old_prev_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERP_Old_num_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERP_Old_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERNeg_prev_denom_24_Nov":[16,9,"t5 m4 f3 s3 r1"],"HA_∩_ERNeg_num_24_Nov":[18,11,"t7 m4 f3 s3 r1"],"HA_∩_ERNeg_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERN_Old_prev_num_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERN_Old_prev_denom_24_Nov":[15,9,"t5 m4 f3 s2 r1"],"HA_∩_ERN_Old_num_24_Nov":[17,11,"t7 m4 f3 r1 h1 s1"],"HA_∩_ERN_Old_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERAmbig_prev_num_24_Nov":[15,10,"t6 m4 f3 r1 h1"],"HA_∩_ERAmbig_prev_denom_24_Nov":[17,11,"t6 f3 s3 m2 r1 d1 h1"],"HA_∩_ERAmbig_num_24_Nov":[16,11,"t7 m4 f3 r1 h1"],"HA_∩_ERAmbig_denom_24_Nov":[16,11,"t6 f3 s3 m2 r1 d1"],"C50_∩_ERNeg_prev_num_24_Nov":[14,10,"t6 f2 m2 s1 r1 d1 h1"],"C50_∩_ERUnrec_prev_num_24_Nov":[14,9,"t6 m4 f2 r1 h1"],"C50_∩_ERUnrec_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"C50_∩_ERUnrec_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERUnrec_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"C50_∩_ERP_Old_prev_num_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"C50_∩_ERP_Old_prev_denom_24_Nov":[13,8,"t5 m4 f2 r1 h1"],"C50_∩_ERP_Old_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERP_Old_denom_24_Nov":[13,10,"t6 f2 m2 r1 d1 h1"],"C50_∩_ERNeg_prev_denom_24_Nov":[13,9,"t5 m4 f2 r1 d1"],"C50_∩_ERNeg_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERNeg_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"C50_∩_ERN_Old_prev_num_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"C50_∩_ERN_Old_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"C50_∩_ERN_Old_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERN_Old_denom_24_Nov":[13,10,"t6 f2 m2 r1 d1 h1"],"C50_∩_ERAmbig_prev_num_24_Nov":[13,10,"t6 f2 m2 r1 d1 h1"],"C50_∩_ERAmbig_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"C50_∩_ERAmbig_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERAmbig_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERNeg_prev_num_24_Nov":[13,10,"t6 f2 m2 s1 r1 d1"],"Hx_∩_ERUnrec_prev_num_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERUnrec_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"Hx_∩_ERUnrec_num_24_Nov":[16,11,"t7 s3 f2 m2 r1 d1"],"Hx_∩_ERUnrec_denom_24_Nov":[16,10,"t6 s3 f2 m2 r1 d1 h1"],"Hx_∩_ERP_Old_prev_num_24_Nov":[13,10,"t6 f2 m2 r1 d1 h1"],"Hx_∩_ERP_Old_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"Hx_∩_ERP_Old_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"Hx_∩_ERP_Old_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERNeg_prev_denom_24_Nov":[12,8,"t5 m4 f2 r1"],"Hx_∩_ERNeg_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"Hx_∩_ERNeg_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERN_Old_prev_num_24_Nov":[14,11,"t6 f3 m2 r1 d1 h1"],"Hx_∩_ERN_Old_prev_denom_24_Nov":[17,12,"t5 f4 r2 s2 m2 d1 h1"],"Hx_∩_ERAmbig_prev_denom_24_Nov":[12,9,"t5 f2 m2 s1 r1 d1"],"Hx_∩_ERAmbig_prev_num_24_Nov":[13,9,"t6 m4 f2 r1"],"Hx_∩_ERAmbig_num_24_Nov":[14,11,"t7 f2 m2 r1 d1 s1"],"Hx_∩_ERAmbig_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERN_Old_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"Hx_∩_ERN_Old_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"No_C50_∩_num_24_Nov":[7,3,"n3 d3 m1"],"No_Hx_∩_ERUnrec_num_24_Nov":[4,1,"m2 r1 h1"],"HA_∩_ERUnrec_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERUnrec_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERUnrec_denom_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERP_Old_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERP_Old_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERP_Old_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERP_Old_denom_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERNeg_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERNeg_denom_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERN_Old_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERN_Old_denom_24_Jun":[20,8,"m8 t7 s4 r1"],"HA_∩_ERAmbig_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERAmbig_denom_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERUnrec_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERNeg_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERNeg_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERN_Old_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERAmbig_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERAmbig_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERN_Old_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERPos_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERPos_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERPos_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERPos_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERUnrec_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"C50_∩_ERUnrec_num_24_Jun":[11,9,"t8 m2 r1"],"C50_∩_ERUnrec_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERP_Old_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERP_Old_num_24_Jun":[11,9,"t8 m2 r1"],"C50_∩_ERP_Old_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERNeg_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERNeg_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"C50_∩_ERNeg_num_24_Jun":[11,9,"t8 m2 r1"],"C50_∩_ERNeg_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERN_Old_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERN_Old_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"C50_∩_ERN_Old_num_24_Jun":[11,9,"t8 m2 r1"],"C50_∩_ERN_Old_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERAmbig_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERAmbig_prev_denom_24_Jun":[17,7,"m7 t6 s3 r1"],"C50_∩_ERAmbig_num_24_Jun":[37,35,"p14 t8 r7 g6 m2"],"C50_∩_ERAmbig_denom_24_Jun":[19,11,"t7 m5 r4 s3"],"C50_∩_ERUnrec_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERP_Old_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"C50_∩_ERPos_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERPos_prev_denom_24_Jun":[14,12,"t11 m2 r1"],"C50_∩_ERPos_num_24_Jun":[13,11,"t8 m2 f2 r1"],"C50_∩_ERPos_denom_24_Jun":[11,9,"t7 m2 r1 f1"],"Hx_∩_ERUnrec_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERUnrec_prev_denom_24_Jun":[8,6,"t5 m2 r1"],"Hx_∩_ERUnrec_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERUnrec_denom_24_Jun":[10,7,"t6 m2 r1 s1"],"Hx_∩_ERP_Old_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERP_Old_prev_denom_24_Jun":[8,6,"t5 m2 r1"],"Hx_∩_ERP_Old_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERP_Old_denom_24_Jun":[10,7,"t6 m2 r1 s1"],"Hx_∩_ERNeg_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERNeg_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERNeg_denom_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERN_Old_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERN_Old_prev_denom_24_Jun":[8,6,"t5 m2 r1"],"Hx_∩_ERAmbig_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERAmbig_denom_24_Jun":[15,13,"t12 m2 r1"],"Hx_∩_ERAmbig_prev_denom_24_Jun":[13,11,"t10 m2 r1"],"Hx_∩_ERN_Old_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERN_Old_denom_24_Jun":[10,7,"t6 m2 r1 s1"],"Hx_∩_ERPos_denom_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERAmbig_prev_num_24_Jun":[10,7,"t6 m2 r1 s1"],"Hx_∩_ERPos_prev_denom_24_Jun":[8,6,"t5 m2 r1"],"Hx_∩_ERNeg_prev_denom_24_Jun":[9,6,"t5 m2 r1 s1"],"Hx_∩_ERPos_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERPos_num_24_Jun":[11,8,"t7 m2 r1 s1"],"HA_∩_ERUnrec_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERUnrec_prev_denom_25_Nov":[5,1,"m4 r1"],"HA_∩_ERUnrec_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERP_Old_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERP_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERP_Old_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERP_Old_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERNeg_prev_num_25_Nov":[4,2,"r2 m2"],"HA_∩_ERNeg_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERN_Old_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERN_Old_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERN_Old_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERAmbig_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERAmbig_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERN_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERPos_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERPos_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERPos_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERPos_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERUnrec_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERUnrec_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERUnrec_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERP_Old_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERP_Old_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERP_Old_denom_25_Nov":[19,1,"m12 s6 r1"],"C50_∩_ERNeg_prev_num_25_Nov":[4,1,"m3 r1"],"C50_∩_ERNeg_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERNeg_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERNeg_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERN_Old_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERN_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERN_Old_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERN_Old_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERAmbig_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERAmbig_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERAmbig_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERAmbig_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERUnrec_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERP_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERPos_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERPos_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERPos_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERPos_denom_25_Nov":[4,2,"r2 m2"],"HA_∩_ERAmbig_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERAmbig_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERNeg_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERNeg_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERUnrec_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERPos_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERPos_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERPos_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERPos_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERNeg_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERNeg_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERNeg_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERNeg_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERAmbig_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERAmbig_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERAmbig_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERAmbig_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERUnrec_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERUnrec_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERP_Old_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERP_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERP_Old_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERP_Old_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERN_Old_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERN_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERN_Old_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERN_Old_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERUnrec_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERUnrec_num_25_Nov":[3,1,"m2 r1"],"Unstrat_∩_denom_24_Jun":[13,1,"s9 m3 t1"],"HA_∩_denom_24_Jun":[2,1,"t1 m1"],"C50_∩_denom_24_Jun":[14,1,"m7 s6 t1"],"Hx_∩_denom_24_Jun":[2,1,"t1 m1"],"No_HA_∩_denom_24_Jun":[2,1,"t1 m1"],"No_C50_∩_denom_24_Jun":[2,1,"t1 m1"],"No_Hx_∩_denom_24_Jun":[14,1,"m7 s6 t1"],"Unstrat_∩_prev_denom_24_Jun":[3,1,"m2 t1"],"HA_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"C50_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"Hx_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"No_HA_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"No_C50_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"No_Hx_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"Unstrat_∩_prev_num_24_Jun":[3,1,"m2 t1"],"HA_∩_prev_num_24_Jun":[2,1,"t1 m1"],"C50_∩_prev_num_24_Jun":[2,1,"t1 m1"],"Hx_∩_prev_num_24_Jun":[2,1,"t1 m1"],"No_HA_∩_prev_num_24_Jun":[2,1,"t1 m1"],"No_C50_∩_prev_num_24_Jun":[2,1,"t1 m1"],"No_Hx_∩_prev_num_24_Jun":[2,1,"t1 m1"],"Unstrat_∩_num_24_Jun":[3,1,"m2 t1"],"HA_∩_num_24_Jun":[2,1,"t1 m1"],"C50_∩_num_24_Jun":[2,1,"t1 m1"],"No_HA_∩_num_24_Jun":[2,1,"t1 m1"],"No_C50_∩_num_24_Jun":[2,1,"t1 m1"],"Hx_∩_num_24_Jun":[14,1,"m7 s6 t1"],"No_Hx_∩_num_24_Jun":[18,1,"s9 m8 t1"],"C50_∩_ERUnrec_denom_25_Jun":[4,2,"r2 m2"],"C50_∩_ERP_Old_prev_num_25_Jun":[4,2,"r2 m2"],"C50_∩_ERP_Old_num_25_Jun":[4,2,"r2 m2"],"C50_∩_ERP_Old_denom_25_Jun":[10,2,"m8 r2"],"C50_∩_ERNeg_prev_num_25_Jun":[4,2,"r2 m2"],"C50_∩_ERNeg_prev_denom_25_Jun":[4,2,"r2 m2"],"HA_∩_ERUnrec_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERUnrec_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERUnrec_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERP_Old_prev_num_25_Jun":[5,1,"m4 r1"],"HA_∩_ERP_Old_prev_denom_25_Jun":[9,1,"m8 r1"],"HA_∩_ERP_Old_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERP_Old_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERNeg_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERNeg_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERN_Old_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERAmbig_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERAmbig_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERUnrec_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERNeg_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERNeg_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERN_Old_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERAmbig_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERAmbig_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERN_Old_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERPos_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERPos_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERPos_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERPos_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERUnrec_prev_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERUnrec_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERNeg_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERNeg_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERN_Old_prev_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERN_Old_prev_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERN_Old_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERN_Old_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERAmbig_prev_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERAmbig_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERAmbig_denom_25_Jun":[4,1,"m3 r1"],"C50_∩_ERUnrec_prev_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERP_Old_prev_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERPos_prev_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERPos_prev_denom_25_Jun":[5,2,"m3 r2"],"C50_∩_ERPos_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERPos_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERUnrec_prev_num_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERUnrec_prev_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERUnrec_num_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERUnrec_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERP_Old_prev_num_25_Jun":[5,1,"m4 r1"],"Hx_∩_ERP_Old_prev_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERP_Old_num_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERP_Old_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERNeg_prev_num_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERNeg_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERNeg_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERN_Old_prev_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERN_Old_prev_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERAmbig_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERAmbig_denom_25_Jun":[6,2,"m4 r2"],"Hx_∩_ERAmbig_prev_denom_25_Jun":[6,2,"m4 r2"],"Hx_∩_ERN_Old_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERN_Old_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERPos_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERAmbig_prev_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERPos_prev_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERNeg_prev_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERPos_prev_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERPos_num_25_Jun":[4,1,"m3 r1"],"C50_∩_ERAmbig_prev_denom_25_Jun":[4,1,"m3 r1"],"HA_∩_ERN_Old_denom_25_Jun":[4,1,"m3 r1"],"Unstrat_∩_prev_num_25_Nov":[2,0,"m2"],"Unstrat_∩_prev_num_25_Jun":[2,0,"m2"],"Unstrat_∩_prev_denom_25_Nov":[3,0,"m3"],"Unstrat_∩_prev_denom_25_Jun":[2,0,"m2"],"Unstrat_∩_num_25_Nov":[2,0,"m2"],"Unstrat_∩_num_25_Jun":[2,0,"m2"],"Unstrat_∩_denom_25_Nov":[2,0,"m2"],"Unstrat_∩_denom_25_Jun":[8,6,"t5 m2 r1"],"No_Hx_∩_prev_num_25_Nov":[1,0,"m1"],"No_Hx_∩_prev_num_25_Jun":[1,0,"m1"],"No_Hx_∩_prev_denom_25_Nov":[1,0,"m1"],"No_Hx_∩_prev_denom_25_Jun":[1,0,"m1"],"No_Hx_∩_num_25_Nov":[1,0,"m1"],"No_Hx_∩_num_25_Jun":[21,0,"m12 s9"],"No_Hx_∩_denom_25_Nov":[1,0,"m1"],"No_Hx_∩_denom_25_Jun":[17,0,"s9 m8"],"No_HA_∩_prev_num_25_Nov":[1,0,"m1"],"No_HA_∩_prev_num_25_Jun":[1,0,"m1"],"No_HA_∩_prev_denom_25_Nov":[1,0,"m1"],"No_HA_∩_prev_denom_25_Jun":[1,0,"m1"],"No_HA_∩_num_25_Nov":[1,0,"m1"],"No_HA_∩_num_25_Jun":[1,0,"m1"],"No_HA_∩_denom_25_Nov":[1,0,"m1"],"No_HA_∩_denom_25_Jun":[1,0,"m1"],"No_C50_∩_prev_num_25_Nov":[1,0,"m1"],"No_C50_∩_prev_num_25_Jun":[1,0,"m1"],"No_C50_∩_prev_denom_25_Nov":[1,0,"m1"],"No_C50_∩_prev_denom_25_Jun":[1,0,"m1"],"No_C50_∩_num_25_Nov":[1,0,"m1"],"No_C50_∩_num_25_Jun":[1,0,"m1"],"No_C50_∩_denom_25_Nov":[1,0,"m1"],"No_C50_∩_denom_25_Jun":[1,0,"m1"],"Hx_∩_prev_num_25_Nov":[1,0,"m1"],"Hx_∩_prev_num_25_Jun":[1,0,"m1"],"Hx_∩_prev_denom_25_Nov":[1,0,"m1"],"Hx_∩_prev_denom_25_Jun":[1,0,"m1"],"Hx_∩_num_25_Nov":[1,0,"m1"],"Hx_∩_num_25_Jun":[13,0,"m7 s6"],"Hx_∩_denom_25_Nov":[1,0,"m1"],"Hx_∩_denom_25_Jun":[1,0,"m1"],"HA_∩_prev_num_25_Nov":[1,0,"m1"],"HA_∩_prev_num_25_Jun":[1,0,"m1"],"HA_∩_prev_denom_25_Nov":[1,0,"m1"],"HA_∩_prev_denom_25_Jun":[1,0,"m1"],"HA_∩_num_25_Nov":[1,0,"m1"],"HA_∩_num_25_Jun":[1,0,"m1"],"HA_∩_denom_25_Nov":[1,0,"m1"],"HA_∩_denom_25_Jun":[1,0,"m1"],"C50_∩_prev_num_25_Nov":[1,0,"m1"],"C50_∩_prev_num_25_Jun":[1,0,"m1"],"C50_∩_prev_denom_25_Nov":[13,0,"m7 s6"],"C50_∩_prev_denom_25_Jun":[1,0,"m1"],"C50_∩_num_25_Nov":[13,0,"m7 s6"],"C50_∩_num_25_Jun":[1,0,"m1"],"C50_∩_denom_25_Nov":[13,0,"m7 s6"],"C50_∩_denom_25_Jun":[13,0,"m7 s6"],"Unstrat_∩__denom_24_Jun":[1,1,"r1"]}};
 
 const ORDER=["dump truncated","groups out of order","wrong window","wrong terms",
              "wrong group count","other","not in grammar"];
+
+
+/* ---------------------------------------------------------------------------
+   FIGURES.  Three jobs, three forms:
+     A  share of each failure kind  -> one proportional segmented bar
+                                       (the kinds partition the fails, so a
+                                        part-to-whole bar is honest; a Venn is
+                                        not - see B for the real overlap)
+     B  defect co-occurrence        -> UpSet-style bar. A row can be wrong on
+                                       several axes at once; this is the figure
+                                       a Venn would be trying to be, without a
+                                       Venn's 3-set ceiling or unreadable lobes.
+     C  which families fail         -> small multiples, fail RATE not fail count,
+                                       because the families are different sizes.
+   Every bar is clickable and drives the same filter state as the chips.
+--------------------------------------------------------------------------- */
+const PAL=["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#6250d6"];
+const PALD=["#3987e5","#d95926","#199e70","#c98500","#d55181","#9085e9"];
+function pal(i){return (document.documentElement.dataset.theme==="dark"||
+  (window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches&&
+   document.documentElement.dataset.theme!=="light"))?PALD[i%6]:PAL[i%6];}
+const KCOL={}; ORDER.forEach((k,i)=>KCOL[k]=i);
+
+function segbar(rows,total,attr){      // [[label,n,colorIdx,key]], attr = data-<attr>
+  if(!total)return "";
+  const A=attr||"k";
+  const W=100, gap=0.35;
+  let x=0,seg="",leg="";
+  rows.forEach(([lab,n,ci,key])=>{
+    const w=Math.max(0,(n/total)*W-gap);
+    seg+=`<rect class="hit" data-${A}="${esc(key)}" x="${x.toFixed(3)}%" y="0" width="${w.toFixed(3)}%" height="26" rx="3" fill="${pal(ci)}"><title>${esc(lab)}: ${n} (${Math.round(n/total*100)}%)</title></rect>`;
+    x+=(n/total)*W;
+    leg+=`<button class="lg hit" data-${A}="${esc(key)}"><i style="background:${pal(ci)}"></i>${esc(lab)} <b>${n}</b> <em>${Math.round(n/total*100)}%</em></button>`;
+  });
+  return `<svg class="sb" viewBox="0 0 100 26" preserveAspectRatio="none" height="26">${seg}</svg><div class="lgs">${leg}</div>`;
+}
+
+function hbars(items,opts){ // [[label,value,denom|null,key]]
+  const o=opts||{}, max=Math.max(1,...items.map(i=>o.rate?(i[2]?i[1]/i[2]:0):i[1]));
+  return '<div class="hb">'+items.map(([lab,v,den,key],i)=>{
+    const val=o.rate?(den?v/den:0):v, w=(val/max)*100;
+    const txt=o.rate?`${Math.round(val*100)}%  <em>${v}/${den}</em>`:`${v}`;
+    return `<div class="hbr hit" data-q="${esc(key||'')}"><span class="hbl">${esc(lab)}</span>`
+      +`<span class="hbt"><i style="width:${w.toFixed(1)}%;background:${pal(o.ci||0)}"></i></span>`
+      +`<span class="hbv">${txt}</span></div>`;}).join("")+'</div>';
+}
+
+function renderViz(S){
+  const fails=S.res.filter(r=>r.status==="bad");
+  if(!fails.length)return "";
+
+  // A — share of each failure kind
+  const kc={}; fails.forEach(r=>kc[r.kind]=(kc[r.kind]||0)+1);
+  const arows=ORDER.filter(k=>kc[k]).map(k=>[k,kc[k],KCOL[k],k]);
+
+  // B — co-occurrence of defect axes
+  const AX=["truncated","order","window","terms","count"];
+  const per={}; AX.forEach(a=>per[a]=0);
+  const combo={};
+  fails.forEach(r=>{const a=(r.axes||[]).slice().sort((x,y)=>AX.indexOf(x)-AX.indexOf(y));
+    a.forEach(x=>per[x]++);
+    const k=a.join(" + ")||"(none)"; combo[k]=(combo[k]||0)+1;});
+  const crows=Object.entries(combo).sort((a,b)=>b[1]-a[1]).slice(0,10)
+    .map(([k,n])=>[k,n,fails.length,""]);
+  const prows=AX.filter(a=>per[a]).map(a=>[a,per[a],fails.length,""]);
+
+  // C — families: fail RATE, since the families differ in size
+  const dims=[["window","Window"],["cohort","Cohort"],["stratum","Stratum"],["metric","Metric"]];
+  const fam=dims.map(([d,lab])=>{
+    const tot={},bad={};
+    S.res.forEach(r=>{if(r.status==="skip")return;const k=r[d]||"(none)";
+      tot[k]=(tot[k]||0)+1; if(r.status==="bad")bad[k]=(bad[k]||0)+1;});
+    const items=Object.keys(tot).map(k=>[k,bad[k]||0,tot[k],k])
+      .sort((a,b)=>(b[1]/b[2])-(a[1]/a[2]));
+    return `<div class="fx"><h4>${lab}</h4>${hbars(items,{rate:true,ci:2})}</div>`;
+  }).join("");
+
+  return '<div class="viz">'
+    +`<section><h3>Share of each failure kind</h3>`
+    +`<p class="vn">${fails.length} failing quer${fails.length===1?"y":"ies"}. Each row is counted once, under its headline defect.</p>`
+    +segbar(arows,fails.length)+`</section>`
+    +`<section><h3>How the defects co-occur</h3>`
+    +`<p class="vn">A row can be wrong on several axes at once. Left: how often each axis is involved. Right: the exact combinations. This is the overlap a Venn would show — it just reads at five axes instead of three.</p>`
+    +`<div class="two"><div><h4>Axis involved in</h4>${hbars(prows,{rate:true,ci:0})}</div>`
+    +`<div><h4>Exact combination</h4>${hbars(crows,{rate:true,ci:5})}</div></div></section>`
+    +`<section><h3>Which families fail</h3>`
+    +`<p class="vn">Fail rate, not fail count — the families are different sizes, so counts would just rank them by how many queries they have. Denominator excludes names outside the grammar.</p>`
+    +`<div class="fxs">${fam}</div></section>`
+    +'</div>';
+}
+
+const fmt=n=>n==null?"\u2014":Number(n).toLocaleString("en-US");
+
+/* ---------------------------------------------------------------------------
+   SNAPSHOT PROVENANCE.  Every dumped row carries the network total and the
+   "N of M" HCO coverage that were on screen when that query was read. Those
+   are not a property of the query - they date the dump. A table whose rows
+   were read against different network totals has no single denominator, which
+   is exactly the thing a reviewer will ask about, so it gets its own section.
+   Column layout is not fixed, so find the pair by content: the "N of M" cell,
+   and the nearest 6-10 digit integer before it.
+--------------------------------------------------------------------------- */
+function snapOf(cells){
+  // the same cell arrives three ways depending on how the tab was built:
+  // gviz display text (79 of 79), a pasted formula (="79 of 79"), or an
+  // on-disk dump row where the literal quotes survive. Strip them first.
+  const c=cells.map(x=>clean(x).trim().replace(/^"+|"+$/g,"").trim());
+  let hi=-1,m=null;
+  for(let i=1;i<c.length;i++){const t=/^(\d+)\s+of\s+(\d+)$/.exec(c[i]);
+    if(t){hi=i;m=t;break;}}
+  if(hi<0)return null;
+  const num=s=>{const v=String(s).replace(/,/g,"");return /^\d+$/.test(v)?+v:null;};
+  let net=null;
+  for(let j=hi-1;j>=1;j--){const v=num(c[j]);if(v!==null&&v>=100000){net=v;break;}}
+  if(net===null)return null;
+  const pre=[];for(let j=1;j<hi;j++){const v=num(c[j]);if(v!==null)pre.push(v);}
+  return {net,on:+m[1],of:+m[2],pts:pre.length?pre[0]:null,sites:pre.length>1?pre[1]:null};
+}
+
+function renderSnaps(S){
+  const rows=S.res.filter(r=>r.snap);
+  if(!rows.length)return "";
+  const cnt=S.snapCount,keys=S.snapKeys,dom=S.dom;
+  const vals=keys.slice().sort((a,b)=>a-b),lo=vals[0],hi=vals[vals.length-1];
+  const off=rows.filter(r=>r.off).length, part=rows.filter(r=>!r.full).length;
+  const seg=keys.map((k,i)=>[fmt(k),cnt[k],i,String(k)]);
+  const tab='<table class="snaptab"><thead><tr><th>Network total</th><th>HCO coverage</th>'
+    +'<th style="text-align:right">Rows</th><th style="text-align:right">Share</th>'
+    +'<th style="text-align:right">\u0394 vs dominant</th></tr></thead><tbody>'
+    +keys.map((k,i)=>{const d=k-dom;
+      return '<tr class="hit'+(k===dom?" dom":"")+(S.snap===String(k)?" on":"")+'" data-sk="'+k+'">'
+       +'<td class="n"><i class="sw" style="background:'+pal(i)+'"></i>'+fmt(k)+'</td>'
+       +'<td class="n">'+esc(S.snapHco[k]||"")
+         +(S.snapFull[k]?"":'<span class="flag">partial</span>')+'</td>'
+       +'<td class="n" style="text-align:right">'+cnt[k]+'</td>'
+       +'<td class="n" style="text-align:right">'+(cnt[k]/rows.length*100).toFixed(1)+'%</td>'
+       +'<td class="n" style="text-align:right">'
+         +(d?(d>0?"+":"\u2212")+fmt(Math.abs(d)):"\u2014")+'</td></tr>';}).join("")
+    +'</tbody></table>';
+  const dims=[["window","Window"],["cohort","Cohort"],["stratum","Stratum"],["metric","Metric"]];
+  const fam=dims.map(d=>{const tot={},bad={};
+    rows.forEach(r=>{const k=r[d[0]]||"(none)";tot[k]=(tot[k]||0)+1;if(r.off)bad[k]=(bad[k]||0)+1;});
+    const items=Object.keys(tot).map(k=>[k,bad[k]||0,tot[k],k])
+      .sort((a,b)=>(b[1]/b[2])-(a[1]/a[2]));
+    return '<div class="fx"><h4>'+d[1]+'</h4>'+hbars(items,{rate:true,ci:3})+'</div>';}).join("");
+  return '<div class="viz">'
+   +'<section><h3>Snapshot provenance</h3>'
+   +'<p class="vn">Each row was read against whatever network total TriNetX happened to be '
+   +'showing at that moment, so the figure dates the dump rather than describing the query. '
+   +(keys.length>1
+      ?'These '+rows.length+' rows are a patchwork of <b>'+keys.length
+       +'</b> snapshots, so the table has no single denominator yet.'
+      :'All '+rows.length+' rows share one snapshot \u2014 the table has a single denominator.')
+   +'</p>'
+   +'<div class="kv">'
+   +'<div><b'+(keys.length>1?' style="color:var(--warn)"':'')+'>'+keys.length+'</b><span>snapshots</span></div>'
+   +'<div><b>'+Math.round(cnt[dom]/rows.length*100)+'%</b><span>on dominant</span></div>'
+   +'<div><b'+(off?' style="color:var(--warn)"':'')+'>'+off+'</b><span>rows off it</span></div>'
+   +'<div><b>'+fmt(hi-lo)+'</b><span>spread max\u2212min</span></div>'
+   +'<div><b'+(part?' style="color:var(--warn)"':'')+'>'+part+'</b><span>below full HCO</span></div>'
+   +'<div><b>'+fmt(dom)+'</b><span>dominant n</span></div>'
+   +'</div>'
+   +segbar(seg,rows.length,"sk")
+   +'<div class="scroll" style="margin-top:18px">'+tab+'</div></section>'
+   +(off?'<section><h3>Which families sit off the dominant snapshot</h3>'
+     +'<p class="vn">Share of each family read against something other than '+fmt(dom)
+     +'. A family at 100% was refreshed as one block \u2014 that is a resume boundary in the run, '
+     +'not a property of the data. Click a bar to filter the table to it.</p>'
+     +'<div class="fxs">'+fam+'</div></section>':"")
+   +'</div>';
+}
+
+/* ---------------------------------------------------------------------------
+   RUN-LOG CORRELATION.  Baked in from 3_VE/Logs at build time; a static page
+   cannot read your disk. One question: do the rows that are off-snapshot, or
+   failing, share a history of being WRITTEN to (fork / replace_rename /
+   shift_dates / remove_group / del / paste) rather than merely read?
+--------------------------------------------------------------------------- */
+function renderLogs(S){
+  if(typeof LOGS==="undefined"||!LOGS||!LOGS.q)return "";
+  const Q=LOGS.q,kf=n=>n.replace("BCa-","");
+  const mrows=Object.keys(LOGS.modes).map(m=>[m,LOGS.modes[m],LOGS.files,""])
+    .sort((a,b)=>b[1]-a[1]);
+  const have=S.res.filter(r=>Q[kf(r.name)]).length;
+  const top=S.res.map(r=>[r.name,Q[kf(r.name)]]).filter(x=>x[1])
+    .sort((a,b)=>b[1][0]-a[1][0]).slice(0,12)
+    .map(x=>[kf(x[0]),x[1][0],null,x[0]]);
+  const grp=(sel,lab)=>{const g=S.res.filter(sel).map(r=>Q[kf(r.name)]).filter(Boolean);
+    if(!g.length)return null;
+    return [lab,g.length,g.reduce((s,v)=>s+v[0],0)/g.length,
+            g.reduce((s,v)=>s+v[1],0)/g.length,g.filter(v=>v[1]>0).length/g.length];};
+  const cm=[grp(r=>r.snap&&!r.off,"On the dominant snapshot"),
+            grp(r=>r.off,"Off the dominant snapshot"),
+            grp(r=>r.status==="bad","Failing the logic check"),
+            grp(r=>r.status==="skip","Name not in the grammar")].filter(Boolean);
+  const ctab='<table class="snaptab"><thead><tr><th>Group</th>'
+    +'<th style="text-align:right">Rows</th><th style="text-align:right">Mean touches</th>'
+    +'<th style="text-align:right">Mean writes</th>'
+    +'<th style="text-align:right">Any write</th></tr></thead><tbody>'
+    +cm.map(r=>'<tr><td>'+esc(r[0])+'</td>'
+      +'<td class="n" style="text-align:right">'+r[1]+'</td>'
+      +'<td class="n" style="text-align:right">'+r[2].toFixed(1)+'</td>'
+      +'<td class="n" style="text-align:right">'+r[3].toFixed(2)+'</td>'
+      +'<td class="n" style="text-align:right">'+Math.round(r[4]*100)+'%</td></tr>').join("")
+    +'</tbody></table>';
+  return '<div class="viz">'
+   +'<section><h3>What the run logs did to these queries</h3>'
+   +'<p class="vn">'+LOGS.files+' run logs, '+esc(LOGS.span)+'. '+have+' of '+S.res.length
+   +' rows are named in at least one of them. Counts are name mentions per log, '
+   +'so a single long walk can touch one query several times.</p>'
+   +'<div class="two"><div><h4>Runs by mode</h4>'+hbars(mrows,{rate:true,ci:4})+'</div>'
+   +'<div><h4>Most-touched queries</h4>'+hbars(top,{ci:1})+'</div></div></section>'
+   +'<section><h3>Does being written to predict being wrong?</h3>'
+   +'<p class="vn">Writes are fork, replace_rename, shift_dates, remove_group, del and paste. '
+   +'If the off-snapshot or failing rows carried many more writes than the rest, that would '
+   +'point at the code path that produced them. Read it as description: these groups are small, '
+   +'and the modes were never applied at random.</p>'
+   +'<div class="scroll">'+ctab+'</div></section>'
+   +'</div>';
+}
 
 function render(){
   const out=document.getElementById("out"),S=STATE;
@@ -238,6 +523,8 @@ function render(){
     if(S.filter==="bad"&&r.status!=="bad")return false;
     if(S.filter==="ok"&&r.status!=="ok")return false;
     if(S.filter==="skip"&&r.status!=="skip")return false;
+    if(S.filter==="off"&&!r.off)return false;
+    if(S.snap&&String(r.snap)!==S.snap)return false;
     if(S.kind&&r.kind!==S.kind)return false;
     if(q&&!(r.name.toLowerCase().includes(q)||
             (r.problems||[]).join(" ").toLowerCase().includes(q)))return false;
@@ -248,12 +535,16 @@ function render(){
     name:(a,b)=>a.name.localeCompare(b.name),
     kind:(a,b)=>(ORDER.indexOf(a.kind)-ORDER.indexOf(b.kind))||a.i-b.i,
     cohort:(a,b)=>(a.cohort||"").localeCompare(b.cohort||"")||a.i-b.i,
-    window:(a,b)=>(a.window||"").localeCompare(b.window||"")||a.i-b.i};
+    window:(a,b)=>(a.window||"").localeCompare(b.window||"")||a.i-b.i,
+    snap:(a,b)=>((a.snap||0)-(b.snap||0))||a.i-b.i};
   rows=rows.slice().sort(cmp[S.sort]||cmp.row);
   if(S.desc)rows.reverse();
 
   const tile=(n,lab,col,key)=>'<button class="tile'+(S.filter===key?" on":"")+'" data-f="'+key+'">'
     +'<b'+(col?' style="color:var(--'+col+')"':'')+'>'+n+'</b><span>'+lab+'</span></button>';
+  // a tile with nothing to filter by - it is a readout, not a control
+  const stat=(n,lab,col)=>'<div class="tile stat"><b'+(col?' style="color:var(--'+col+')"':'')
+    +'>'+n+'</b><span>'+lab+'</span></div>';
 
   const kinds={};
   for(const r of S.res)if(r.kind)kinds[r.kind]=(kinds[r.kind]||0)+1;
@@ -268,7 +559,7 @@ function render(){
   if(!rows.length)body='<p class="note">Nothing matches that filter.</p>';
   else if(S.group==="none"){
     body='<div class="scroll"><table><thead><tr><th></th>'
-      +th("row","Row")+th("name","Query")+th("kind","Problem")
+      +th("row","Row")+th("name","Query")+th("snap","Snapshot n")+th("kind","Problem")
       +'<th>What\u2019s wrong</th></tr></thead><tbody>'
       +rows.map(tr).join("")+'</tbody></table></div>';
   }else{
@@ -295,23 +586,44 @@ function render(){
     +tile(S.n.ok,"pass","ok","ok")
     +tile(S.n.bad,"fail","bad","bad")
     +tile(S.n.skip,"name not in grammar","warn","skip")
+    +(S.nsnap?stat(S.nsnap,"snapshots",S.nsnap>1?"warn":"ok"):"")
+    +(S.noff?tile(S.noff,"off dominant n","warn","off"):"")
     +'</div>'
+    +renderSnaps(S)
+    +renderViz(S)
+    +renderLogs(S)
     +(chips?'<div class="chips"><span class="clab">Problem</span>'+chips
       +(S.kind?'<button class="chip clear" data-k="">clear</button>':"")+'</div>':"")
+    +(S.snapKeys.length>1?'<div class="chips"><span class="clab">Snapshot</span>'
+      +S.snapKeys.map((k,i)=>'<button class="chip'+(S.snap===String(k)?" on":"")+'" data-sk="'+k+'">'
+        +'<i class="sw" style="background:'+pal(i)+'"></i>'+fmt(k)
+        +' <i>'+S.snapCount[k]+'</i></button>').join("")
+      +(S.snap?'<button class="chip clear" data-sk="">clear</button>':"")+'</div>':"")
     +'<div class="bar">'
     +'<label class="inl">Group by '
-      +'<select id="grp">'+[["none","nothing"],["kind","problem"],["window","window"],
-         ["cohort","cohort"],["stratum","stratum"],["metric","metric"]]
+      +'<select id="grp">'+[["none","nothing"],["kind","problem"],["snapshot","snapshot"],
+         ["window","window"],["cohort","cohort"],["stratum","stratum"],["metric","metric"]]
         .map(([v,l])=>'<option value="'+v+'"'+(S.group===v?" selected":"")+'>'+l+'</option>').join("")
       +'</select></label>'
     +'<input id="q" placeholder="filter by name or problem\u2026" value="'+esc(S.q)+'">'
     +'<span class="note">'+rows.length+' shown</span>'
     +'</div>'+body+'</div>';
 
-  out.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{
+  out.querySelectorAll(".tile[data-f]").forEach(b=>b.onclick=()=>{
     S.filter=(S.filter===b.dataset.f?"all":b.dataset.f);render();});
-  out.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{
+  out.querySelectorAll(".hit[data-k]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k; if(!k)return;
+    S.kind=(S.kind===k?"":k); S.filter="bad"; render();});
+  out.querySelectorAll(".hbr.hit[data-q]").forEach(b=>b.onclick=()=>{
+    const q=b.dataset.q; if(!q)return;
+    S.q=(S.q===q?"":q); S.filter="bad"; render();});
+  out.querySelectorAll(".chip[data-k]").forEach(b=>b.onclick=()=>{
     S.kind=(S.kind===b.dataset.k?"":b.dataset.k);render();});
+  out.querySelectorAll("[data-sk]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.sk;
+    S.snap=(S.snap===k?"":k);
+    if(S.snap&&S.filter==="off")S.filter="all";
+    render();});
   out.querySelectorAll("th.sort").forEach(h=>h.onclick=()=>{
     const k=h.dataset.s;if(S.sort===k)S.desc=!S.desc;else{S.sort=k;S.desc=false;}render();});
   const g=out.querySelector("#grp");if(g)g.onchange=()=>{S.group=g.value;render();};
@@ -324,6 +636,8 @@ function tr(r){
   return '<tr><td><span class="mark '+m[0]+'">'+m[1]+'</span></td>'
    +'<td class="num">'+r.i+'</td>'
    +'<td class="g">'+esc(r.name)+'</td>'
+   +'<td class="snapc'+(r.off?" off":"")+'" title="'+esc(r.hco||"")+'">'
+     +(r.snap?fmt(r.snap):"\u2014")+(r.snap&&!r.full?" \u26a0":"")+'</td>'
    +'<td class="kind">'+esc(r.kind||"")+'</td>'
    +'<td class="why">'+esc((r.problems||[]).join("; "))+'</td></tr>';}
 
@@ -346,11 +660,29 @@ async function run(){
   const all=parseCSV(text);
   const res=[];
   all.forEach((row,ix)=>{ if(!row.length||!String(row[0]).trim())return;
-    const v=check(row); v.i=ix+1; res.push(v); });
+    const v=check(row); v.i=ix+1;
+    const sp=snapOf(row);
+    v.snap=sp?sp.net:null; v.hco=sp?sp.on+" of "+sp.of:"";
+    v.full=sp?sp.on===sp.of:false; v.pts=sp?sp.pts:null;
+    v.snapshot=sp?fmt(sp.net):"(none)";
+    res.push(v); });
   const n={ok:res.filter(r=>r.status==="ok").length,
            bad:res.filter(r=>r.status==="bad").length,
            skip:res.filter(r=>r.status==="skip").length};
-  STATE={res,n,filter:"bad",kind:"",group:"kind",sort:"row",desc:false,q:""};
+  // The dominant snapshot is simply the one most rows were read against;
+  // everything else is a later partial refresh, and gets flagged.
+  const snapCount={},snapHco={},snapFull={};
+  res.forEach(r=>{if(!r.snap)return;
+    snapCount[r.snap]=(snapCount[r.snap]||0)+1;
+    snapHco[r.snap]=r.hco; snapFull[r.snap]=r.full;});
+  const snapKeys=Object.keys(snapCount).map(Number)
+    .sort((a,b)=>snapCount[b]-snapCount[a]||b-a);
+  const dom=snapKeys.length?snapKeys[0]:null;
+  res.forEach(r=>r.off=!!(r.snap&&dom&&r.snap!==dom));
+  STATE={res,n,filter:n.bad?"bad":"all",kind:"",group:n.bad?"kind":"none",
+    sort:"row",desc:false,q:"",snap:"",
+    snapCount,snapKeys,snapHco,snapFull,dom,
+    nsnap:snapKeys.length,noff:res.filter(r=>r.off).length};
   render();}
 document.getElementById("run").addEventListener("click",run);
 </script>
