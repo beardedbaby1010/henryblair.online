@@ -1,0 +1,194 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VE Query Logic Check — live</title>
+<style>
+:root{--bg:#f6f7f9;--panel:#fff;--ink:#15181d;--muted:#5b6472;--line:#dde2ea;
+ --accent:#1f5fa9;--ok:#176b45;--ok-soft:#e3f3ea;--bad:#a3291f;--bad-soft:#fbe9e7;
+ --warn:#8a5a00;--warn-soft:#fdf2dd;
+ --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--sans:Inter,system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#101318;--panel:#171b22;--ink:#e9edf3;
+ --muted:#949db0;--line:#2a313c;--accent:#6fa8e8;--ok:#6fcf9b;--ok-soft:#13291f;
+ --bad:#f08a7e;--bad-soft:#2e1714;--warn:#e0b665;--warn-soft:#2b2110;color-scheme:dark}}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);margin:0;
+ padding:24px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));
+ font-size:15px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font-size:26px;margin:0;letter-spacing:-.02em}
+.sub{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
+label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);margin-bottom:6px}
+input{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line);
+ border-radius:7px;padding:9px 11px;font-family:var(--mono);font-size:13px;min-width:0}
+button{background:var(--accent);color:#fff;border:0;border-radius:7px;padding:9px 16px;
+ font-size:14px;font-weight:600;cursor:pointer}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.row>div{flex:1 1 240px;min-width:0}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+.scroll{overflow-x:auto}
+th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);padding:0 10px 7px 0;border-bottom:1px solid var(--line)}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.g{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+.why{color:var(--muted);font-size:12.5px}
+.mark{font-size:16px;font-weight:700}
+.mark.ok{color:var(--ok)}.mark.bad{color:var(--bad)}.mark.warn{color:var(--warn)}
+.tally{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0 12px;font-variant-numeric:tabular-nums}
+.tally b{font-size:21px;display:block;line-height:1.2}
+.tally span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.note{color:var(--muted);font-size:13px}
+code{font-family:var(--mono);font-size:12.5px}
+.err{background:var(--bad-soft);color:var(--bad);padding:10px 12px;border-radius:7px;font-size:13.5px}
+</style>
+<div class="wrap">
+<header><h1>VE Query Logic Check</h1>
+<p class="sub">Reads a sheet tab live through the gviz CSV endpoint and checks every
+BCa query's group structure against the spec its name implies.</p></header>
+<div class="card">
+ <div class="row">
+  <div><label for="key">Sheet URL or key</label>
+   <input id="key" value="1Cy64AGkUWwHMHl3a-F2AhOxZOmTl-iOJMsmy5FA85L8" spellcheck="false"></div>
+  <div><label for="tab">Tab name</label><input id="tab" value="QM" spellcheck="false"></div>
+  <button id="run">Check</button>
+ </div>
+ <p class="note" style="margin:10px 0 0">The sheet must be viewable by anyone with the
+ link, the same requirement your other live figures have.</p>
+</div>
+<div id="out"></div>
+</div>
+<script>
+const COH=["No_HA","No_C50","No_Hx","HA","C50","Hx","Unstrat"];
+const STR=["ERPos","ERNeg","ERAmbig","ERUnrec","ERP_Old","ERN_Old"];
+const MARK=[["ICD","Diagnoses: ICD-10"],["CPT","CPT 1013626"],["VAG","estradiol"],
+  ["C50","ICD-10-CM C50"],["Z85","Z85.3"],["Z170","Z17.0"],["Z171","Z17.1"],["ET","tamoxifen"]];
+const FP={In_Care:"11000000/00000000/OR",VE_Denom:"11000000/00000000/OR",
+  WASHOUT_VE:"00000000/00100000/-",VE_Num:"00100000/00000000/-",
+  HA:"00011000/00000000/OR",C50:"00010000/00000000/-",Hx:"00001000/00000000/-",
+  No_HA:"00000000/00011000/OR",No_C50:"00000000/00010000/-",No_Hx:"00000000/00001000/-",
+  ERPos:"00000101/00000010/OR",ERNeg:"00000010/00000101/OR",ERAmbig:"00000110/00000000/AND",
+  ERUnrec:"00000000/00000110/OR",ERP_Old:"00000100/00000010/-",ERN_Old:"00000010/00000100/-"};
+const HUMAN={In_Care:"must: ICD-10 dx OR CPT 1013626 office visit",
+  VE_Denom:"must: ICD-10 dx OR CPT 1013626 office visit",
+  WASHOUT_VE:"cannot: estradiol [Vaginal Product]",
+  VE_Num:"must: estradiol [Vaginal Product]",
+  HA:"must: C50 OR Z85.3",C50:"must: C50",Hx:"must: Z85.3",
+  No_HA:"cannot: C50 OR Z85.3",No_C50:"cannot: C50",No_Hx:"cannot: Z85.3",
+  ERPos:"must: Z17.0 OR tamoxifen OR anastrozole OR letrozole OR exemestane · cannot: Z17.1",
+  ERNeg:"must: Z17.1 · cannot: Z17.0 OR the four endocrine agents",
+  ERAmbig:"must: Z17.1 AND Z17.0",ERUnrec:"cannot: Z17.1 OR Z17.0",
+  ERP_Old:"must: Z17.0 · cannot: Z17.1",ERN_Old:"must: Z17.1 · cannot: Z17.0"};
+
+const NAME_RE=new RegExp("^BCa-("+COH.join("|")+")_∩_(?:("+STR.join("|")+")_)?((?:prev_)?(?:num|denom))_(2[45])_(Nov|Jun)$");
+function parseName(n){const m=NAME_RE.exec(n.trim());if(!m)return null;
+  return{cohort:m[1],stratum:m[2]||"",metric:m[3],yy:m[4],mon:m[5]};}
+function windows(yy,mon){const y=+yy;
+  if(mon==="Nov")return{idx:`between Nov 01, 20${y} and Mar 31, 20${y+1}`,
+    care:`between Nov 01, 20${y-1} and Mar 31, 20${y}`,cut:`on or before Oct 31, 20${y}`};
+  return{idx:`between Jun 01, 20${y} and Oct 31, 20${y}`,
+    care:`between Jun 01, 20${y-1} and Oct 31, 20${y-1}`,cut:`on or before May 31, 20${y}`};}
+function expected(name){const p=parseName(name);if(!p)return null;
+  const w=windows(p.yy,p.mon),prev=p.metric.startsWith("prev_"),num=p.metric.endsWith("num");
+  const out=[["In_Care",w.care]];
+  if(!prev)out.push(["WASHOUT_VE",w.cut]);
+  out.push(["VE_Denom",w.idx]);
+  if(p.cohort!=="Unstrat")out.push([p.cohort,w.cut]);
+  if(num)out.push(["VE_Num",w.idx]);
+  if(p.stratum)out.push([p.stratum,w.cut]);
+  return out.map(([t,win])=>({title:t,fp:FP[t],win,human:HUMAN[t]}));}
+
+function clean(s){s=String(s);if(!s.startsWith("="))return s;
+  s=s.replace(/^=/,"").replace(/^"|"$/g,"");
+  s=s.split('"&CHAR(10)&"').join("\n").split("&CHAR(10)&").join("\n");
+  // rows pasted without their CHAR(10)s arrive as bare &"-concatenation;
+  // that join is the line break too.
+  return s.split('"&"').join("\n").split('""').join('"');}
+function fingerprint(cell){
+  const mm=/Must have:([\s\S]*?)(?:Cannot have:|$)/.exec(cell),
+        cc=/Cannot have:([\s\S]*)/.exec(cell);
+  const bits=m=>{const b=m?m[1]:"";return MARK.map(k=>b.includes(k[1])?"1":"0").join("");};
+  const op=/(^|\n)AND /.test(cell)?"AND":(/(^|\n)OR /.test(cell)?"OR":"-");
+  return bits(mm)+"/"+bits(cc)+"/"+op;}
+const TITLES=new Set(Object.keys(FP));
+function actual(cells){
+  // Column layout is not fixed - tabs differ in whether the =$A$n helper
+  // columns are present - so find group cells by content, not by stride.
+  const c=cells.map(x=>clean(x).trim()),gs=[];
+  for(let i=0;i<c.length;i++){
+    const cell=c[i];
+    if(!cell||cell==="–"||cell==="-")continue;
+    const title=cell.split("\n")[0].trim().replace(/"/g,"");
+    if(!TITLES.has(title))continue;
+    if(!cell.includes("Must have")&&!cell.includes("Cannot have"))continue;
+    let win="";
+    for(let j=i+1;j<Math.min(i+4,c.length);j++){
+      const m=/occurred ([^\n]+)/.exec(c[j]);
+      if(m){win=m[1].trim();break;}}
+    gs.push({title,fp:fingerprint(cell),win});}
+  return gs;}
+function check(cells){
+  const name=clean(cells[0]).trim(),exp=expected(name);
+  if(!exp)return{name,status:"skip",problems:["name is not in the BCa grammar"]};
+  const act=actual(cells),probs=[];
+  if(act.length!==exp.length)
+    probs.push(`${act.length} groups, expected ${exp.length} (${exp.map(e=>e.title).join(" → ")})`);
+  for(let i=0;i<Math.max(act.length,exp.length);i++){
+    const e=exp[i],a=act[i];
+    if(e&&!a){probs.push(`group ${i+1} missing: ${e.title}`);continue;}
+    if(a&&!e){probs.push(`group ${i+1} unexpected: ${a.title}`);continue;}
+    if(a.title!==e.title){probs.push(`group ${i+1} titled ${a.title}, expected ${e.title}`);continue;}
+    if(a.fp!==e.fp){const A=a.fp.split("/"),E=e.fp.split("/"),why=[];
+      if(A[0]!==E[0])why.push("must-have terms");
+      if(A[1]!==E[1])why.push("cannot-have terms");
+      if(A[2]!==E[2])why.push(`AND/OR (${A[2]} not ${E[2]})`);
+      probs.push(`${e.title}: wrong ${why.join(" and ")}`);}
+    if(a.win!==e.win)probs.push(`${e.title}: window “${a.win}”, expected “${e.win}”`);}
+  return{name,status:probs.length?"bad":"ok",problems:probs};}
+
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function parseCSV(t){const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"')q=true;
+    else if(c===","){row.push(f);f="";}
+    else if(c==="\n"){row.push(f);f="";rows.push(row);row=[];}
+    else if(c!=="\r")f+=c;}
+  if(f.length||row.length){row.push(f);rows.push(row);}
+  return rows;}
+function keyOf(s){const m=/\/spreadsheets\/d\/([A-Za-z0-9_-]+)/.exec(s);return m?m[1]:s.trim();}
+async function run(){
+  const out=document.getElementById("out");
+  const key=keyOf(document.getElementById("key").value),
+        tab=document.getElementById("tab").value.trim();
+  out.innerHTML='<div class="card"><p class="note">Loading '+esc(tab)+'…</p></div>';
+  const url="https://docs.google.com/spreadsheets/d/"+encodeURIComponent(key)
+    +"/gviz/tq?tqx=out:csv&headers=0&sheet="+encodeURIComponent(tab);
+  let text;
+  try{const r=await fetch(url);
+    if(!r.ok)throw new Error("HTTP "+r.status+(r.status===404?" — no tab by that name":""));
+    text=await r.text();}
+  catch(e){out.innerHTML='<div class="card"><p class="err">Could not read the sheet: '
+    +esc(e.message)+'. Check the tab name, and that the sheet is shared to anyone with the link.</p></div>';return;}
+  if(/^\s*<!DOCTYPE/i.test(text)){out.innerHTML='<div class="card"><p class="err">'
+    +'Google returned a sign-in page instead of CSV — the sheet is not link-viewable.</p></div>';return;}
+  const rows=parseCSV(text).filter(r=>r.length&&String(r[0]).trim());
+  const res=rows.map(check);
+  const ok=res.filter(r=>r.status==="ok").length,bad=res.filter(r=>r.status==="bad").length,
+        skip=res.filter(r=>r.status==="skip").length;
+  const show=res.filter(r=>r.status!=="ok");
+  out.innerHTML='<div class="card"><div class="tally">'
+    +'<div><b>'+rows.length+'</b><span>rows</span></div>'
+    +'<div><b style="color:var(--ok)">'+ok+'</b><span>pass</span></div>'
+    +'<div><b style="color:var(--bad)">'+bad+'</b><span>fail</span></div>'
+    +'<div><b style="color:var(--warn)">'+skip+'</b><span>name not in grammar</span></div></div>'
+    +(show.length?'<div class="scroll"><table><thead><tr><th></th><th>Query</th>'
+      +'<th>What\u2019s wrong</th></tr></thead><tbody>'
+      +show.map(r=>'<tr><td><span class="mark '+(r.status==="bad"?"bad":"warn")+'">'
+        +(r.status==="bad"?"\u2717":"\u2014")+'</span></td><td class="g">'+esc(r.name)
+        +'</td><td class="why">'+esc(r.problems.join("; "))+'</td></tr>').join("")
+      +'</tbody></table></div>'
+      :'<p class="note">Every row matches the spec.</p>')+'</div>';}
+document.getElementById("run").addEventListener("click",run);
+</script>
