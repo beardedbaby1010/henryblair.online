@@ -1,0 +1,1054 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VE Query Logic Check — live</title>
+<style>
+:root{--bg:#f6f7f9;--panel:#fff;--ink:#15181d;--muted:#5b6472;--line:#dde2ea;
+ --accent:#1f5fa9;--ok:#176b45;--ok-soft:#e3f3ea;--bad:#a3291f;--bad-soft:#fbe9e7;
+ --warn:#8a5a00;--warn-soft:#fdf2dd;
+ --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--sans:Inter,system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#101318;--panel:#171b22;--ink:#e9edf3;
+ --muted:#949db0;--line:#2a313c;--accent:#6fa8e8;--ok:#6fcf9b;--ok-soft:#13291f;
+ --bad:#f08a7e;--bad-soft:#2e1714;--warn:#e0b665;--warn-soft:#2b2110;color-scheme:dark}}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);margin:0;
+ padding:24px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));
+ font-size:15px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font-size:26px;margin:0;letter-spacing:-.02em}
+.sub{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
+label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);margin-bottom:6px}
+input{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line);
+ border-radius:7px;padding:9px 11px;font-family:var(--mono);font-size:13px;min-width:0}
+button{background:var(--accent);color:#fff;border:0;border-radius:7px;padding:9px 16px;
+ font-size:14px;font-weight:600;cursor:pointer}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.row>div{flex:1 1 240px;min-width:0}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+.scroll{overflow-x:auto}
+th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);padding:0 10px 7px 0;border-bottom:1px solid var(--line)}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.g{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+.why{color:var(--muted);font-size:12.5px}
+.mark{font-size:16px;font-weight:700}
+.mark.ok{color:var(--ok)}.mark.bad{color:var(--bad)}.mark.warn{color:var(--warn)}
+.tally{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0 12px;font-variant-numeric:tabular-nums}
+.tally b{font-size:21px;display:block;line-height:1.2}
+.tally span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.note{color:var(--muted);font-size:13px}
+code{font-family:var(--mono);font-size:12.5px}
+.err{background:var(--bad-soft);color:var(--bad);padding:10px 12px;border-radius:7px;font-size:13.5px}
+.tally{gap:10px}
+.tile{background:transparent;border:1px solid transparent;border-radius:9px;padding:8px 14px 7px;
+ cursor:pointer;text-align:left;color:inherit;font:inherit}
+.tile:hover{background:var(--bg)}
+.tile.on{border-color:var(--accent);background:var(--bg)}
+.tile b{font-size:21px;display:block;line-height:1.2;font-weight:700}
+.tile span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.viz{display:flex;flex-direction:column;gap:22px;margin:4px 0 20px;
+ padding-bottom:18px;border-bottom:1px solid var(--line)}
+.viz section h3{font-size:14px;margin:0 0 4px;letter-spacing:-.01em}
+.viz h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+ margin:0 0 7px;font-weight:600}
+.vn{color:var(--muted);font-size:12.5px;margin:0 0 10px;max-width:78ch}
+.sb{width:100%;display:block;border-radius:3px;overflow:hidden}
+.sb rect{cursor:pointer}
+.sb rect:hover{opacity:.82}
+.lgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.lg{display:inline-flex;align-items:center;gap:6px;background:var(--bg);color:var(--ink);
+ border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer}
+.lg:hover{border-color:var(--accent)}
+.lg i{width:9px;height:9px;border-radius:2px;display:inline-block;flex:none}
+.lg b{font-variant-numeric:tabular-nums}
+.lg em{font-style:normal;color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.hb{display:flex;flex-direction:column;gap:3px}
+.hb{--hbl:11ch}
+.hbr{display:grid;grid-template-columns:var(--hbl) 1fr auto;gap:9px;align-items:center;
+ font-size:12px;padding:1px 0;cursor:default}
+.hbr.hit[data-q]:not([data-q=""]),.hbr.hit[data-rg]:not([data-rg=""]){cursor:pointer}
+.hbr.hit[data-q]:not([data-q=""]):hover .hbl,
+.hbr.hit[data-rg]:not([data-rg=""]):hover .hbl{color:var(--accent)}
+.hbr.hit[data-rg].on{background:var(--bg);border-radius:5px}
+.hbr.hit[data-rg].on .hbl{color:var(--accent);font-weight:600}
+.hbl{font-family:var(--mono);font-size:11.5px;color:var(--ink);white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis}
+.hbt{background:var(--bg);border-radius:3px;height:13px;min-width:30px;overflow:hidden}
+.hbt i{display:block;height:13px;border-radius:0 3px 3px 0;min-width:2px}
+.hbv{font-variant-numeric:tabular-nums;color:var(--ink);font-size:11.5px;white-space:nowrap}
+.hbv em{font-style:normal;color:var(--muted);font-size:11px}
+.fxs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px 24px}
+@media (max-width:640px){.viz section h3{font-size:13px}.hbl{max-width:92px}}
+.chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:4px 0 14px}
+.clab{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+.chip{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:999px;
+ padding:4px 11px;font-size:12.5px;font-weight:500;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip i{font-style:normal;opacity:.65;margin-left:3px;font-variant-numeric:tabular-nums}
+.chip.clear{opacity:.7}
+.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 12px;
+ padding-bottom:12px;border-bottom:1px solid var(--line)}
+.bar input{flex:1 1 220px;max-width:340px;font-family:var(--sans);font-size:13px;padding:7px 10px}
+.inl{display:flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.06em;
+ text-transform:uppercase;color:var(--muted);margin:0}
+.bar select{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:7px;
+ padding:6px 8px;font:inherit;font-size:13px;text-transform:none;letter-spacing:0}
+th.sort{cursor:pointer;user-select:none;white-space:nowrap}
+th.sort:hover{color:var(--ink)}
+th.sort.on{color:var(--accent)}
+td.num{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right;
+ font-variant-numeric:tabular-nums;white-space:nowrap}
+td.kind{font-size:12px;color:var(--muted);white-space:nowrap}
+details{border-top:1px solid var(--line)}
+details:first-of-type{border-top:0}
+summary{cursor:pointer;padding:10px 0;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+summary::marker{color:var(--muted)}
+.gk{font-family:var(--mono);font-size:13.5px;font-weight:600}
+.gc{font-size:12px;color:var(--muted)}
+.gc em{font-style:normal;font-weight:600}
+.gc em.ok{color:var(--ok)}.gc em.bad{color:var(--bad)}.gc em.warn{color:var(--warn)}
+details table{margin-bottom:12px}
+/* snapshot + log-provenance additions, same tokens as everything above */
+.kv{display:flex;gap:20px;flex-wrap:wrap;margin:2px 0 14px;font-variant-numeric:tabular-nums}
+.kv div{min-width:86px}
+.kv b{display:block;font-size:20px;line-height:1.25;font-weight:700}
+.kv span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.snaptab{border-collapse:collapse;width:100%;font-size:13px}
+.snaptab th{padding:0 12px 7px 0}
+.snaptab td{padding:6px 12px 6px 0;border-bottom:1px solid var(--line)}
+.snaptab td.n{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.snaptab tr.dom td{font-weight:600}
+.snaptab tr.hit{cursor:pointer}
+.snaptab tr.hit:hover td{color:var(--accent)}
+.snaptab tr.on td{color:var(--accent)}
+.sw{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:7px;
+ vertical-align:1px;flex:none}
+.chip i.sw{opacity:1;margin-left:0;margin-right:6px}
+.flag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:999px;margin-left:4px;
+ background:var(--warn-soft);color:var(--warn);font-weight:600;letter-spacing:.02em}
+.tile.stat{cursor:default}
+.tile.stat:hover{background:transparent}
+td.snapc{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right;
+ font-variant-numeric:tabular-nums;white-space:nowrap}
+td.snapc.off{color:var(--warn)}
+/* a deviation reads as the wrong value; hover strikes it and reveals the right one */
+.dv{display:inline-flex;align-items:baseline;gap:5px;max-width:100%}
+.dv .act{color:var(--bad);font-family:var(--mono);font-size:12px}
+.dv .exp{display:inline-block;max-width:0;overflow:hidden;white-space:nowrap;
+ color:var(--ok);font-family:var(--mono);font-size:12px;vertical-align:bottom;
+ transition:max-width .22s ease;opacity:0}
+.dv:hover .act,tr.open .dv .act,.gt .dv .act{text-decoration:line-through;opacity:.55}
+.dv:hover .exp,tr.open .dv .exp,.gt .dv .exp{max-width:46ch;opacity:1}
+.dv .arw{color:var(--muted);font-size:11px;opacity:0;transition:opacity .22s}
+.dv:hover .arw,tr.open .dv .arw,.gt .dv .arw{opacity:1}
+.gt .dv{flex-wrap:wrap}
+.devs{display:flex;flex-direction:column;gap:3px}
+.dev{display:flex;gap:7px;align-items:baseline;flex-wrap:wrap}
+.dev .gid{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.dev .fld{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+tr.clk{cursor:pointer}
+tr.clk:hover td{background:var(--bg)}
+tr.open td{background:var(--bg)}
+td.tiles{padding:6px 0 18px 0}
+.gts{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;
+ margin-top:4px;width:100%}
+.gt{border:1px solid var(--line);border-left-width:3px;border-radius:8px;padding:9px 11px;
+ background:var(--panel);display:flex;flex-direction:column;gap:4px}
+.gt.ok{border-left-color:var(--ok);background:var(--ok-soft)}
+.gt.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.gt.ghost{border-style:dashed;background:transparent;opacity:.85}
+.gth{display:flex;gap:7px;align-items:baseline}
+.gth b{font-family:var(--mono);font-size:12px;font-weight:700}
+.gth .gnm{font-family:var(--mono);font-size:12.5px;font-weight:600}
+.gth .gok{margin-left:auto;font-size:12px}
+.gth .gok.ok{color:var(--ok)}.gth .gok.bad{color:var(--bad)}
+.gtl{font-size:11.5px;color:var(--muted);font-family:var(--mono);line-height:1.45;
+ overflow-wrap:anywhere}
+.gtl b{color:var(--ink);font-weight:600}
+.pie2{display:grid;grid-template-columns:minmax(210px,262px) 1fr;gap:26px;align-items:center}
+@media (max-width:720px){.pie2{grid-template-columns:1fr;justify-items:center}}
+.pie{width:100%;max-width:262px;height:auto;display:block}
+.pie text{font-family:var(--sans);font-variant-numeric:tabular-nums}
+.pie .sl{cursor:pointer;transition:transform .2s ease,opacity .2s ease}
+.pie .sl path{stroke:var(--panel);stroke-width:1.5}
+.pie .sl:hover{opacity:.82}
+.pie .sl.on path{stroke:var(--ink);stroke-width:2}
+.pie .pct{font-size:11px;font-weight:700;text-anchor:middle;fill:#fff;pointer-events:none;
+ paint-order:stroke;stroke:rgba(0,0,0,.28);stroke-width:2.4px}
+.pie .ctr{font-size:27px;font-weight:700;text-anchor:middle;fill:var(--ink)}
+.pie .ctl{font-size:10px;text-anchor:middle;fill:var(--muted);letter-spacing:.09em;
+ text-transform:uppercase}
+.pl{display:flex;flex-direction:column;gap:1px;width:100%;max-width:520px}
+.plr{display:grid;grid-template-columns:12px minmax(9ch,max-content) 1fr auto;gap:10px;
+ align-items:center;font:inherit;font-size:12px;background:none;border:0;border-radius:7px;
+ padding:5px 7px;cursor:pointer;color:var(--ink);text-align:left}
+.plr:hover{background:var(--bg)}
+.plr.on{background:var(--bg);box-shadow:inset 0 0 0 1px var(--line)}
+.plr i{width:12px;height:12px;border-radius:3px;display:inline-block;flex:none}
+.plr .pnm{font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+.plr .ptk{background:var(--bg);border-radius:3px;height:9px;overflow:hidden;min-width:28px}
+.plr:hover .ptk,.plr.on .ptk{background:var(--line)}
+.plr .ptk b{display:block;height:9px;border-radius:0 3px 3px 0;min-width:2px}
+.plr .pv{font-variant-numeric:tabular-nums;font-size:11.5px;white-space:nowrap}
+.plr .pv em{font-style:normal;color:var(--muted);font-size:11px;margin-left:3px}
+.vhit{position:absolute;opacity:0}
+.cpy{background:var(--bg);color:var(--muted);border:1px solid var(--line);border-radius:6px;
+ padding:2px 8px;font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;
+ letter-spacing:.02em;white-space:nowrap}
+.cpy:hover{border-color:var(--accent);color:var(--accent)}
+.cpy.done{border-color:var(--ok);color:var(--ok)}
+.cpy.big{background:var(--accent);color:#fff;border-color:var(--accent);font-size:12px;
+ padding:6px 12px;font-family:var(--sans)}
+.cpy.big:hover{filter:brightness(1.08);color:#fff}
+.cpy.big.done{background:var(--ok);border-color:var(--ok)}
+td.act{text-align:right;white-space:nowrap;padding-right:0}
+.fixbox{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.fixh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.fixh h5{margin:0;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+ font-weight:600}
+.fixh .cpy{margin-left:auto}
+.fixsh{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 13px;
+ font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--ink);overflow-x:auto;
+ white-space:pre;tab-size:2}
+.fixsh .c{color:var(--muted)}
+</style>
+<div class="wrap" style="max-width:1200px">
+<header><h1>VE Query Logic Check</h1>
+<p class="sub">Reads a sheet tab live through the gviz CSV endpoint and checks every
+BCa query's group structure against the spec its name implies.</p></header>
+<div class="card">
+ <div class="row">
+  <div><label for="key">Sheet URL or key</label>
+   <input id="key" value="1Cy64AGkUWwHMHl3a-F2AhOxZOmTl-iOJMsmy5FA85L8" spellcheck="false"></div>
+  <div><label for="tab">Tab name</label><input id="tab" value="Old_BCa_Data" spellcheck="false"></div>
+  <button id="run">Check</button>
+ </div>
+ <p class="note" style="margin:10px 0 0">The sheet must be viewable by anyone with the
+ link, the same requirement your other live figures have.</p>
+</div>
+<div id="out"></div>
+</div>
+<script>
+const COH=["No_HA","No_C50","No_Hx","HA","C50","Hx","Unstrat"];
+const STR=["ERPos","ERNeg","ERAmbig","ERUnrec","ERP_Old","ERN_Old"];
+const MARK=[["ICD","Diagnoses: ICD-10"],["CPT","CPT 1013626"],["VAG","estradiol"],
+  ["C50","ICD-10-CM C50"],["Z85","Z85.3"],["Z170","Z17.0"],["Z171","Z17.1"],["ET","tamoxifen"]];
+const FP={In_Care:"11000000/00000000/OR",VE_Denom:"11000000/00000000/OR",
+  WASHOUT_VE:"00000000/00100000/-",VE_Num:"00100000/00000000/-",
+  HA:"00011000/00000000/OR",C50:"00010000/00000000/-",Hx:"00001000/00000000/-",
+  No_HA:"00000000/00011000/OR",No_C50:"00000000/00010000/-",No_Hx:"00000000/00001000/-",
+  ERPos:"00000101/00000010/OR",ERNeg:"00000010/00000101/OR",ERAmbig:"00000110/00000000/AND",
+  ERUnrec:"00000000/00000110/OR",ERP_Old:"00000100/00000010/-",ERN_Old:"00000010/00000100/-"};
+const HUMAN={In_Care:"must: ICD-10 dx OR CPT 1013626 office visit",
+  VE_Denom:"must: ICD-10 dx OR CPT 1013626 office visit",
+  WASHOUT_VE:"cannot: estradiol [Vaginal Product]",
+  VE_Num:"must: estradiol [Vaginal Product]",
+  HA:"must: C50 OR Z85.3",C50:"must: C50",Hx:"must: Z85.3",
+  No_HA:"cannot: C50 OR Z85.3",No_C50:"cannot: C50",No_Hx:"cannot: Z85.3",
+  ERPos:"must: Z17.0 OR tamoxifen OR anastrozole OR letrozole OR exemestane · cannot: Z17.1",
+  ERNeg:"must: Z17.1 · cannot: Z17.0 OR the four endocrine agents",
+  ERAmbig:"must: Z17.1 AND Z17.0",ERUnrec:"cannot: Z17.1 OR Z17.0",
+  ERP_Old:"must: Z17.0 · cannot: Z17.1",ERN_Old:"must: Z17.1 · cannot: Z17.0"};
+
+const NAME_RE=new RegExp("^BCa-("+COH.join("|")+")_∩_(?:("+STR.join("|")+")_)?((?:prev_)?(?:num|denom))_(2[45])_(Nov|Jun)$");
+function parseName(n){const m=NAME_RE.exec(n.trim());if(!m)return null;
+  return{cohort:m[1],stratum:m[2]||"",metric:m[3],yy:m[4],mon:m[5]};}
+function windows(yy,mon){const y=+yy;
+  if(mon==="Nov")return{idx:`between Nov 01, 20${y} and Mar 31, 20${y+1}`,
+    care:`between Nov 01, 20${y-1} and Mar 31, 20${y}`,cut:`on or before Oct 31, 20${y}`};
+  return{idx:`between Jun 01, 20${y} and Oct 31, 20${y}`,
+    care:`between Jun 01, 20${y-1} and Oct 31, 20${y-1}`,cut:`on or before May 31, 20${y}`};}
+function expected(name){const p=parseName(name);if(!p)return null;
+  const w=windows(p.yy,p.mon),prev=p.metric.startsWith("prev_"),num=p.metric.endsWith("num");
+  const out=[["In_Care",w.care]];
+  if(!prev)out.push(["WASHOUT_VE",w.cut]);
+  out.push(["VE_Denom",w.idx]);
+  if(p.cohort!=="Unstrat")out.push([p.cohort,w.cut]);
+  if(num)out.push(["VE_Num",w.idx]);
+  if(p.stratum)out.push([p.stratum,w.cut]);
+  return out.map(([t,win])=>({title:t,fp:FP[t],win,human:HUMAN[t]}));}
+
+function clean(s){s=String(s);if(!s.startsWith("="))return s;
+  s=s.replace(/^=/,"").replace(/^"|"$/g,"");
+  s=s.split('"&CHAR(10)&"').join("\n").split("&CHAR(10)&").join("\n");
+  // rows pasted without their CHAR(10)s arrive as bare &"-concatenation;
+  // that join is the line break too.
+  return s.split('"&"').join("\n").split('""').join('"');}
+function fingerprint(cell){
+  const mm=/Must have:([\s\S]*?)(?:Cannot have:|$)/.exec(cell),
+        cc=/Cannot have:([\s\S]*)/.exec(cell);
+  const bits=m=>{const b=m?m[1]:"";return MARK.map(k=>b.includes(k[1])?"1":"0").join("");};
+  // multiline cells start a line with the operator; gviz-flattened cells
+  // put it straight after the previous term's ")".
+  const op=/(?:^|\n|\))\s*AND /.test(cell)?"AND"
+          :(/(?:^|\n|\))\s*OR /.test(cell)?"OR":"-");
+  return bits(mm)+"/"+bits(cc)+"/"+op;}
+const TITLES=new Set(Object.keys(FP));
+const JOIN=/^\d+(?: (?:AND|OR) \d+)+$/;
+function actual(cells){
+  // Column layout is not fixed - tabs differ in whether the =$A$n helper
+  // columns are present - so find group cells by content, not by stride.
+  const c=cells.map(x=>clean(x).trim()),gs=[];
+  // A dump ends at its own join marker ("1 AND 2 AND 3"). Anything past that
+  // is residue from an earlier, wider dump that was never cleared, so it is
+  // not part of this query.
+  let end=c.length;
+  for(let i=0;i<c.length;i++){if(JOIN.test(c[i])){end=i;break;}}
+  for(let i=0;i<end;i++){
+    const cell=c[i];
+    if(!cell||cell==="–"||cell==="-")continue;
+    const tm=/^\s*"([^"\n]+)"/.exec(cell);
+    if(!tm)continue;
+    const title=tm[1].trim();
+    if(!TITLES.has(title))continue;
+    if(!cell.includes("Must have")&&!cell.includes("Cannot have"))continue;
+    let win="";
+    for(let j=i+1;j<Math.min(i+4,c.length);j++){
+      const m=/occurred ((?:between [A-Z][a-z]{2} \d{1,2}, \d{4} and [A-Z][a-z]{2} \d{1,2}, \d{4})|(?:on or (?:before|after) [A-Z][a-z]{2} \d{1,2}, \d{4}))/.exec(c[j]);
+      if(m){win=m[1].trim();break;}}
+    gs.push({title,fp:fingerprint(cell),win});}
+  return gs;}
+// The sheet writes "N vs N+1: AND" beside the last group it dumped; when that
+// line names a group the dump does not contain, the dump stopped early - the
+// query itself still has that group.
+function announcesMore(cells,n){
+  if(!n)return false;
+  const want=n+" vs "+(n+1)+": ";
+  return cells.some(x=>{const t=clean(x);
+    const i=t.indexOf(want);return i>=0&&/^(AND|OR)\b/.test(t.slice(i+want.length).trim());});}
+// A row can carry several defects at once. `kind` is the headline (first match);
+// `axes` keeps every one, which is what the co-occurrence figure reads.
+function axesOf(probs,trunc){
+  const a=[];
+  if(trunc)a.push("truncated");
+  if(probs.some(p=>/ titled /.test(p)))a.push("order");
+  if(probs.some(p=>/: window /.test(p)))a.push("window");
+  if(probs.some(p=>/wrong (?:must-have|cannot-have|AND)/.test(p)))a.push("terms");
+  if(probs.some(p=>/missing:|unexpected:|groups, expected/.test(p)))a.push("count");
+  return a;}
+function kindOf(probs,trunc){
+  if(trunc)return "dump truncated";
+  if(probs.some(p=>/ titled /.test(p)))return "groups out of order";
+  if(probs.some(p=>/: window /.test(p)))return "wrong window";
+  if(probs.some(p=>/wrong (?:must-have|cannot-have|AND)/.test(p)))return "wrong terms";
+  if(probs.some(p=>/missing:|unexpected:|groups, expected/.test(p)))return "wrong group count";
+  return "other";}
+// fingerprint bits -> the term codes they stand for, so a diff can name the
+// terms that are actually there instead of printing 00000110.
+function bitLabel(bits){
+  const on=MARK.filter((m,i)=>bits[i]==="1").map(m=>m[0]);
+  return on.length?on.join("\u00b7"):"\u2014";}
+function check(cells){
+  const name=clean(cells[0]).trim(),exp=expected(name);
+  if(!exp)return{name,status:"skip",kind:"not in grammar",axes:[],problems:["name is not in the BCa grammar"],groups:[]};
+  const act=actual(cells),probs=[],groups=[];
+  if(act.length!==exp.length)
+    probs.push(`${act.length} groups, expected ${exp.length} (${exp.map(e=>e.title).join(" → ")})`);
+  for(let i=0;i<Math.max(act.length,exp.length);i++){
+    const e=exp[i],a=act[i];
+    const g={n:i+1,title:(e&&e.title)||(a&&a.title),human:e?e.human:"",issues:[]};
+    if(e&&!a){probs.push(`group ${i+1} missing: ${e.title}`);
+      g.state="missing"; g.issues.push({f:"group",act:"not present",exp:e.title});
+      g.exp=e; groups.push(g); continue;}
+    if(a&&!e){probs.push(`group ${i+1} unexpected: ${a.title}`);
+      g.state="extra"; g.issues.push({f:"group",act:a.title,exp:"no group here"});
+      g.act=a; groups.push(g); continue;}
+    g.exp=e; g.act=a;
+    if(a.title!==e.title){probs.push(`group ${i+1} titled ${a.title}, expected ${e.title}`);
+      g.issues.push({f:"title",act:a.title,exp:e.title});
+      g.state="bad"; groups.push(g); continue;}
+    if(a.fp!==e.fp){const A=a.fp.split("/"),E=e.fp.split("/"),why=[];
+      if(A[0]!==E[0]){why.push("must-have terms");
+        g.issues.push({f:"must",act:bitLabel(A[0]),exp:bitLabel(E[0])});}
+      if(A[1]!==E[1]){why.push("cannot-have terms");
+        g.issues.push({f:"cannot",act:bitLabel(A[1]),exp:bitLabel(E[1])});}
+      if(A[2]!==E[2]){why.push(`AND/OR (${A[2]} not ${E[2]})`);
+        g.issues.push({f:"operator",act:A[2],exp:E[2]});}
+      probs.push(`${e.title}: wrong ${why.join(" and ")}`);}
+    if(a.win!==e.win){probs.push(`${e.title}: window “${a.win}”, expected “${e.win}”`);
+      g.issues.push({f:"window",act:a.win||"(none)",exp:e.win});}
+    g.state=g.issues.length?"bad":"ok";
+    groups.push(g);}
+  const trunc=act.length<exp.length&&announcesMore(cells,act.length);
+  const p=parseName(name);
+  return{name,status:probs.length?"bad":"ok",problems:probs,groups,
+    kind:probs.length?kindOf(probs,trunc):"",
+    axes:probs.length?axesOf(probs,trunc):[],
+    cohort:p.cohort,stratum:p.stratum||"(none)",metric:p.metric,window:p.yy+"_"+p.mon};}
+
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function parseCSV(t){const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"')q=true;
+    else if(c===","){row.push(f);f="";}
+    else if(c==="\n"){row.push(f);f="";rows.push(row);row=[];}
+    else if(c!=="\r")f+=c;}
+  if(f.length||row.length){row.push(f);rows.push(row);}
+  return rows;}
+function keyOf(s){const m=/\/spreadsheets\/d\/([A-Za-z0-9_-]+)/.exec(s);return m?m[1]:s.trim();}
+let STATE=null;
+const LOGS={"files":481,"span":"11/11 11:18 → 11/12 01:04","modes":{"search":151,"main":232,"replace_rename":18,"?":14,"fork":17,"shift_dates":25,"print_qn":9,"del":5,"refresh":1,"remove_group":5,"paste":4},"legend":{"m":"main","s":"search","f":"fork","r":"replace_rename","t":"shift_dates","g":"remove_group","d":"del","p":"paste","n":"print_qn","h":"refresh","u":"?"},"mut":"frtgdp","q":{"C50_∩_denom_24_Nov":[17,2,"s11 n3 d2 m1"],"Hx_∩_denom_24_Nov":[13,2,"s8 n2 d2 m1"],"Unstrat_prev_denom_24_Nov":[2,0,"s2"],"HA_∩_prev_denom_24_Nov":[8,2,"s3 n2 d2 m1"],"C50_∩_prev_denom_24_Nov":[8,2,"s3 n2 d2 m1"],"Hx_∩_prev_denom_24_Nov":[8,0,"s3 m3 n2"],"No_HA_∩_prev_denom_24_Nov":[8,2,"s3 n2 d2 m1"],"No_C50_∩_prev_denom_24_Nov":[8,2,"s3 n2 d2 m1"],"No_Hx_∩_prev_denom_24_Nov":[14,2,"s9 n2 d2 m1"],"Unstrat_∩_ERPos_prev_num_24_Nov":[13,1,"s6 m3 n3 r1"],"HA_∩_ERPos_prev_num_24_Nov":[25,12,"s8 t6 m4 f3 r2 d1 h1"],"No_Hx_∩_ERN_Old_num_24_Nov":[5,1,"n2 s1 d1 m1"],"C50_∩_ERPos_prev_num_24_Nov":[17,11,"t6 m3 s2 r2 f2 d1 h1"],"Hx_∩_ERPos_prev_num_24_Nov":[17,11,"t6 m3 s2 r2 f2 d1 h1"],"HA_∩_ERPos_num_24_Nov":[19,13,"t7 m4 f3 r2 s1 d1 h1"],"No_HA_∩_ERPos_prev_num_24_Nov":[6,2,"m2 n2 r1 d1"],"No_C50_∩_ERPos_prev_num_24_Nov":[6,2,"m2 n2 r1 d1"],"No_Hx_∩_ERPos_prev_num_24_Nov":[6,2,"m2 n2 r1 d1"],"C50_∩_ERPos_num_24_Nov":[16,12,"t7 m3 r2 f2 d1 h1"],"No_HA_∩_ERPos_num_24_Nov":[7,2,"n3 m2 r1 d1"],"No_C50_∩_ERPos_num_24_Nov":[7,2,"n3 m2 r1 d1"],"Hx_∩_ERPos_num_24_Nov":[16,12,"t7 m3 r2 f2 d1 h1"],"Unstrat_∩_ERPos_denom_24_Nov":[7,2,"n3 m2 r1 d1"],"HA_∩_ERPos_denom_24_Nov":[19,12,"t6 m3 f3 s3 r2 d1 h1"],"C50_∩_ERPos_denom_24_Nov":[24,17,"t12 m3 s3 r2 f2 d1 h1"],"Hx_∩_ERPos_denom_24_Nov":[16,10,"m6 t6 r2 f2"],"No_HA_∩_ERPos_denom_24_Nov":[6,2,"m2 n2 r1 d1"],"No_C50_∩_ERPos_denom_24_Nov":[6,2,"m2 n2 r1 d1"],"No_Hx_∩_ERPos_denom_24_Nov":[7,1,"m4 n2 r1"],"Unstrat_∩_ERPos_prev_denom_24_Nov":[11,2,"m4 n3 s2 r1 f1"],"HA_∩_ERPos_prev_denom_24_Nov":[16,12,"t5 f4 m3 r2 d1 h1"],"C50_∩_ERPos_prev_denom_24_Nov":[15,11,"t5 m3 f3 r2 d1 h1"],"Hx_∩_ERPos_prev_denom_24_Nov":[19,12,"m7 t5 f4 r3"],"No_HA_∩_ERPos_prev_denom_24_Nov":[7,3,"m2 n2 r1 f1 d1"],"No_C50_∩_ERPos_prev_denom_24_Nov":[7,3,"m2 n2 r1 f1 d1"],"No_Hx_∩_ERPos_prev_denom_24_Nov":[10,2,"m6 n2 r1 f1"],"No_Hx_∩_ERPos_num_24_Nov":[6,2,"m2 n2 r1 d1"],"Unstrat_∩_ERPos_num_24_Nov":[6,2,"m2 n2 r1 d1"],"No_Hx_∩_ERNeg_num_24_Nov":[5,0,"n3 m2"],"No_Hx_∩_ERNeg_prev_denom_24_Nov":[5,0,"n3 m2"],"No_C50_∩_ERNeg_prev_denom_24_Nov":[5,0,"n3 m2"],"Unstrat_∩_prev_num_24_Nov":[9,3,"n4 d3 m2"],"HA_∩_prev_num_24_Nov":[7,3,"n3 d3 m1"],"C50_∩_prev_num_24_Nov":[8,3,"n4 d3 m1"],"Hx_∩_prev_num_24_Nov":[8,3,"n4 d3 m1"],"No_HA_∩_prev_num_24_Nov":[8,3,"n4 d3 m1"],"No_C50_∩_prev_num_24_Nov":[7,3,"n3 d3 m1"],"No_Hx_∩_prev_num_24_Nov":[7,3,"n3 d3 m1"],"Unstrat_∩_num_24_Nov":[8,3,"n3 d3 m2"],"HA_∩_num_24_Nov":[7,3,"n3 d3 m1"],"C50_∩_num_24_Nov":[8,3,"n4 d3 m1"],"No_HA_∩_num_24_Nov":[7,3,"n3 d3 m1"],"Hx_∩_num_24_Nov":[7,3,"n3 d3 m1"],"Unstrat_∩_denom_24_Nov":[9,3,"n4 d3 s1 m1"],"HA_∩_denom_24_Nov":[7,3,"n3 d3 m1"],"No_HA_∩_denom_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_denom_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_denom_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_prev_denom_24_Nov":[6,2,"n2 d2 m2"],"No_Hx_∩_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERNeg_prev_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERNeg_num_24_Nov":[29,2,"m13 s12 n2 d2"],"Unstrat_∩_ERNeg_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERNeg_prev_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERAmbig_prev_num_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERAmbig_num_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERAmbig_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERAmbig_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERUnrec_prev_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERUnrec_num_24_Nov":[59,2,"s30 m24 n3 d2"],"Unstrat_∩_ERUnrec_denom_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERUnrec_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERP_Old_prev_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERP_Old_num_24_Nov":[6,2,"n3 d2 m1"],"Unstrat_∩_ERP_Old_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERP_Old_prev_denom_24_Nov":[37,2,"m21 s12 n2 d2"],"Unstrat_∩_ERN_Old_prev_num_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERN_Old_num_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERN_Old_denom_24_Nov":[5,2,"n2 d2 m1"],"Unstrat_∩_ERN_Old_prev_denom_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERNeg_prev_num_24_Nov":[18,2,"m7 s6 n3 d2"],"No_C50_∩_ERNeg_prev_num_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_ERNeg_prev_num_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERNeg_num_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERNeg_num_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERNeg_denom_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERNeg_denom_24_Nov":[5,2,"n2 d2 m1"],"No_Hx_∩_ERNeg_denom_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERNeg_prev_denom_24_Nov":[18,2,"m7 s6 n3 d2"],"No_HA_∩_ERAmbig_prev_num_24_Nov":[6,2,"n3 d2 m1"],"No_C50_∩_ERAmbig_prev_num_24_Nov":[17,2,"m7 s6 n2 d2"],"No_Hx_∩_ERAmbig_prev_num_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERAmbig_num_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERAmbig_num_24_Nov":[17,2,"m7 s6 n2 d2"],"No_HA_∩_ERAmbig_denom_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERAmbig_denom_24_Nov":[5,2,"n2 d2 m1"],"No_Hx_∩_ERAmbig_denom_24_Nov":[6,2,"n3 d2 m1"],"No_HA_∩_ERAmbig_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_C50_∩_ERAmbig_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_ERAmbig_prev_denom_24_Nov":[18,2,"m7 s6 n3 d2"],"No_Hx_∩_ERAmbig_num_24_Nov":[6,2,"n3 d2 m1"],"No_HA_∩_ERUnrec_prev_num_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERUnrec_prev_num_24_Nov":[5,2,"n2 d2 m1"],"No_Hx_∩_ERUnrec_prev_num_24_Nov":[17,2,"m7 s6 n2 d2"],"No_HA_∩_ERUnrec_num_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERUnrec_num_24_Nov":[5,2,"n2 d2 m1"],"No_HA_∩_ERUnrec_denom_24_Nov":[5,2,"n2 d2 m1"],"No_C50_∩_ERUnrec_denom_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_ERUnrec_denom_24_Nov":[6,2,"n3 d2 m1"],"No_HA_∩_ERUnrec_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_C50_∩_ERUnrec_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_Hx_∩_ERUnrec_prev_denom_24_Nov":[6,2,"n3 d2 m1"],"No_HA_∩_ERP_Old_prev_num_24_Nov":[5,1,"n3 d1 m1"],"No_C50_∩_ERP_Old_prev_num_24_Nov":[5,1,"n3 d1 m1"],"No_Hx_∩_ERP_Old_prev_num_24_Nov":[5,1,"n3 d1 m1"],"No_HA_∩_ERP_Old_num_24_Nov":[5,1,"n3 d1 m1"],"No_C50_∩_ERP_Old_num_24_Nov":[5,1,"n3 d1 m1"],"No_HA_∩_ERP_Old_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_C50_∩_ERP_Old_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_Hx_∩_ERP_Old_denom_24_Nov":[5,1,"n3 d1 m1"],"No_HA_∩_ERP_Old_prev_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_C50_∩_ERP_Old_prev_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_Hx_∩_ERP_Old_prev_denom_24_Nov":[5,1,"n3 d1 m1"],"No_Hx_∩_ERP_Old_num_24_Nov":[4,1,"n2 d1 m1"],"No_HA_∩_ERN_Old_prev_num_24_Nov":[4,1,"n2 d1 m1"],"No_C50_∩_ERN_Old_prev_num_24_Nov":[4,1,"n2 d1 m1"],"No_Hx_∩_ERN_Old_prev_num_24_Nov":[4,1,"n2 d1 m1"],"No_HA_∩_ERN_Old_num_24_Nov":[4,1,"n2 d1 m1"],"No_C50_∩_ERN_Old_num_24_Nov":[4,1,"n2 d1 m1"],"No_HA_∩_ERN_Old_denom_24_Nov":[5,1,"n3 d1 m1"],"No_C50_∩_ERN_Old_denom_24_Nov":[5,1,"n3 d1 m1"],"No_Hx_∩_ERN_Old_denom_24_Nov":[17,1,"m7 s6 n3 d1"],"No_HA_∩_ERN_Old_prev_denom_24_Nov":[5,0,"m3 n2"],"No_C50_∩_ERN_Old_prev_denom_24_Nov":[4,1,"n2 d1 m1"],"No_Hx_∩_ERN_Old_prev_denom_24_Nov":[4,1,"n2 d1 m1"],"HA_∩_ERNeg_prev_num_24_Nov":[19,12,"t7 s4 f3 m2 r1 d1 h1"],"HA_∩_ERUnrec_prev_num_24_Nov":[10,6,"f3 m2 r1 s1 d1 h1 t1"],"HA_∩_ERUnrec_prev_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERUnrec_num_24_Nov":[18,11,"t7 m4 f3 s3 r1"],"HA_∩_ERUnrec_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERP_Old_prev_num_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERP_Old_prev_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERP_Old_num_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERP_Old_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERNeg_prev_denom_24_Nov":[16,9,"t5 m4 f3 s3 r1"],"HA_∩_ERNeg_num_24_Nov":[18,11,"t7 m4 f3 s3 r1"],"HA_∩_ERNeg_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERN_Old_prev_num_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERN_Old_prev_denom_24_Nov":[15,9,"t5 m4 f3 s2 r1"],"HA_∩_ERN_Old_num_24_Nov":[17,11,"t7 m4 f3 r1 h1 s1"],"HA_∩_ERN_Old_denom_24_Nov":[9,6,"f3 m2 r1 d1 h1 t1"],"HA_∩_ERAmbig_prev_num_24_Nov":[15,10,"t6 m4 f3 r1 h1"],"HA_∩_ERAmbig_prev_denom_24_Nov":[17,11,"t6 f3 s3 m2 r1 d1 h1"],"HA_∩_ERAmbig_num_24_Nov":[16,11,"t7 m4 f3 r1 h1"],"HA_∩_ERAmbig_denom_24_Nov":[16,11,"t6 f3 s3 m2 r1 d1"],"C50_∩_ERNeg_prev_num_24_Nov":[14,10,"t6 f2 m2 s1 r1 d1 h1"],"C50_∩_ERUnrec_prev_num_24_Nov":[14,9,"t6 m4 f2 r1 h1"],"C50_∩_ERUnrec_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"C50_∩_ERUnrec_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERUnrec_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"C50_∩_ERP_Old_prev_num_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"C50_∩_ERP_Old_prev_denom_24_Nov":[13,8,"t5 m4 f2 r1 h1"],"C50_∩_ERP_Old_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERP_Old_denom_24_Nov":[13,10,"t6 f2 m2 r1 d1 h1"],"C50_∩_ERNeg_prev_denom_24_Nov":[13,9,"t5 m4 f2 r1 d1"],"C50_∩_ERNeg_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERNeg_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"C50_∩_ERN_Old_prev_num_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"C50_∩_ERN_Old_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"C50_∩_ERN_Old_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERN_Old_denom_24_Nov":[13,10,"t6 f2 m2 r1 d1 h1"],"C50_∩_ERAmbig_prev_num_24_Nov":[13,10,"t6 f2 m2 r1 d1 h1"],"C50_∩_ERAmbig_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"C50_∩_ERAmbig_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"C50_∩_ERAmbig_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERNeg_prev_num_24_Nov":[13,10,"t6 f2 m2 s1 r1 d1"],"Hx_∩_ERUnrec_prev_num_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERUnrec_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"Hx_∩_ERUnrec_num_24_Nov":[16,11,"t7 s3 f2 m2 r1 d1"],"Hx_∩_ERUnrec_denom_24_Nov":[16,10,"t6 s3 f2 m2 r1 d1 h1"],"Hx_∩_ERP_Old_prev_num_24_Nov":[13,10,"t6 f2 m2 r1 d1 h1"],"Hx_∩_ERP_Old_prev_denom_24_Nov":[11,9,"t5 f2 m2 r1 d1"],"Hx_∩_ERP_Old_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"Hx_∩_ERP_Old_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERNeg_prev_denom_24_Nov":[12,8,"t5 m4 f2 r1"],"Hx_∩_ERNeg_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"Hx_∩_ERNeg_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERN_Old_prev_num_24_Nov":[14,11,"t6 f3 m2 r1 d1 h1"],"Hx_∩_ERN_Old_prev_denom_24_Nov":[17,12,"t5 f4 r2 s2 m2 d1 h1"],"Hx_∩_ERAmbig_prev_denom_24_Nov":[12,9,"t5 f2 m2 s1 r1 d1"],"Hx_∩_ERAmbig_prev_num_24_Nov":[13,9,"t6 m4 f2 r1"],"Hx_∩_ERAmbig_num_24_Nov":[14,11,"t7 f2 m2 r1 d1 s1"],"Hx_∩_ERAmbig_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"Hx_∩_ERN_Old_num_24_Nov":[13,11,"t7 f2 m2 r1 d1"],"Hx_∩_ERN_Old_denom_24_Nov":[12,10,"t6 f2 m2 r1 d1"],"No_C50_∩_num_24_Nov":[7,3,"n3 d3 m1"],"No_Hx_∩_ERUnrec_num_24_Nov":[4,1,"m2 r1 h1"],"HA_∩_ERUnrec_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERUnrec_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERUnrec_denom_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERP_Old_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERP_Old_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERP_Old_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERP_Old_denom_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERNeg_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERNeg_denom_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERN_Old_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERN_Old_denom_24_Jun":[20,8,"m8 t7 s4 r1"],"HA_∩_ERAmbig_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERAmbig_denom_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERUnrec_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERNeg_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERNeg_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERN_Old_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERAmbig_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERAmbig_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERN_Old_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERPos_prev_num_24_Jun":[10,8,"t7 m2 r1"],"HA_∩_ERPos_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"HA_∩_ERPos_num_24_Jun":[11,9,"t8 m2 r1"],"HA_∩_ERPos_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERUnrec_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"C50_∩_ERUnrec_num_24_Jun":[11,9,"t8 m2 r1"],"C50_∩_ERUnrec_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERP_Old_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERP_Old_num_24_Jun":[11,9,"t8 m2 r1"],"C50_∩_ERP_Old_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERNeg_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERNeg_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"C50_∩_ERNeg_num_24_Jun":[11,9,"t8 m2 r1"],"C50_∩_ERNeg_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERN_Old_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERN_Old_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"C50_∩_ERN_Old_num_24_Jun":[11,9,"t8 m2 r1"],"C50_∩_ERN_Old_denom_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERAmbig_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERAmbig_prev_denom_24_Jun":[17,7,"m7 t6 s3 r1"],"C50_∩_ERAmbig_num_24_Jun":[37,35,"p14 t8 r7 g6 m2"],"C50_∩_ERAmbig_denom_24_Jun":[19,11,"t7 m5 r4 s3"],"C50_∩_ERUnrec_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERP_Old_prev_denom_24_Jun":[9,7,"t6 m2 r1"],"C50_∩_ERPos_prev_num_24_Jun":[10,8,"t7 m2 r1"],"C50_∩_ERPos_prev_denom_24_Jun":[14,12,"t11 m2 r1"],"C50_∩_ERPos_num_24_Jun":[13,11,"t8 m2 f2 r1"],"C50_∩_ERPos_denom_24_Jun":[11,9,"t7 m2 r1 f1"],"Hx_∩_ERUnrec_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERUnrec_prev_denom_24_Jun":[8,6,"t5 m2 r1"],"Hx_∩_ERUnrec_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERUnrec_denom_24_Jun":[10,7,"t6 m2 r1 s1"],"Hx_∩_ERP_Old_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERP_Old_prev_denom_24_Jun":[8,6,"t5 m2 r1"],"Hx_∩_ERP_Old_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERP_Old_denom_24_Jun":[10,7,"t6 m2 r1 s1"],"Hx_∩_ERNeg_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERNeg_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERNeg_denom_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERN_Old_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERN_Old_prev_denom_24_Jun":[8,6,"t5 m2 r1"],"Hx_∩_ERAmbig_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERAmbig_denom_24_Jun":[15,13,"t12 m2 r1"],"Hx_∩_ERAmbig_prev_denom_24_Jun":[13,11,"t10 m2 r1"],"Hx_∩_ERN_Old_num_24_Jun":[10,8,"t7 m2 r1"],"Hx_∩_ERN_Old_denom_24_Jun":[10,7,"t6 m2 r1 s1"],"Hx_∩_ERPos_denom_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERAmbig_prev_num_24_Jun":[10,7,"t6 m2 r1 s1"],"Hx_∩_ERPos_prev_denom_24_Jun":[8,6,"t5 m2 r1"],"Hx_∩_ERNeg_prev_denom_24_Jun":[9,6,"t5 m2 r1 s1"],"Hx_∩_ERPos_prev_num_24_Jun":[9,7,"t6 m2 r1"],"Hx_∩_ERPos_num_24_Jun":[11,8,"t7 m2 r1 s1"],"HA_∩_ERUnrec_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERUnrec_prev_denom_25_Nov":[5,1,"m4 r1"],"HA_∩_ERUnrec_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERP_Old_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERP_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERP_Old_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERP_Old_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERNeg_prev_num_25_Nov":[4,2,"r2 m2"],"HA_∩_ERNeg_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERN_Old_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERN_Old_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERN_Old_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERAmbig_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERAmbig_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERN_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERPos_prev_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERPos_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERPos_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERPos_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERUnrec_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERUnrec_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERUnrec_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERP_Old_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERP_Old_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERP_Old_denom_25_Nov":[19,1,"m12 s6 r1"],"C50_∩_ERNeg_prev_num_25_Nov":[4,1,"m3 r1"],"C50_∩_ERNeg_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERNeg_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERNeg_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERN_Old_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERN_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERN_Old_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERN_Old_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERAmbig_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERAmbig_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERAmbig_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERAmbig_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERUnrec_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERP_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERPos_prev_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERPos_prev_denom_25_Nov":[3,1,"m2 r1"],"C50_∩_ERPos_num_25_Nov":[3,1,"m2 r1"],"C50_∩_ERPos_denom_25_Nov":[4,2,"r2 m2"],"HA_∩_ERAmbig_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERAmbig_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERNeg_num_25_Nov":[3,1,"m2 r1"],"HA_∩_ERNeg_prev_denom_25_Nov":[3,1,"m2 r1"],"HA_∩_ERUnrec_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERPos_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERPos_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERPos_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERPos_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERNeg_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERNeg_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERNeg_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERNeg_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERAmbig_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERAmbig_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERAmbig_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERAmbig_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERUnrec_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERUnrec_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERP_Old_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERP_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERP_Old_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERP_Old_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERN_Old_prev_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERN_Old_prev_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERN_Old_num_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERN_Old_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERUnrec_denom_25_Nov":[3,1,"m2 r1"],"Hx_∩_ERUnrec_num_25_Nov":[3,1,"m2 r1"],"Unstrat_∩_denom_24_Jun":[13,1,"s9 m3 t1"],"HA_∩_denom_24_Jun":[2,1,"t1 m1"],"C50_∩_denom_24_Jun":[14,1,"m7 s6 t1"],"Hx_∩_denom_24_Jun":[2,1,"t1 m1"],"No_HA_∩_denom_24_Jun":[2,1,"t1 m1"],"No_C50_∩_denom_24_Jun":[2,1,"t1 m1"],"No_Hx_∩_denom_24_Jun":[14,1,"m7 s6 t1"],"Unstrat_∩_prev_denom_24_Jun":[3,1,"m2 t1"],"HA_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"C50_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"Hx_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"No_HA_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"No_C50_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"No_Hx_∩_prev_denom_24_Jun":[2,1,"t1 m1"],"Unstrat_∩_prev_num_24_Jun":[3,1,"m2 t1"],"HA_∩_prev_num_24_Jun":[2,1,"t1 m1"],"C50_∩_prev_num_24_Jun":[2,1,"t1 m1"],"Hx_∩_prev_num_24_Jun":[2,1,"t1 m1"],"No_HA_∩_prev_num_24_Jun":[2,1,"t1 m1"],"No_C50_∩_prev_num_24_Jun":[2,1,"t1 m1"],"No_Hx_∩_prev_num_24_Jun":[2,1,"t1 m1"],"Unstrat_∩_num_24_Jun":[3,1,"m2 t1"],"HA_∩_num_24_Jun":[2,1,"t1 m1"],"C50_∩_num_24_Jun":[2,1,"t1 m1"],"No_HA_∩_num_24_Jun":[2,1,"t1 m1"],"No_C50_∩_num_24_Jun":[2,1,"t1 m1"],"Hx_∩_num_24_Jun":[14,1,"m7 s6 t1"],"No_Hx_∩_num_24_Jun":[18,1,"s9 m8 t1"],"C50_∩_ERUnrec_denom_25_Jun":[4,2,"r2 m2"],"C50_∩_ERP_Old_prev_num_25_Jun":[4,2,"r2 m2"],"C50_∩_ERP_Old_num_25_Jun":[4,2,"r2 m2"],"C50_∩_ERP_Old_denom_25_Jun":[10,2,"m8 r2"],"C50_∩_ERNeg_prev_num_25_Jun":[4,2,"r2 m2"],"C50_∩_ERNeg_prev_denom_25_Jun":[4,2,"r2 m2"],"HA_∩_ERUnrec_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERUnrec_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERUnrec_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERP_Old_prev_num_25_Jun":[5,1,"m4 r1"],"HA_∩_ERP_Old_prev_denom_25_Jun":[9,1,"m8 r1"],"HA_∩_ERP_Old_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERP_Old_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERNeg_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERNeg_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERN_Old_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERAmbig_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERAmbig_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERUnrec_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERNeg_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERNeg_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERN_Old_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERAmbig_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERAmbig_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERN_Old_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERPos_prev_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERPos_prev_denom_25_Jun":[3,1,"m2 r1"],"HA_∩_ERPos_num_25_Jun":[3,1,"m2 r1"],"HA_∩_ERPos_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERUnrec_prev_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERUnrec_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERNeg_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERNeg_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERN_Old_prev_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERN_Old_prev_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERN_Old_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERN_Old_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERAmbig_prev_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERAmbig_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERAmbig_denom_25_Jun":[4,1,"m3 r1"],"C50_∩_ERUnrec_prev_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERP_Old_prev_denom_25_Jun":[3,1,"m2 r1"],"C50_∩_ERPos_prev_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERPos_prev_denom_25_Jun":[5,2,"m3 r2"],"C50_∩_ERPos_num_25_Jun":[3,1,"m2 r1"],"C50_∩_ERPos_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERUnrec_prev_num_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERUnrec_prev_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERUnrec_num_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERUnrec_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERP_Old_prev_num_25_Jun":[5,1,"m4 r1"],"Hx_∩_ERP_Old_prev_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERP_Old_num_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERP_Old_denom_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERNeg_prev_num_25_Jun":[3,1,"m2 r1"],"Hx_∩_ERNeg_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERNeg_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERN_Old_prev_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERN_Old_prev_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERAmbig_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERAmbig_denom_25_Jun":[6,2,"m4 r2"],"Hx_∩_ERAmbig_prev_denom_25_Jun":[6,2,"m4 r2"],"Hx_∩_ERN_Old_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERN_Old_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERPos_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERAmbig_prev_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERPos_prev_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERNeg_prev_denom_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERPos_prev_num_25_Jun":[4,1,"m3 r1"],"Hx_∩_ERPos_num_25_Jun":[4,1,"m3 r1"],"C50_∩_ERAmbig_prev_denom_25_Jun":[4,1,"m3 r1"],"HA_∩_ERN_Old_denom_25_Jun":[4,1,"m3 r1"],"Unstrat_∩_prev_num_25_Nov":[2,0,"m2"],"Unstrat_∩_prev_num_25_Jun":[2,0,"m2"],"Unstrat_∩_prev_denom_25_Nov":[3,0,"m3"],"Unstrat_∩_prev_denom_25_Jun":[2,0,"m2"],"Unstrat_∩_num_25_Nov":[2,0,"m2"],"Unstrat_∩_num_25_Jun":[2,0,"m2"],"Unstrat_∩_denom_25_Nov":[2,0,"m2"],"Unstrat_∩_denom_25_Jun":[8,6,"t5 m2 r1"],"No_Hx_∩_prev_num_25_Nov":[1,0,"m1"],"No_Hx_∩_prev_num_25_Jun":[1,0,"m1"],"No_Hx_∩_prev_denom_25_Nov":[1,0,"m1"],"No_Hx_∩_prev_denom_25_Jun":[1,0,"m1"],"No_Hx_∩_num_25_Nov":[1,0,"m1"],"No_Hx_∩_num_25_Jun":[21,0,"m12 s9"],"No_Hx_∩_denom_25_Nov":[1,0,"m1"],"No_Hx_∩_denom_25_Jun":[17,0,"s9 m8"],"No_HA_∩_prev_num_25_Nov":[1,0,"m1"],"No_HA_∩_prev_num_25_Jun":[1,0,"m1"],"No_HA_∩_prev_denom_25_Nov":[1,0,"m1"],"No_HA_∩_prev_denom_25_Jun":[1,0,"m1"],"No_HA_∩_num_25_Nov":[1,0,"m1"],"No_HA_∩_num_25_Jun":[1,0,"m1"],"No_HA_∩_denom_25_Nov":[1,0,"m1"],"No_HA_∩_denom_25_Jun":[1,0,"m1"],"No_C50_∩_prev_num_25_Nov":[1,0,"m1"],"No_C50_∩_prev_num_25_Jun":[1,0,"m1"],"No_C50_∩_prev_denom_25_Nov":[1,0,"m1"],"No_C50_∩_prev_denom_25_Jun":[1,0,"m1"],"No_C50_∩_num_25_Nov":[1,0,"m1"],"No_C50_∩_num_25_Jun":[1,0,"m1"],"No_C50_∩_denom_25_Nov":[1,0,"m1"],"No_C50_∩_denom_25_Jun":[1,0,"m1"],"Hx_∩_prev_num_25_Nov":[1,0,"m1"],"Hx_∩_prev_num_25_Jun":[1,0,"m1"],"Hx_∩_prev_denom_25_Nov":[1,0,"m1"],"Hx_∩_prev_denom_25_Jun":[1,0,"m1"],"Hx_∩_num_25_Nov":[1,0,"m1"],"Hx_∩_num_25_Jun":[13,0,"m7 s6"],"Hx_∩_denom_25_Nov":[1,0,"m1"],"Hx_∩_denom_25_Jun":[1,0,"m1"],"HA_∩_prev_num_25_Nov":[1,0,"m1"],"HA_∩_prev_num_25_Jun":[1,0,"m1"],"HA_∩_prev_denom_25_Nov":[1,0,"m1"],"HA_∩_prev_denom_25_Jun":[1,0,"m1"],"HA_∩_num_25_Nov":[1,0,"m1"],"HA_∩_num_25_Jun":[1,0,"m1"],"HA_∩_denom_25_Nov":[1,0,"m1"],"HA_∩_denom_25_Jun":[1,0,"m1"],"C50_∩_prev_num_25_Nov":[1,0,"m1"],"C50_∩_prev_num_25_Jun":[1,0,"m1"],"C50_∩_prev_denom_25_Nov":[13,0,"m7 s6"],"C50_∩_prev_denom_25_Jun":[1,0,"m1"],"C50_∩_num_25_Nov":[13,0,"m7 s6"],"C50_∩_num_25_Jun":[1,0,"m1"],"C50_∩_denom_25_Nov":[13,0,"m7 s6"],"C50_∩_denom_25_Jun":[13,0,"m7 s6"],"Unstrat_∩__denom_24_Jun":[1,1,"r1"]}};
+
+const ORDER=["dump truncated","groups out of order","wrong window","wrong terms",
+             "wrong group count","other","not in grammar"];
+
+
+/* ---------------------------------------------------------------------------
+   FIGURES.  Three jobs, three forms:
+     A  share of each failure kind  -> one proportional segmented bar
+                                       (the kinds partition the fails, so a
+                                        part-to-whole bar is honest; a Venn is
+                                        not - see B for the real overlap)
+     B  defect co-occurrence        -> UpSet-style bar. A row can be wrong on
+                                       several axes at once; this is the figure
+                                       a Venn would be trying to be, without a
+                                       Venn's 3-set ceiling or unreadable lobes.
+     C  which families fail         -> small multiples, fail RATE not fail count,
+                                       because the families are different sizes.
+   Every bar is clickable and drives the same filter state as the chips.
+--------------------------------------------------------------------------- */
+const PAL=["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#6250d6"];
+const PALD=["#3987e5","#d95926","#199e70","#c98500","#d55181","#9085e9"];
+function pal(i){return (document.documentElement.dataset.theme==="dark"||
+  (window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches&&
+   document.documentElement.dataset.theme!=="light"))?PALD[i%6]:PAL[i%6];}
+const KCOL={}; ORDER.forEach((k,i)=>KCOL[k]=i);
+
+function segbar(rows,total,attr){      // [[label,n,colorIdx,key]], attr = data-<attr>
+  if(!total)return "";
+  const A=attr||"k";
+  const W=100, gap=0.35;
+  let x=0,seg="",leg="";
+  rows.forEach(([lab,n,ci,key])=>{
+    const w=Math.max(0,(n/total)*W-gap);
+    seg+=`<rect class="hit" data-${A}="${esc(key)}" x="${x.toFixed(3)}%" y="0" width="${w.toFixed(3)}%" height="26" rx="3" fill="${pal(ci)}"><title>${esc(lab)}: ${n} (${Math.round(n/total*100)}%)</title></rect>`;
+    x+=(n/total)*W;
+    leg+=`<button class="lg hit" data-${A}="${esc(key)}"><i style="background:${pal(ci)}"></i>${esc(lab)} <b>${n}</b> <em>${Math.round(n/total*100)}%</em></button>`;
+  });
+  return `<svg class="sb" viewBox="0 0 100 26" preserveAspectRatio="none" height="26">${seg}</svg><div class="lgs">${leg}</div>`;
+}
+
+function hbars(items,opts){ // [[label,value,denom|null,key]]
+  const o=opts||{}, max=Math.max(1,...items.map(i=>o.rate?(i[2]?i[1]/i[2]:0):i[1]));
+  // one label width for the whole block: the bars then start on a common x,
+  // which is the only way a row of small multiples reads as one figure.
+  return '<div class="hb"'+(o.lw?' style="--hbl:'+o.lw+'"':'')+'>'+items.map(([lab,v,den,key],i)=>{
+    const val=o.rate?(den?v/den:0):v, w=(val/max)*100;
+    const txt=o.rate?`${Math.round(val*100)}%  <em>${v}/${den}</em>`:`${v}`;
+    return `<div class="hbr hit${o.rg&&key&&o.on===key?" on":""}" data-${o.rg?"rg":"q"}="${esc(key||'')}"><span class="hbl">${esc(lab)}</span>`
+      +`<span class="hbt"><i style="width:${w.toFixed(1)}%;background:${pal(o.ci||0)}"></i></span>`
+      +`<span class="hbv">${txt}</span></div>`;}).join("")+'</div>';
+}
+
+function renderViz(S){
+  const fails=S.res.filter(r=>r.status==="bad");
+  if(!fails.length)return "";
+  S.regionSet=["truncated","order","window","terms","count"];
+
+  // A — share of each failure kind
+  const kc={}; fails.forEach(r=>kc[r.kind]=(kc[r.kind]||0)+1);
+  const arows=ORDER.filter(k=>kc[k]).map(k=>[k,kc[k],KCOL[k],k]);
+
+  // B — co-occurrence of defect axes
+  const AX=["truncated","order","window","terms","count"];
+  const per={}; AX.forEach(a=>per[a]=0);
+  const combo={};
+  fails.forEach(r=>{const a=(r.axes||[]).slice().sort((x,y)=>AX.indexOf(x)-AX.indexOf(y));
+    a.forEach(x=>per[x]++);
+    const k=a.join(" + ")||"(none)"; combo[k]=(combo[k]||0)+1;});
+  const crows=Object.entries(combo).sort((a,b)=>b[1]-a[1]).slice(0,10)
+    // the region key is the axis set joined without spaces, which is the form
+    // render()'s region filter rebuilds from each row
+    .map(([k,n])=>[k,n,fails.length,k==="(none)"?"":k.replace(/ \+ /g,"+")]);
+  const prows=AX.filter(a=>per[a]).map(a=>[a,per[a],fails.length,""]);
+
+  // C — families: fail RATE, since the families differ in size
+  const dims=[["window","Window"],["cohort","Cohort"],["stratum","Stratum"],["metric","Metric"]];
+  const fam=dims.map(([d,lab])=>{
+    const tot={},bad={};
+    S.res.forEach(r=>{if(r.status==="skip")return;const k=r[d]||"(none)";
+      tot[k]=(tot[k]||0)+1; if(r.status==="bad")bad[k]=(bad[k]||0)+1;});
+    const items=Object.keys(tot).map(k=>[k,bad[k]||0,tot[k],k])
+      .sort((a,b)=>(b[1]/b[2])-(a[1]/a[2]));
+    return `<div class="fx"><h4>${lab}</h4>${hbars(items,{rate:true,ci:2,lw:"11ch"})}</div>`;
+  }).join("");
+
+  return '<div class="viz">'
+    +`<section><h3>Share of each failure kind</h3>`
+    +`<p class="vn">${fails.length} failing quer${fails.length===1?"y":"ies"}. Each row is counted once, under its headline defect — click a slice to filter the table to it.</p>`
+    +donut(arows,fails.length,S)+`</section>`
+    +`<section><h3>How the defects co-occur</h3>`
+    +`<p class="vn">A row can be wrong on several axes at once, so these two add to more than the pie. The left bars count how often each axis is involved; the right bars give the exact combination — click one to filter the table to rows wrong on precisely that set.</p>`
+    +`<div class="two"><div><h4>Axis involved in</h4>${hbars(prows,{rate:true,ci:0,lw:"13ch"})}</div>`
+    +`<div><h4>Exact combination</h4>${hbars(crows,{rate:true,ci:5,lw:"22ch",rg:true,on:S.region})}</div></div></section>`
+    +`<section><h3>Which families fail</h3>`
+    +`<p class="vn">Fail rate, not fail count — the families are different sizes, so counts would just rank them by how many queries they have. Denominator excludes names outside the grammar.</p>`
+    +`<div class="fxs">${fam}</div></section>`
+    +'</div>';
+}
+
+const fmt=n=>n==null?"\u2014":Number(n).toLocaleString("en-US");
+
+/* ---------------------------------------------------------------------------
+   SNAPSHOT PROVENANCE.  Every dumped row carries the network total and the
+   "N of M" HCO coverage that were on screen when that query was read. Those
+   are not a property of the query - they date the dump. A table whose rows
+   were read against different network totals has no single denominator, which
+   is exactly the thing a reviewer will ask about, so it gets its own section.
+   Column layout is not fixed, so find the pair by content: the "N of M" cell,
+   and the nearest 6-10 digit integer before it.
+--------------------------------------------------------------------------- */
+function snapOf(cells){
+  // the same cell arrives three ways depending on how the tab was built:
+  // gviz display text (79 of 79), a pasted formula (="79 of 79"), or an
+  // on-disk dump row where the literal quotes survive. Strip them first.
+  const c=cells.map(x=>clean(x).trim().replace(/^"+|"+$/g,"").trim());
+  let hi=-1,m=null;
+  for(let i=1;i<c.length;i++){const t=/^(\d+)\s+of\s+(\d+)$/.exec(c[i]);
+    if(t){hi=i;m=t;break;}}
+  if(hi<0)return null;
+  const num=s=>{const v=String(s).replace(/,/g,"");return /^\d+$/.test(v)?+v:null;};
+  let net=null;
+  for(let j=hi-1;j>=1;j--){const v=num(c[j]);if(v!==null&&v>=100000){net=v;break;}}
+  if(net===null)return null;
+  const pre=[];for(let j=1;j<hi;j++){const v=num(c[j]);if(v!==null)pre.push(v);}
+  return {net,on:+m[1],of:+m[2],pts:pre.length?pre[0]:null,sites:pre.length>1?pre[1]:null};
+}
+
+function renderSnaps(S){
+  const rows=S.res.filter(r=>r.snap);
+  if(!rows.length)return "";
+  const cnt=S.snapCount,keys=S.snapKeys,dom=S.dom;
+  const vals=keys.slice().sort((a,b)=>a-b),lo=vals[0],hi=vals[vals.length-1];
+  const off=rows.filter(r=>r.off).length, part=rows.filter(r=>!r.full).length;
+  const seg=keys.map((k,i)=>[fmt(k),cnt[k],i,String(k)]);
+  const tab='<table class="snaptab"><thead><tr><th>Network total</th><th>HCO coverage</th>'
+    +'<th style="text-align:right">Rows</th><th style="text-align:right">Share</th>'
+    +'<th style="text-align:right">\u0394 vs dominant</th></tr></thead><tbody>'
+    +keys.map((k,i)=>{const d=k-dom;
+      return '<tr class="hit'+(k===dom?" dom":"")+(S.snap===String(k)?" on":"")+'" data-sk="'+k+'">'
+       +'<td class="n"><i class="sw" style="background:'+pal(i)+'"></i>'+fmt(k)+'</td>'
+       +'<td class="n">'+esc(S.snapHco[k]||"")
+         +(S.snapFull[k]?"":'<span class="flag">partial</span>')+'</td>'
+       +'<td class="n" style="text-align:right">'+cnt[k]+'</td>'
+       +'<td class="n" style="text-align:right">'+(cnt[k]/rows.length*100).toFixed(1)+'%</td>'
+       +'<td class="n" style="text-align:right">'
+         +(d?(d>0?"+":"\u2212")+fmt(Math.abs(d)):"\u2014")+'</td></tr>';}).join("")
+    +'</tbody></table>';
+  const dims=[["window","Window"],["cohort","Cohort"],["stratum","Stratum"],["metric","Metric"]];
+  const fam=dims.map(d=>{const tot={},bad={};
+    rows.forEach(r=>{const k=r[d[0]]||"(none)";tot[k]=(tot[k]||0)+1;if(r.off)bad[k]=(bad[k]||0)+1;});
+    const items=Object.keys(tot).map(k=>[k,bad[k]||0,tot[k],k])
+      .sort((a,b)=>(b[1]/b[2])-(a[1]/a[2]));
+    return '<div class="fx"><h4>'+d[1]+'</h4>'+hbars(items,{rate:true,ci:3,lw:"11ch"})+'</div>';}).join("");
+  return '<div class="viz">'
+   +'<section><h3>Snapshot provenance</h3>'
+   +'<p class="vn">Each row was read against whatever network total TriNetX happened to be '
+   +'showing at that moment, so the figure dates the dump rather than describing the query. '
+   +(keys.length>1
+      ?'These '+rows.length+' rows are a patchwork of <b>'+keys.length
+       +'</b> snapshots, so the table has no single denominator yet.'
+      :'All '+rows.length+' rows share one snapshot \u2014 the table has a single denominator.')
+   +'</p>'
+   +'<div class="kv">'
+   +'<div><b'+(keys.length>1?' style="color:var(--warn)"':'')+'>'+keys.length+'</b><span>snapshots</span></div>'
+   +'<div><b>'+Math.round(cnt[dom]/rows.length*100)+'%</b><span>on dominant</span></div>'
+   +'<div><b'+(off?' style="color:var(--warn)"':'')+'>'+off+'</b><span>rows off it</span></div>'
+   +'<div><b>'+fmt(hi-lo)+'</b><span>spread max\u2212min</span></div>'
+   +'<div><b'+(part?' style="color:var(--warn)"':'')+'>'+part+'</b><span>below full HCO</span></div>'
+   +'<div><b>'+fmt(dom)+'</b><span>dominant n</span></div>'
+   +'</div>'
+   +segbar(seg,rows.length,"sk")
+   +'<div class="scroll" style="margin-top:18px">'+tab+'</div></section>'
+   +(off?'<section><h3>Which families sit off the dominant snapshot</h3>'
+     +'<p class="vn">Share of each family read against something other than '+fmt(dom)
+     +'. A family at 100% was refreshed as one block \u2014 that is a resume boundary in the run, '
+     +'not a property of the data. Click a bar to filter the table to it.</p>'
+     +'<div class="fxs">'+fam+'</div></section>':"")
+   +'</div>';
+}
+
+/* ---------------------------------------------------------------------------
+   RUN-LOG CORRELATION.  Baked in from 3_VE/Logs at build time; a static page
+   cannot read your disk. One question: do the rows that are off-snapshot, or
+   failing, share a history of being WRITTEN to (fork / replace_rename /
+   shift_dates / remove_group / del / paste) rather than merely read?
+--------------------------------------------------------------------------- */
+function renderLogs(S){
+  if(typeof LOGS==="undefined"||!LOGS||!LOGS.q)return "";
+  const Q=LOGS.q,kf=n=>n.replace("BCa-","");
+  const mrows=Object.keys(LOGS.modes).map(m=>[m,LOGS.modes[m],LOGS.files,""])
+    .sort((a,b)=>b[1]-a[1]);
+  const have=S.res.filter(r=>Q[kf(r.name)]).length;
+  const top=S.res.map(r=>[r.name,Q[kf(r.name)]]).filter(x=>x[1])
+    .sort((a,b)=>b[1][0]-a[1][0]).slice(0,12)
+    .map(x=>[kf(x[0]),x[1][0],null,x[0]]);
+  const grp=(sel,lab)=>{const g=S.res.filter(sel).map(r=>Q[kf(r.name)]).filter(Boolean);
+    if(!g.length)return null;
+    return [lab,g.length,g.reduce((s,v)=>s+v[0],0)/g.length,
+            g.reduce((s,v)=>s+v[1],0)/g.length,g.filter(v=>v[1]>0).length/g.length];};
+  const cm=[grp(r=>r.snap&&!r.off,"On the dominant snapshot"),
+            grp(r=>r.off,"Off the dominant snapshot"),
+            grp(r=>r.status==="bad","Failing the logic check"),
+            grp(r=>r.status==="skip","Name not in the grammar")].filter(Boolean);
+  const ctab='<table class="snaptab"><thead><tr><th>Group</th>'
+    +'<th style="text-align:right">Rows</th><th style="text-align:right">Mean touches</th>'
+    +'<th style="text-align:right">Mean writes</th>'
+    +'<th style="text-align:right">Any write</th></tr></thead><tbody>'
+    +cm.map(r=>'<tr><td>'+esc(r[0])+'</td>'
+      +'<td class="n" style="text-align:right">'+r[1]+'</td>'
+      +'<td class="n" style="text-align:right">'+r[2].toFixed(1)+'</td>'
+      +'<td class="n" style="text-align:right">'+r[3].toFixed(2)+'</td>'
+      +'<td class="n" style="text-align:right">'+Math.round(r[4]*100)+'%</td></tr>').join("")
+    +'</tbody></table>';
+  return '<div class="viz">'
+   +'<section><h3>What the run logs did to these queries</h3>'
+   +'<p class="vn">'+LOGS.files+' run logs, '+esc(LOGS.span)+'. '+have+' of '+S.res.length
+   +' rows are named in at least one of them. Counts are name mentions per log, '
+   +'so a single long walk can touch one query several times.</p>'
+   +'<div class="two"><div><h4>Runs by mode</h4>'+hbars(mrows,{rate:true,ci:4,lw:"15ch"})+'</div>'
+   +'<div><h4>Most-touched queries</h4>'+hbars(top,{ci:1,lw:"34ch"})+'</div></div></section>'
+   +'<section><h3>Does being written to predict being wrong?</h3>'
+   +'<p class="vn">Writes are fork, replace_rename, shift_dates, remove_group, del and paste. '
+   +'If the off-snapshot or failing rows carried many more writes than the rest, that would '
+   +'point at the code path that produced them. Read it as description: these groups are small, '
+   +'and the modes were never applied at random.</p>'
+   +'<div class="scroll">'+ctab+'</div></section>'
+   +'</div>';
+}
+
+/* ---------------------------------------------------------------------------
+   A DEVIATION, RENDERED.  What the row actually says is the thing you read
+   first, in the fail colour. Hovering strikes it through and slides the
+   expected value in beside it, in the pass colour - so the correction never
+   occupies space until you ask for it, and the row stays scannable.
+--------------------------------------------------------------------------- */
+const FLD={must:"must have",cannot:"cannot have",operator:"operator",
+           window:"window",title:"titled",group:"group"};
+function dv(iss){
+  return '<span class="dv"><span class="act">'+esc(iss.act)+'</span>'
+    +'<span class="arw">\u2192</span>'
+    +'<span class="exp">'+esc(iss.exp)+'</span></span>';}
+function devList(r){
+  const out=[];
+  (r.groups||[]).forEach(g=>{if(!g.issues.length)return;
+    g.issues.forEach(iss=>out.push('<span class="dev">'
+      // a title/presence defect is about the slot, not the group that is in it,
+      // so naming the group there would print the expected name twice
+      +'<span class="gid">'+(iss.f==="title"||iss.f==="group"
+          ? "group "+g.n : g.n+'\u00b7'+esc(g.title||"?"))+'</span>'
+      +'<span class="fld">'+(FLD[iss.f]||iss.f)+'</span>'+dv(iss)+'</span>'));});
+  if(!out.length)return esc((r.problems||[]).join("; "));
+  return '<span class="devs">'+out.join("")+'</span>';}
+
+/* ---------------------------------------------------------------------------
+   A FIX SCRIPT PER QUERY.  The checker already knows exactly which group
+   deviated and what it should say, so it can hand over the shell block that
+   finds the query and then blocks on a read until you have fixed it - the
+   instructions sit in the read prompt, so they stay on screen while you work
+   inside TriNetX. A terminal prompt cannot carry a double quote, so every
+   value is sanitised before it goes in.
+--------------------------------------------------------------------------- */
+function shp(t){ // safe inside a double-quoted zsh read prompt
+  return String(t).replace(/\\/g,"\\\\").replace(/"/g,"'")
+    .replace(/[$`]/g,m=>"\\"+m).replace(/\n/g," ");}
+function fixSteps(r){
+  const out=[];
+  if(r.kind==="dump truncated")
+    out.push("the pasted dump is short - re-copy the whole query text before judging it");
+  (r.groups||[]).forEach(g=>(g.issues||[]).forEach(i=>{
+    const w=(i.f==="title"||i.f==="group")?"group "+g.n
+      :"group "+g.n+" ("+(g.title||"?")+")";
+    if(i.f==="group"&&i.exp!=="no group here")
+      out.push(w+": missing - add "+i.exp);
+    else if(i.f==="group")
+      out.push(w+": "+i.act+" does not belong here - delete it");
+    else if(i.f==="title")
+      out.push(w+": is "+i.act+", should be "+i.exp+" (groups are out of order)");
+    else if(i.f==="must")
+      out.push(w+": must-have is "+i.act+", should be "+i.exp);
+    else if(i.f==="cannot")
+      out.push(w+": cannot-have is "+i.act+", should be "+i.exp);
+    else if(i.f==="operator")
+      out.push(w+": operator is "+i.act+", should be "+i.exp);
+    else if(i.f==="window")
+      out.push(w+": window is "+i.act+", should be "+i.exp);}));
+  if(!out.length)(r.problems||[]).forEach(x=>out.push(x));
+  return out;}
+/* The shell side of this comes in two shapes, because there are two jobs.
+   Bringing a sheet onto one snapshot is the same action for every row, so it
+   is an array and a loop. Fixing failures is per-query work, but the
+   instruction is a property of the DEFECT, not of the query - queries that
+   deviate in exactly the same way share one instruction verbatim, so they
+   batch into one array too, and the paste stays short however many rows fail.
+--------------------------------------------------------------------------- */
+const FIXFN=
+ 'fix_q_func(){\n'
++'  _rr ${q} && tnx -find_query -e ${q} -main -n 1 -go\n'
++'  read "ignore?\n'
++'${q}\n'
++'${instr}\n'
++'Press enter once you have fixed the query, then it re-dumps. "\n'
++'  tnx -find_query -e ${q} -main -n 1 -go\n'
++'}\n';
+function qsArr(list,pad){
+  const p=pad||"";
+  return p+"qs=(\n"+list.map(r=>p+'  "'+r.name+'"').join("\n")+"\n"+p+")\n";}
+// the instruction text for a row, with no mention of the row - that is what
+// lets two rows with the same defect share one block
+function instrOf(r){
+  return [shp(r.kind||"fails the spec")]
+    .concat(fixSteps(r).map(x=>"  • "+shp(x))).join("\n");}
+
+function fixScript(list,label){
+  const when=new Date().toISOString().slice(0,16).replace("T"," ");
+  if(list.length===1){
+    const r=list[0];
+    // one query pastes as the body of fix_q_func, inlined, so nothing has to
+    // be defined first and nothing has to be invoked after
+    return "# "+r.name+"  -  "+(r.kind||"fails the spec")+"\n"
+      +'q="'+r.name+'"\n'
+      +'instr="'+instrOf(r)+'"\n'
+      +'_rr ${q} && tnx -find_query -e ${q} -main -n 1 -go\n'
+      +'read "ignore?\n${q}\n${instr}\nPress enter once you have fixed the query. "\n'
+      +'tnx -find_query -e ${q} -main -n 1 -go\n';}
+  // group by identical instruction: same defect, same words, one array
+  const by=new Map();
+  list.forEach(r=>{const k=instrOf(r);
+    if(!by.has(k))by.set(k,[]); by.get(k).push(r);});
+  const groups=[...by.entries()].sort((a,b)=>b[1].length-a[1].length);
+  let out="# VE fix run — "+list.length+" failing queries, "+groups.length
+    +" distinct defect"+(groups.length===1?"":"s")+"  ("+label+", "+when+")\n"
+    +"# Each array shares one instruction because its rows deviate identically.\n"
+    +FIXFN;
+  groups.forEach(([k,rows],n)=>{
+    out+="\n# "+(n+1)+"/"+groups.length+" — "+rows[0].kind+"  ("+rows.length
+      +" quer"+(rows.length===1?"y":"ies")+")\n"
+      +'instr="['+(n+1)+"/"+groups.length+"] "+k+'"\n'
+      +qsArr(rows)
+      +"for q in ${qs[@]}; do fix_q_func; done\n";});
+  return out;}
+
+/* Bringing rows onto one snapshot needs no instruction at all - _rr drops the
+   stale dump and the find re-reads it, so it is one array and one loop. */
+function runScript(list,label){
+  const when=new Date().toISOString().slice(0,16).replace("T"," ");
+  const act='_rr ${q} && tnx -find_query -e ${q} -main -n 1 -go';
+  if(list.length===1)return 'q="'+list[0].name+'"; '+act+"\n";
+  return "# VE re-run — "+list.length+" queries  ("+label+", "+when+")\n"
+    +"# Drops each stale dump and re-reads it, so every row lands on today's snapshot.\n"
+    +qsArr(list)
+    +"for q in ${qs[@]}; do "+act+"; done\n";}
+
+/* Clipboard: the page is often opened from a file:// URL, where the async
+   clipboard API is not available, so there is a textarea fallback. */
+function copyText(t,btn){
+  const mark=ok=>{if(!btn)return;const o=btn.dataset.lab||btn.textContent;
+    btn.dataset.lab=o; btn.textContent=ok?"copied":"press \u2318C";
+    btn.classList.toggle("done",ok);
+    setTimeout(()=>{btn.textContent=o;btn.classList.remove("done");},1500);};
+  const fb=()=>{const ta=document.createElement("textarea");ta.value=t;
+    ta.setAttribute("readonly","");ta.style.cssText="position:fixed;top:0;left:0;opacity:0";
+    document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);
+    let ok=false; try{ok=document.execCommand("copy");}catch(e){}
+    document.body.removeChild(ta); mark(ok);};
+  if(navigator.clipboard&&window.isSecureContext)
+    navigator.clipboard.writeText(t).then(()=>mark(true),fb);
+  else fb();}
+
+/* group tiles for an expanded row: every group the query should have, in order,
+   green when it matches and red when it does not. */
+function tiles(r){
+  if(!r.groups||!r.groups.length)return "";
+  const t=r.groups.map(g=>{
+    const bad=g.state!=="ok", ghost=g.state==="missing";
+    const by={}; (g.issues||[]).forEach(i=>by[i.f]=i);
+    const line=(lab,f,val)=>{
+      if(by[f])return '<span class="gtl"><b>'+lab+'</b> '+dv(by[f])+'</span>';
+      return val?'<span class="gtl"><b>'+lab+'</b> '+esc(val)+'</span>':"";};
+    const a=g.act,e=g.exp;
+    const fp=(a&&a.fp||"").split("/"),ef=(e&&e.fp||"").split("/");
+    return '<div class="gt '+(bad?"bad":"ok")+(ghost?" ghost":"")+'">'
+      +'<span class="gth"><b>'+g.n+'</b><span class="gnm">'+esc(g.title||"?")+'</span>'
+      +'<span class="gok '+(bad?"bad":"ok")+'">'+(bad?"\u2717":"\u2713")+'</span></span>'
+      +(ghost?'<span class="gtl"><b>missing</b> '+dv(by.group)+'</span>'
+        :line("must",   "must",    fp[0]?bitLabel(fp[0]):"")
+        +line("cannot", "cannot",  fp[1]?bitLabel(fp[1]):"")
+        +line("op",     "operator",fp[2]||"")
+        +line("window", "window",  a?a.win:""))
+      +(g.human?'<span class="gtl" style="opacity:.75">'+esc(g.human)+'</span>':"")
+      +'</div>';}).join("");
+  return '<div class="gts">'+t+'</div>';}
+
+/* ---------------------------------------------------------------------------
+   THE VENN.  Three circles is the honest ceiling, so it takes the three axes
+   that actually occur most and says plainly how many failures involve none of
+   them. The UpSet bars beside it keep the full picture.
+--------------------------------------------------------------------------- */
+/* A pie of error type: one slice per headline defect kind, each row counted
+   once. A donut rather than a full pie - the hole carries the total, and an
+   annulus is easier to compare by angle than a disc with labels fighting the
+   centre. Click a slice or a legend row to filter the table to that kind. */
+function donut(rows,total,S){        // [[label,n,colorIdx,key]]
+  if(!total)return "";
+  const cx=132,cy=132,R=104,r=63,TAU=Math.PI*2;
+  const pt=(a,rad)=>[(cx+rad*Math.cos(a)).toFixed(2),(cy+rad*Math.sin(a)).toFixed(2)].join(",");
+  let a0=-Math.PI/2, out="";
+  rows.forEach(([lab,n,ci,key])=>{
+    const f=n/total, a1=a0+f*TAU, big=(a1-a0)>Math.PI?1:0, mid=(a0+a1)/2;
+    let d;
+    if(f>=0.9995){
+      // a full turn has no chord, so the ring is drawn as two half-arcs per edge
+      d="M "+pt(a0,R)+" A "+R+" "+R+" 0 1 1 "+pt(a0+Math.PI,R)
+       +" A "+R+" "+R+" 0 1 1 "+pt(a0,R)
+       +" M "+pt(a0,r)+" A "+r+" "+r+" 0 1 0 "+pt(a0+Math.PI,r)
+       +" A "+r+" "+r+" 0 1 0 "+pt(a0,r)+" Z";
+    } else {
+      d="M "+pt(a0,R)+" A "+R+" "+R+" 0 "+big+" 1 "+pt(a1,R)
+       +" L "+pt(a1,r)+" A "+r+" "+r+" 0 "+big+" 0 "+pt(a0,r)+" Z";
+    }
+    const on=S.kind===key, k=6, dx=(on?k*Math.cos(mid):0), dy=(on?k*Math.sin(mid):0);
+    const pc=Math.round(f*100);
+    out+='<g class="sl hit'+(on?" on":"")+'" data-k="'+esc(key)+'"'
+      +(on?' transform="translate('+dx.toFixed(2)+','+dy.toFixed(2)+')"':"")+'>'
+      +'<path d="'+d+'" fill="'+pal(ci)+'"><title>'+esc(lab)+": "+n+" of "+total
+      +" ("+pc+'%)</title></path>'
+      +(f>=0.06?'<text class="pct" x="'+(cx+((R+r)/2)*Math.cos(mid)).toFixed(1)
+        +'" y="'+(cy+((R+r)/2)*Math.sin(mid)+4).toFixed(1)+'">'+pc+'%</text>':"")
+      +'</g>';
+    a0=a1;});
+  const svg='<svg class="pie" viewBox="0 0 264 264" role="img" '
+    +'aria-label="share of each failure kind">'+out
+    +'<text class="ctr" x="132" y="130">'+total+'</text>'
+    +'<text class="ctl" x="132" y="149">failing</text></svg>';
+  const mx=Math.max(...rows.map(x=>x[1]));
+  const leg='<div class="pl">'+rows.map(([lab,n,ci,key])=>
+    '<button class="plr hit'+(S.kind===key?" on":"")+'" data-k="'+esc(key)+'">'
+    +'<i style="background:'+pal(ci)+'"></i>'
+    +'<span class="pnm">'+esc(lab)+'</span>'
+    +'<span class="ptk"><b style="width:'+(n/mx*100).toFixed(1)+'%;background:'+pal(ci)+'"></b></span>'
+    +'<span class="pv">'+n+' <em>'+Math.round(n/total*100)+'%</em></span></button>').join("")
+    +'</div>';
+  return '<div class="pie2">'+svg+leg+'</div>';}
+
+function render(){
+  const out=document.getElementById("out"),S=STATE;
+  if(!S)return;
+  const q=S.q.trim().toLowerCase();
+  let rows=S.res.filter(r=>{
+    if(S.filter==="bad"&&r.status!=="bad")return false;
+    if(S.filter==="ok"&&r.status!=="ok")return false;
+    if(S.filter==="skip"&&r.status!=="skip")return false;
+    if(S.filter==="off"&&!r.off)return false;
+    if(S.snap&&String(r.snap)!==S.snap)return false;
+    if(S.kind&&r.kind!==S.kind)return false;
+    if(S.region){const AXo=["truncated","order","window","terms","count"];
+      const k=AXo.filter(a=>(r.axes||[]).includes(a))
+        .filter(a=>S.regionSet.includes(a)).join("+");
+      if(k!==S.region)return false;}
+    if(q&&!(r.name.toLowerCase().includes(q)||
+            (r.problems||[]).join(" ").toLowerCase().includes(q)))return false;
+    return true;});
+
+  const cmp={
+    row:(a,b)=>a.i-b.i,
+    name:(a,b)=>a.name.localeCompare(b.name),
+    kind:(a,b)=>(ORDER.indexOf(a.kind)-ORDER.indexOf(b.kind))||a.i-b.i,
+    cohort:(a,b)=>(a.cohort||"").localeCompare(b.cohort||"")||a.i-b.i,
+    window:(a,b)=>(a.window||"").localeCompare(b.window||"")||a.i-b.i,
+    snap:(a,b)=>((a.snap||0)-(b.snap||0))||a.i-b.i};
+  rows=rows.slice().sort(cmp[S.sort]||cmp.row);
+  if(S.desc)rows.reverse();
+
+  const tile=(n,lab,col,key)=>'<button class="tile'+(S.filter===key?" on":"")+'" data-f="'+key+'">'
+    +'<b'+(col?' style="color:var(--'+col+')"':'')+'>'+n+'</b><span>'+lab+'</span></button>';
+  // a tile with nothing to filter by - it is a readout, not a control
+  const stat=(n,lab,col)=>'<div class="tile stat"><b'+(col?' style="color:var(--'+col+')"':'')
+    +'>'+n+'</b><span>'+lab+'</span></div>';
+
+  const kinds={};
+  for(const r of S.res)if(r.kind)kinds[r.kind]=(kinds[r.kind]||0)+1;
+  const chips=ORDER.filter(k=>kinds[k]).map(k=>
+    '<button class="chip'+(S.kind===k?" on":"")+'" data-k="'+k+'">'+k
+    +' <i>'+kinds[k]+'</i></button>').join("");
+
+  const th=(key,lab)=>'<th class="sort'+(S.sort===key?" on":"")+'" data-s="'+key+'">'+lab
+    +(S.sort===key?(S.desc?" \u25be":" \u25b4"):"")+'</th>';
+
+  let body="";
+  if(!rows.length)body='<p class="note">Nothing matches that filter.</p>';
+  else if(S.group==="none"){
+    body='<div class="scroll"><table><thead><tr><th></th>'
+      +th("row","Row")+th("name","Query")+th("snap","Snapshot n")+th("kind","Problem")
+      +'<th>What\u2019s wrong</th><th></th></tr></thead><tbody>'
+      +rows.map(tr).join("")+'</tbody></table></div>';
+  }else{
+    const buckets=new Map();
+    for(const r of rows){const k=r[S.group]||"(none)";
+      if(!buckets.has(k))buckets.set(k,[]);buckets.get(k).push(r);}
+    const keys=[...buckets.keys()].sort((a,b)=>
+      S.group==="kind"?ORDER.indexOf(a)-ORDER.indexOf(b):a.localeCompare(b));
+    body=keys.map(k=>{const g=buckets.get(k),
+      nb=g.filter(r=>r.status==="bad").length,nk=g.filter(r=>r.status==="skip").length,
+      no=g.filter(r=>r.status==="ok").length;
+      return '<details open><summary><span class="gk">'+esc(k)+'</span>'
+       +'<span class="gc">'+g.length+' row'+(g.length===1?"":"s")
+       +(no?' \u00b7 <em class="ok">'+no+' pass</em>':"")
+       +(nb?' \u00b7 <em class="bad">'+nb+' fail</em>':"")
+       +(nk?' \u00b7 <em class="warn">'+nk+' not in grammar</em>':"")+'</span></summary>'
+       +'<div class="scroll"><table><tbody>'+g.map(tr).join("")+'</tbody></table></div></details>';
+    }).join("");
+  }
+
+  out.innerHTML='<div class="card">'
+    +'<div class="tally">'
+    +tile(S.res.length,"rows","","all")
+    +tile(S.n.ok,"pass","ok","ok")
+    +tile(S.n.bad,"fail","bad","bad")
+    +tile(S.n.skip,"name not in grammar","warn","skip")
+    +(S.nsnap?stat(S.nsnap,"snapshots",S.nsnap>1?"warn":"ok"):"")
+    +(S.noff?tile(S.noff,"off dominant n","warn","off"):"")
+    +'</div>'
+    +renderSnaps(S)
+    +renderViz(S)
+    +renderLogs(S)
+    +(chips?'<div class="chips"><span class="clab">Problem</span>'+chips
+      +(S.kind?'<button class="chip clear" data-k="">clear</button>':"")+'</div>':"")
+    +(S.snapKeys.length>1?'<div class="chips"><span class="clab">Snapshot</span>'
+      +S.snapKeys.map((k,i)=>'<button class="chip'+(S.snap===String(k)?" on":"")+'" data-sk="'+k+'">'
+        +'<i class="sw" style="background:'+pal(i)+'"></i>'+fmt(k)
+        +' <i>'+S.snapCount[k]+'</i></button>').join("")
+      +(S.snap?'<button class="chip clear" data-sk="">clear</button>':"")+'</div>':"")
+    +'<div class="bar">'
+    +'<label class="inl">Group by '
+      +'<select id="grp">'+[["none","nothing"],["kind","problem"],["snapshot","snapshot"],
+         ["window","window"],["cohort","cohort"],["stratum","stratum"],["metric","metric"]]
+        .map(([v,l])=>'<option value="'+v+'"'+(S.group===v?" selected":"")+'>'+l+'</option>').join("")
+      +'</select></label>'
+    +'<input id="q" placeholder="filter by name or problem\u2026" value="'+esc(S.q)+'">'
+    +'<span class="note">'+rows.length+' shown</span>'
+    +(rows.filter(r=>r.status==="bad").length
+      ?'<button class="cpy big" data-cp="all">\u29c9 Copy fix script \u2014 '
+        +rows.filter(r=>r.status==="bad").length+' failing</button>':"")
+    +(rows.length
+      ?'<button class="cpy" data-cp="run" title="find-query lines for every row shown, '
+        +'in the order shown">\u29c9 Copy re-run \u2014 '+rows.length+' shown</button>':"")
+    +'</div>'+body+'</div>';
+
+  // both "all" buttons copy exactly what is on screen, in the order shown
+  const failing=rows.filter(r=>r.status==="bad");
+  S.fixAll=failing.length?fixScript(failing,"as filtered"):"";
+  S.runAll=rows.length?runScript(rows,
+    S.snap?"snapshot "+fmt(+S.snap):(S.filter==="off"?"off the dominant snapshot":"as filtered")):"";
+
+  out.querySelectorAll(".tile[data-f]").forEach(b=>b.onclick=()=>{
+    S.filter=(S.filter===b.dataset.f?"all":b.dataset.f);render();});
+  out.querySelectorAll(".hit[data-k]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k; if(!k)return;
+    S.kind=(S.kind===k?"":k); S.filter="bad"; render();});
+  out.querySelectorAll(".hbr.hit[data-q]").forEach(b=>b.onclick=()=>{
+    const q=b.dataset.q; if(!q)return;
+    S.q=(S.q===q?"":q); S.filter="bad"; render();});
+  out.querySelectorAll(".chip[data-k]").forEach(b=>b.onclick=()=>{
+    S.kind=(S.kind===b.dataset.k?"":b.dataset.k);render();});
+  out.querySelectorAll("[data-sk]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.sk;
+    S.snap=(S.snap===k?"":k);
+    if(S.snap&&S.filter==="off")S.filter="all";
+    render();});
+  out.querySelectorAll("th.sort").forEach(h=>h.onclick=()=>{
+    const k=h.dataset.s;if(S.sort===k)S.desc=!S.desc;else{S.sort=k;S.desc=false;}render();});
+  // a failing row opens its group tiles in place; the deviations inside stay
+  // in their hover-to-correct form, and the open row shows them unprompted.
+  out.querySelectorAll("tr.clk[data-row]").forEach(row=>row.onclick=e=>{
+    if(e.target.closest("a"))return;
+    const d=out.querySelector('tr.det[data-det="'+row.dataset.row+'"]');
+    if(!d)return;
+    const open=!d.hidden; d.hidden=open; row.classList.toggle("open",!open);});
+  out.querySelectorAll("[data-cp]").forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const k=b.dataset.cp;
+    if(k==="all")return copyText(S.fixAll,b);
+    if(k==="run")return copyText(S.runAll,b);
+    const r=S.res.find(x=>String(x.i)===k);
+    if(r)copyText(fixScript([r],r.name),b);});
+  out.querySelectorAll(".hbr.hit[data-rg]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.rg; if(!k)return;
+    S.region=(S.region===k?"":k); S.filter="bad"; render();});
+  const g=out.querySelector("#grp");if(g)g.onchange=()=>{S.group=g.value;render();};
+  const qi=out.querySelector("#q");
+  if(qi)qi.oninput=()=>{S.q=qi.value;const p=qi.selectionStart;render();
+    const n=document.getElementById("q");if(n){n.focus();n.setSelectionRange(p,p);}};
+}
+function tr(r){
+  const m=r.status==="ok"?["ok","\u2713"]:r.status==="bad"?["bad","\u2717"]:["warn","\u2014"];
+  return '<tr'+(r.status==="bad"?' class="clk" data-row="'+r.i+'"':'')+'><td><span class="mark '+m[0]+'">'+m[1]+'</span></td>'
+   +'<td class="num">'+r.i+'</td>'
+   +'<td class="g">'+esc(r.name)+'</td>'
+   +'<td class="snapc'+(r.off?" off":"")+'" title="'+esc(r.hco||"")+'">'
+     +(r.snap?fmt(r.snap):"\u2014")+(r.snap&&!r.full?" \u26a0":"")+'</td>'
+   +'<td class="kind">'+esc(r.kind||"")+'</td>'
+   +'<td class="why">'+(r.status==="bad"?devList(r):esc((r.problems||[]).join("; ")))
+   +'</td>'
+   +'<td class="act">'+(r.status==="bad"
+      ?'<button class="cpy" data-cp="'+r.i+'" title="copy the fix block for this query">'
+        +'\u29c9 fix</button>':"")+'</td></tr>'
+   +(r.status==="bad"?'<tr class="det" data-det="'+r.i+'" hidden>'
+      +'<td class="tiles" colspan="6">'+tiles(r)
+      +'<div class="fixbox"><div class="fixh"><h5>Fix script</h5>'
+      +'<button class="cpy" data-cp="'+r.i+'">\u29c9 copy</button></div>'
+      +'<pre class="fixsh">'+esc(fixScript([r],r.name))+'</pre></div>'
+      +'</td></tr>':"");}
+
+function keyOf2(){}
+async function run(){
+  const out=document.getElementById("out");
+  const key=keyOf(document.getElementById("key").value),
+        tab=document.getElementById("tab").value.trim();
+  out.innerHTML='<div class="card"><p class="note">Loading '+esc(tab)+'\u2026</p></div>';
+  const url="https://docs.google.com/spreadsheets/d/"+encodeURIComponent(key)
+    +"/gviz/tq?tqx=out:csv&headers=0&sheet="+encodeURIComponent(tab);
+  let text;
+  try{const r=await fetch(url);
+    if(!r.ok)throw new Error("HTTP "+r.status+(r.status===404?" \u2014 no tab by that name":""));
+    text=await r.text();}
+  catch(e){out.innerHTML='<div class="card"><p class="err">Could not read the sheet: '
+    +esc(e.message)+'. Check the tab name, and that the sheet is shared to anyone with the link.</p></div>';return;}
+  if(/^\s*<!DOCTYPE/i.test(text)){out.innerHTML='<div class="card"><p class="err">'
+    +'Google returned a sign-in page instead of CSV \u2014 the sheet is not link-viewable.</p></div>';return;}
+  const all=parseCSV(text);
+  const res=[];
+  all.forEach((row,ix)=>{ if(!row.length||!String(row[0]).trim())return;
+    const v=check(row); v.i=ix+1;
+    const sp=snapOf(row);
+    v.snap=sp?sp.net:null; v.hco=sp?sp.on+" of "+sp.of:"";
+    v.full=sp?sp.on===sp.of:false; v.pts=sp?sp.pts:null;
+    v.snapshot=sp?fmt(sp.net):"(none)";
+    res.push(v); });
+  const n={ok:res.filter(r=>r.status==="ok").length,
+           bad:res.filter(r=>r.status==="bad").length,
+           skip:res.filter(r=>r.status==="skip").length};
+  // The dominant snapshot is simply the one most rows were read against;
+  // everything else is a later partial refresh, and gets flagged.
+  const snapCount={},snapHco={},snapFull={};
+  res.forEach(r=>{if(!r.snap)return;
+    snapCount[r.snap]=(snapCount[r.snap]||0)+1;
+    snapHco[r.snap]=r.hco; snapFull[r.snap]=r.full;});
+  const snapKeys=Object.keys(snapCount).map(Number)
+    .sort((a,b)=>snapCount[b]-snapCount[a]||b-a);
+  const dom=snapKeys.length?snapKeys[0]:null;
+  res.forEach(r=>r.off=!!(r.snap&&dom&&r.snap!==dom));
+  STATE={res,n,filter:n.bad?"bad":"all",kind:"",group:n.bad?"kind":"none",
+    sort:"row",desc:false,q:"",snap:"",region:"",
+    regionSet:["truncated","order","window","terms","count"],
+    snapCount,snapKeys,snapHco,snapFull,dom,
+    nsnap:snapKeys.length,noff:res.filter(r=>r.off).length};
+  render();}
+document.getElementById("run").addEventListener("click",run);
+</script>

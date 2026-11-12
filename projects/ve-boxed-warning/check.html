@@ -201,11 +201,27 @@ td.tiles{padding:6px 0 18px 0}
  letter-spacing:.02em;white-space:nowrap}
 .cpy:hover{border-color:var(--accent);color:var(--accent)}
 .cpy.done{border-color:var(--ok);color:var(--ok)}
-.cpy.big{background:var(--accent);color:#fff;border-color:var(--accent);font-size:12px;
- padding:6px 12px;font-family:var(--sans)}
+.cpy .ic{font-size:14px;line-height:1;position:relative;top:1px}
+.cpy i{font-style:normal;opacity:.7;font-variant-numeric:tabular-nums;margin-left:5px}
+.cpy.big{background:var(--accent);color:#fff;border-color:var(--accent);font-size:13.5px;
+ font-weight:600;padding:9px 15px;border-radius:8px;font-family:var(--sans);letter-spacing:0;
+ display:inline-flex;align-items:center;gap:7px}
 .cpy.big:hover{filter:brightness(1.08);color:#fff}
 .cpy.big.done{background:var(--ok);border-color:var(--ok)}
-td.act{text-align:right;white-space:nowrap;padding-right:0}
+.cpy.big i{opacity:.75;font-size:12.5px}
+/* the row control is quiet until you are on the row, so 496 of them do not
+   turn the table into a wall of buttons */
+.cpy.rowb{opacity:0;font-size:14px;padding:2px 7px;transition:opacity .13s ease}
+tr:hover .cpy.rowb,tr.open .cpy.rowb,.cpy.rowb:focus,.cpy.rowb.done{opacity:1}
+td.act{text-align:right;white-space:nowrap;padding-right:0;width:1%}
+.stdg{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.stdsel{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--line);
+ border-radius:8px;padding:5px 9px}
+.stdlab{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
+ white-space:nowrap}
+.stdsel select{background:transparent;border:0;color:var(--ink);font-family:var(--mono);
+ font-size:12.5px;padding:0;cursor:pointer}
+.stdsel .sw{width:9px;height:9px;border-radius:2px;display:inline-block;flex:none}
 .fixbox{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
 .fixh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .fixh h5{margin:0;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
@@ -688,6 +704,11 @@ function fixSteps(r){
    deviate in exactly the same way share one instruction verbatim, so they
    batch into one array too, and the paste stays short however many rows fail.
 --------------------------------------------------------------------------- */
+/* His own _rr, copied verbatim - it drops the query's line out of
+   _ALL_rows.txt and deletes its dump files, so the find that follows writes a
+   fresh one. Every script carries it so a paste works in a shell that has not
+   sourced his zsh yet; redefining it is harmless where it already exists. */
+const RRFN="_rr(){\n    cd ${five}/3_VE\n    local q=\"$1\" ; local d=\"query_dumps\" ; local src=\"${d}/_ALL_rows.txt\"    \n    if [[ -z \"$1\" ]]; then echo 'rr() requires an argument \"$1\"' && return 1 ; fi\n    sed -i '' \"/^\\\"${q}\\\"\\t/d\" \"${src}\"\n    for f in ${d}/${q}.(html|txt)(N); do rm -- \"$f\"; done\n    # Older version of sed line \u2191\n    # awk -F'\\t' -v q=\"$q\" '{n=$1; gsub(/^=/,\"\",n); gsub(/\"/,\"\",n); if (n != q) print}' \\\n    # \"$src\" > \"${src}.tmp\" && mv \"${src}.tmp\" \"$src\"\n  }\n";
 const FIXFN=
  'fix_q_func(){\n'
 +'  _rr ${q} && tnx -find_query -e ${q} -main -n 1 -go\n'
@@ -713,6 +734,7 @@ function fixScript(list,label){
     // one query pastes as the body of fix_q_func, inlined, so nothing has to
     // be defined first and nothing has to be invoked after
     return "# "+r.name+"  -  "+(r.kind||"fails the spec")+"\n"
+      +RRFN
       +'q="'+r.name+'"\n'
       +'instr="'+instrOf(r)+'"\n'
       +'_rr ${q} && tnx -find_query -e ${q} -main -n 1 -go\n'
@@ -726,7 +748,7 @@ function fixScript(list,label){
   let out="# VE fix run — "+list.length+" failing queries, "+groups.length
     +" distinct defect"+(groups.length===1?"":"s")+"  ("+label+", "+when+")\n"
     +"# Each array shares one instruction because its rows deviate identically.\n"
-    +FIXFN;
+    +RRFN+FIXFN;
   groups.forEach(([k,rows],n)=>{
     out+="\n# "+(n+1)+"/"+groups.length+" — "+rows[0].kind+"  ("+rows.length
       +" quer"+(rows.length===1?"y":"ies")+")\n"
@@ -740,11 +762,34 @@ function fixScript(list,label){
 function runScript(list,label){
   const when=new Date().toISOString().slice(0,16).replace("T"," ");
   const act='_rr ${q} && tnx -find_query -e ${q} -main -n 1 -go';
-  if(list.length===1)return 'q="'+list[0].name+'"; '+act+"\n";
+  if(list.length===1)return RRFN+'q="'+list[0].name+'"; '+act+"\n";
   return "# VE re-run — "+list.length+" queries  ("+label+", "+when+")\n"
     +"# Drops each stale dump and re-reads it, so every row lands on today's snapshot.\n"
-    +qsArr(list)
+    +RRFN+qsArr(list)
     +"for q in ${qs[@]}; do "+act+"; done\n";}
+
+/* One pass over the sheet: fix what is broken, refresh what is merely stale.
+   A failing row is only in the first half - fix_q_func re-dumps it once you
+   have fixed it, so it would be re-run twice otherwise. A row that already
+   sits on the target snapshot and passes is in neither half; there is nothing
+   to do to it. */
+function bothScript(bad,stale,tgt){
+  const when=new Date().toISOString().slice(0,16).replace("T"," ");
+  let out="# VE full pass \u2014 "+bad.length+" to fix, "+stale.length
+    +" to refresh onto "+fmt(tgt)+"  ("+when+")\n"
+    +"# Rows already on "+fmt(tgt)+" and passing are not touched.\n"+RRFN;
+  if(bad.length){
+    const f=fixScript(bad,"whole sheet").replace(RRFN,"");
+    // drop the builder's own header; this script has one of its own
+    out+="\n### 1 \u2014 fix "+bad.length+" failing quer"+(bad.length===1?"y":"ies")
+      +" (each re-dumps itself when you are done)\n"
+      +f.split("\n").filter(l=>!/^# VE fix run|^# Each array shares/.test(l)).join("\n");}
+  if(stale.length){
+    out+="\n### "+(bad.length?2:1)+" \u2014 refresh "+stale.length+" passing row"
+      +(stale.length===1?"":"s")+" onto "+fmt(tgt)+"\n"
+      +qsArr(stale)
+      +"for q in ${qs[@]}; do _rr ${q} && tnx -find_query -e ${q} -main -n 1 -go; done\n";}
+  return out;}
 
 /* Clipboard: the page is often opened from a file:// URL, where the async
    clipboard API is not available, so there is a textarea fallback. */
@@ -866,6 +911,14 @@ function render(){
   rows=rows.slice().sort(cmp[S.sort]||cmp.row);
   if(S.desc)rows.reverse();
 
+  // target snapshot: the one most rows carry, unless you pick another
+  const tgt=S.target||S.dom;
+  const allBad=S.res.filter(r=>r.status==="bad").sort((a,b)=>a.i-b.i);
+  const allOff=S.res.filter(r=>r.snap&&r.snap!==tgt).sort((a,b)=>a.i-b.i);
+  // for the combined pass: stale means off-target AND not already a failure,
+  // since a failure is re-dumped by its own fix block
+  const allStale=allOff.filter(r=>r.status!=="bad");
+
   const tile=(n,lab,col,key)=>'<button class="tile'+(S.filter===key?" on":"")+'" data-f="'+key+'">'
     +'<b'+(col?' style="color:var(--'+col+')"':'')+'>'+n+'</b><span>'+lab+'</span></button>';
   // a tile with nothing to filter by - it is a readout, not a control
@@ -933,19 +986,34 @@ function render(){
       +'</select></label>'
     +'<input id="q" placeholder="filter by name or problem\u2026" value="'+esc(S.q)+'">'
     +'<span class="note">'+rows.length+' shown</span>'
-    +(rows.filter(r=>r.status==="bad").length
-      ?'<button class="cpy big" data-cp="all">\u29c9 Copy fix script \u2014 '
-        +rows.filter(r=>r.status==="bad").length+' failing</button>':"")
-    +(rows.length
-      ?'<button class="cpy" data-cp="run" title="find-query lines for every row shown, '
-        +'in the order shown">\u29c9 Copy re-run \u2014 '+rows.length+' shown</button>':"")
+    // the two whole-sheet scripts. They deliberately ignore the filters: one
+    // brings every row onto a single snapshot, the other fixes every failure,
+    // and both are jobs you do for the sheet, not for a view of it.
+    +(allBad.length>1
+      ?'<button class="cpy big" data-cp="fixall" title="fix script for every failing '
+        +'query on the sheet, batched by defect">Failures <span class="ic">\u29c9</span>'
+        +'<i>'+allBad.length+'</i></button>':"")
+    +(S.snapKeys.length>1
+      ?'<span class="stdg"><button class="cpy big" data-cp="snapall" title="re-run every row '
+        +'that is not already on the target snapshot">Snapshot <span class="ic">\u29c9</span>'
+        +'<i>'+allOff.length+'</i></button>'
+        +'<span class="stdsel"><span class="stdlab">standardized to snapshot</span>'
+        +'<i class="sw" style="background:'+pal(Math.max(0,S.snapKeys.indexOf(tgt)))+'"></i>'
+        +'<select id="tgt">'+S.snapKeys.map(k=>'<option value="'+k+'"'
+            +(k===tgt?" selected":"")+'>'+fmt(k)+' \u00b7 '+S.snapCount[k]
+            +' row'+(S.snapCount[k]===1?"":"s")+'</option>').join("")
+        +'</select>'
+        +((allBad.length||allStale.length)
+          ?'<button class="cpy" data-cp="both" title="one script: fix every failure, then '
+            +'refresh every passing row that is not on the target snapshot">'
+            +'fix + refresh <span class="ic">\u29c9</span><i>'
+            +(allBad.length+allStale.length)+'</i></button>':"")
+        +'</span></span>':"")
     +'</div>'+body+'</div>';
 
-  // both "all" buttons copy exactly what is on screen, in the order shown
-  const failing=rows.filter(r=>r.status==="bad");
-  S.fixAll=failing.length?fixScript(failing,"as filtered"):"";
-  S.runAll=rows.length?runScript(rows,
-    S.snap?"snapshot "+fmt(+S.snap):(S.filter==="off"?"off the dominant snapshot":"as filtered")):"";
+  S.fixAll=allBad.length?fixScript(allBad,"whole sheet"):"";
+  S.snapAll=allOff.length?runScript(allOff,"onto "+fmt(tgt)):"";
+  S.bothAll=(allBad.length||allStale.length)?bothScript(allBad,allStale,tgt):"";
 
   out.querySelectorAll(".tile[data-f]").forEach(b=>b.onclick=()=>{
     S.filter=(S.filter===b.dataset.f?"all":b.dataset.f);render();});
@@ -974,14 +1042,18 @@ function render(){
   out.querySelectorAll("[data-cp]").forEach(b=>b.onclick=e=>{
     e.stopPropagation();
     const k=b.dataset.cp;
-    if(k==="all")return copyText(S.fixAll,b);
-    if(k==="run")return copyText(S.runAll,b);
+    if(k==="fixall")return copyText(S.fixAll,b);
+    if(k==="snapall")return copyText(S.snapAll,b);
+    if(k==="both")return copyText(S.bothAll,b);
     const r=S.res.find(x=>String(x.i)===k);
-    if(r)copyText(fixScript([r],r.name),b);});
+    // a failing row hands over its fix; a passing one only needs re-running
+    if(r)copyText(r.status==="bad"?fixScript([r],r.name):runScript([r],r.name),b);});
   out.querySelectorAll(".hbr.hit[data-rg]").forEach(b=>b.onclick=()=>{
     const k=b.dataset.rg; if(!k)return;
     S.region=(S.region===k?"":k); S.filter="bad"; render();});
   const g=out.querySelector("#grp");if(g)g.onchange=()=>{S.group=g.value;render();};
+  const tg=out.querySelector("#tgt");
+  if(tg)tg.onchange=()=>{S.target=+tg.value;render();};
   const qi=out.querySelector("#q");
   if(qi)qi.oninput=()=>{S.q=qi.value;const p=qi.selectionStart;render();
     const n=document.getElementById("q");if(n){n.focus();n.setSelectionRange(p,p);}};
@@ -996,11 +1068,12 @@ function tr(r){
    +'<td class="kind">'+esc(r.kind||"")+'</td>'
    +'<td class="why">'+(r.status==="bad"?devList(r):esc((r.problems||[]).join("; ")))
    +'</td>'
-   +'<td class="act">'+(r.status==="bad"
-      ?'<button class="cpy" data-cp="'+r.i+'" title="copy the fix block for this query">'
-        +'\u29c9 fix</button>':"")+'</td></tr>'
+   +'<td class="act">'+(r.status==="skip"?""
+      :'<button class="cpy rowb" data-cp="'+r.i+'" title="'
+        +(r.status==="bad"?"copy the fix block for this query"
+          :"copy the re-run line for this query")+'">\u29c9</button>')+'</td></tr>'
    +(r.status==="bad"?'<tr class="det" data-det="'+r.i+'" hidden>'
-      +'<td class="tiles" colspan="6">'+tiles(r)
+      +'<td class="tiles" colspan="7">'+tiles(r)
       +'<div class="fixbox"><div class="fixh"><h5>Fix script</h5>'
       +'<button class="cpy" data-cp="'+r.i+'">\u29c9 copy</button></div>'
       +'<pre class="fixsh">'+esc(fixScript([r],r.name))+'</pre></div>'
@@ -1047,7 +1120,7 @@ async function run(){
   STATE={res,n,filter:n.bad?"bad":"all",kind:"",group:n.bad?"kind":"none",
     sort:"row",desc:false,q:"",snap:"",region:"",
     regionSet:["truncated","order","window","terms","count"],
-    snapCount,snapKeys,snapHco,snapFull,dom,
+    snapCount,snapKeys,snapHco,snapFull,dom,target:dom,
     nsnap:snapKeys.length,noff:res.filter(r=>r.off).length};
   render();}
 document.getElementById("run").addEventListener("click",run);
