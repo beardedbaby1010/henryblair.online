@@ -681,28 +681,70 @@ function fixSteps(r){
       out.push(w+": window is "+i.act+", should be "+i.exp);}));
   if(!out.length)(r.problems||[]).forEach(x=>out.push(x));
   return out;}
-function fixBlock(r,idx,tot,pad){
-  const p=pad||"", tag=tot>1?"["+idx+"/"+tot+"] ":"";
-  const steps=fixSteps(r);
-  return p+"# "+tag+r.name+"  -  "+(r.kind||"fails the spec")+"\n"
-    +p+'q="'+r.name+'"; _rr ${q} && tnx -find_query -e ${q} -main -n 1 -go\n'
-    +p+'read ignore"?\n'
-    +p+shp(tag+r.name)+"\n"
-    +p+shp(r.kind||"fails the spec")+"\n"
-    +steps.map(x=>p+"  \u2022 "+shp(x)).join("\n")+"\n"
-    +p+'Press enter once you have fixed the query. "\n';}
-/* One query copies as a bare block you can paste straight in. Several wrap in
-   a function, so the paste defines it and you start the walk when you are
-   ready rather than the moment the terminal sees the text. */
+/* The shell side of this comes in two shapes, because there are two jobs.
+   Bringing a sheet onto one snapshot is the same action for every row, so it
+   is an array and a loop. Fixing failures is per-query work, but the
+   instruction is a property of the DEFECT, not of the query - queries that
+   deviate in exactly the same way share one instruction verbatim, so they
+   batch into one array too, and the paste stays short however many rows fail.
+--------------------------------------------------------------------------- */
+const FIXFN=
+ 'fix_q_func(){\n'
++'  _rr ${q} && tnx -find_query -e ${q} -main -n 1 -go\n'
++'  read "ignore?\n'
++'${q}\n'
++'${instr}\n'
++'Press enter once you have fixed the query, then it re-dumps. "\n'
++'  tnx -find_query -e ${q} -main -n 1 -go\n'
++'}\n';
+function qsArr(list,pad){
+  const p=pad||"";
+  return p+"qs=(\n"+list.map(r=>p+'  "'+r.name+'"').join("\n")+"\n"+p+")\n";}
+// the instruction text for a row, with no mention of the row - that is what
+// lets two rows with the same defect share one block
+function instrOf(r){
+  return [shp(r.kind||"fails the spec")]
+    .concat(fixSteps(r).map(x=>"  • "+shp(x))).join("\n");}
+
 function fixScript(list,label){
-  const tot=list.length, when=new Date().toISOString().slice(0,16).replace("T"," ");
-  if(tot===1)return fixBlock(list[0],1,1,"");
-  return "# VE query fix run \u2014 "+tot+" queries  ("+label+", "+when+")\n"
-    +"# Each block finds the query, prints what is wrong, then waits on a read.\n"
-    +"vefix(){\n"
-    +list.map((r,i)=>fixBlock(r,i+1,tot,"  ")).join("\n")
-    +'  print "\u2713 '+tot+' queries walked."\n'
-    +"}\n# paste the above, then run:  vefix\n";}
+  const when=new Date().toISOString().slice(0,16).replace("T"," ");
+  if(list.length===1){
+    const r=list[0];
+    // one query pastes as the body of fix_q_func, inlined, so nothing has to
+    // be defined first and nothing has to be invoked after
+    return "# "+r.name+"  -  "+(r.kind||"fails the spec")+"\n"
+      +'q="'+r.name+'"\n'
+      +'instr="'+instrOf(r)+'"\n'
+      +'_rr ${q} && tnx -find_query -e ${q} -main -n 1 -go\n'
+      +'read "ignore?\n${q}\n${instr}\nPress enter once you have fixed the query. "\n'
+      +'tnx -find_query -e ${q} -main -n 1 -go\n';}
+  // group by identical instruction: same defect, same words, one array
+  const by=new Map();
+  list.forEach(r=>{const k=instrOf(r);
+    if(!by.has(k))by.set(k,[]); by.get(k).push(r);});
+  const groups=[...by.entries()].sort((a,b)=>b[1].length-a[1].length);
+  let out="# VE fix run — "+list.length+" failing queries, "+groups.length
+    +" distinct defect"+(groups.length===1?"":"s")+"  ("+label+", "+when+")\n"
+    +"# Each array shares one instruction because its rows deviate identically.\n"
+    +FIXFN;
+  groups.forEach(([k,rows],n)=>{
+    out+="\n# "+(n+1)+"/"+groups.length+" — "+rows[0].kind+"  ("+rows.length
+      +" quer"+(rows.length===1?"y":"ies")+")\n"
+      +'instr="['+(n+1)+"/"+groups.length+"] "+k+'"\n'
+      +qsArr(rows)
+      +"for q in ${qs[@]}; do fix_q_func; done\n";});
+  return out;}
+
+/* Bringing rows onto one snapshot needs no instruction at all - _rr drops the
+   stale dump and the find re-reads it, so it is one array and one loop. */
+function runScript(list,label){
+  const when=new Date().toISOString().slice(0,16).replace("T"," ");
+  const act='_rr ${q} && tnx -find_query -e ${q} -main -n 1 -go';
+  if(list.length===1)return 'q="'+list[0].name+'"; '+act+"\n";
+  return "# VE re-run — "+list.length+" queries  ("+label+", "+when+")\n"
+    +"# Drops each stale dump and re-reads it, so every row lands on today's snapshot.\n"
+    +qsArr(list)
+    +"for q in ${qs[@]}; do "+act+"; done\n";}
 
 /* Clipboard: the page is often opened from a file:// URL, where the async
    clipboard API is not available, so there is a textarea fallback. */
@@ -894,11 +936,16 @@ function render(){
     +(rows.filter(r=>r.status==="bad").length
       ?'<button class="cpy big" data-cp="all">\u29c9 Copy fix script \u2014 '
         +rows.filter(r=>r.status==="bad").length+' failing</button>':"")
+    +(rows.length
+      ?'<button class="cpy" data-cp="run" title="find-query lines for every row shown, '
+        +'in the order shown">\u29c9 Copy re-run \u2014 '+rows.length+' shown</button>':"")
     +'</div>'+body+'</div>';
 
-  // the "all" button copies exactly what is on screen, in the order shown
+  // both "all" buttons copy exactly what is on screen, in the order shown
   const failing=rows.filter(r=>r.status==="bad");
   S.fixAll=failing.length?fixScript(failing,"as filtered"):"";
+  S.runAll=rows.length?runScript(rows,
+    S.snap?"snapshot "+fmt(+S.snap):(S.filter==="off"?"off the dominant snapshot":"as filtered")):"";
 
   out.querySelectorAll(".tile[data-f]").forEach(b=>b.onclick=()=>{
     S.filter=(S.filter===b.dataset.f?"all":b.dataset.f);render();});
@@ -928,6 +975,7 @@ function render(){
     e.stopPropagation();
     const k=b.dataset.cp;
     if(k==="all")return copyText(S.fixAll,b);
+    if(k==="run")return copyText(S.runAll,b);
     const r=S.res.find(x=>String(x.i)===k);
     if(r)copyText(fixScript([r],r.name),b);});
   out.querySelectorAll(".hbr.hit[data-rg]").forEach(b=>b.onclick=()=>{
